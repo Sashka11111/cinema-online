@@ -2,7 +2,6 @@
 
 namespace Liamtseva\Cinema\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -186,7 +185,7 @@ class User extends Authenticatable implements FilamentUser
     protected function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $value ? asset("storage/$value") : null
+            get: fn($value) => $value ? asset("storage/$value") : null
         );
     }
 }
