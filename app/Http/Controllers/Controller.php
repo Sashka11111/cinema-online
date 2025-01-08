@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Liamtseva\Cinema\Http\Controllers;
 
 abstract class Controller
 {
