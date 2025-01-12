@@ -9,6 +9,7 @@ class StudioPolicy
 {
     public function before(User $user, $ability): ?bool
     {
+        // If the user is an admin, they are allowed to perform any action
         if ($user->isAdmin()) {
             return true;
         }
@@ -21,7 +22,8 @@ class StudioPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        // Example: Allow all authenticated users to view studios
+        return $user->is_authenticated;
     }
 
     /**
@@ -29,7 +31,8 @@ class StudioPolicy
      */
     public function view(User $user, Studio $studio): bool
     {
-        //
+        // Example: Allow the user to view the studio if they are the owner or an admin
+        return $user->id === $studio->user_id || $user->is_admin;
     }
 
     /**
@@ -37,7 +40,8 @@ class StudioPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Example: Only allow users with the "admin" role to create studios
+        return $user->is_admin;
     }
 
     /**
@@ -45,7 +49,8 @@ class StudioPolicy
      */
     public function update(User $user, Studio $studio): bool
     {
-        //
+        // Example: Allow the user to update the studio if they are the owner or an admin
+        return $user->id === $studio->user_id || $user->is_admin;
     }
 
     /**
@@ -53,7 +58,8 @@ class StudioPolicy
      */
     public function delete(User $user, Studio $studio): bool
     {
-        //
+        // Example: Allow the user to delete the studio if they are the owner or an admin
+        return $user->id === $studio->user_id || $user->is_admin;
     }
 
     /**
@@ -61,7 +67,8 @@ class StudioPolicy
      */
     public function restore(User $user, Studio $studio): bool
     {
-        //
+        // Example: Only allow admins to restore studios
+        return $user->is_admin;
     }
 
     /**
@@ -69,6 +76,7 @@ class StudioPolicy
      */
     public function forceDelete(User $user, Studio $studio): bool
     {
-        //
+        // Example: Only allow admins to permanently delete studios
+        return $user->is_admin;
     }
 }

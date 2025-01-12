@@ -1,11 +1,10 @@
 <?php
 
-use App\Livewire\Actions\Logout;
+use Liamtseva\Cinema\Livewire\Actions\Logout;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Volt\Component;
 
-new class extends Component
-{
+new class extends Component {
     public string $password = '';
 
     /**
@@ -51,7 +50,7 @@ new class extends Component
             </p>
 
             <div class="mt-6">
-                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only" />
+                <x-input-label for="password" value="{{ __('Password') }}" class="sr-only"/>
 
                 <x-text-input
                     wire:model="password"
@@ -62,7 +61,7 @@ new class extends Component
                     placeholder="{{ __('Password') }}"
                 />
 
-                <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                <x-input-error :messages="$errors->get('password')" class="mt-2"/>
             </div>
 
             <div class="mt-6 flex justify-end">

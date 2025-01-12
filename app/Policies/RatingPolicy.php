@@ -12,7 +12,8 @@ class RatingPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        // Example: Allow all users to view ratings
+        return true; // or add your own logic here
     }
 
     /**
@@ -20,7 +21,8 @@ class RatingPolicy
      */
     public function view(User $user, Rating $rating): bool
     {
-        //
+        // Example: Only allow the owner or an admin to view the rating
+        return $user->id === $rating->user_id || $user->is_admin;
     }
 
     /**
@@ -28,7 +30,8 @@ class RatingPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Example: Allow any authenticated user to create ratings
+        return $user->is_authenticated;
     }
 
     /**
@@ -36,7 +39,8 @@ class RatingPolicy
      */
     public function update(User $user, Rating $rating): bool
     {
-        //
+        // Example: Only allow the owner or an admin to update the rating
+        return $user->id === $rating->user_id || $user->is_admin;
     }
 
     /**
@@ -44,7 +48,8 @@ class RatingPolicy
      */
     public function delete(User $user, Rating $rating): bool
     {
-        //
+        // Example: Only allow the owner or an admin to delete the rating
+        return $user->id === $rating->user_id || $user->is_admin;
     }
 
     /**
@@ -52,7 +57,8 @@ class RatingPolicy
      */
     public function restore(User $user, Rating $rating): bool
     {
-        //
+        // Example: Only an admin can restore ratings
+        return $user->is_admin;
     }
 
     /**
@@ -60,6 +66,7 @@ class RatingPolicy
      */
     public function forceDelete(User $user, Rating $rating): bool
     {
-        //
+        // Example: Only an admin can permanently delete ratings
+        return $user->is_admin;
     }
 }

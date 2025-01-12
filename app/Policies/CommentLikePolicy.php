@@ -7,59 +7,38 @@ use Liamtseva\Cinema\Models\User;
 
 class CommentLikePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
-        //
+        return $user->exists; // Усі авторизовані користувачі можуть переглядати
     }
 
-    /**
-     * Determine whether the user can view the model.
-     */
     public function view(User $user, CommentLike $commentLike): bool
     {
-        //
+        return $user->id === $commentLike->user_id; // Тільки власник лайка може переглядати
     }
 
-    /**
-     * Determine whether the user can create models.
-     */
     public function create(User $user): bool
     {
-        //
+        return $user->exists; // Усі авторизовані користувачі можуть створювати
     }
 
-    /**
-     * Determine whether the user can update the model.
-     */
     public function update(User $user, CommentLike $commentLike): bool
     {
-        //
+        return $user->id === $commentLike->user_id; // Тільки власник може змінювати лайк
     }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
     public function delete(User $user, CommentLike $commentLike): bool
     {
-        //
+        return $user->role === 'admin' || $user->id === $commentLike->user_id;
     }
 
-    /**
-     * Determine whether the user can restore the model.
-     */
     public function restore(User $user, CommentLike $commentLike): bool
     {
-        //
+        return $user->role === 'admin'; // Тільки адміністратор може відновити
     }
 
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
     public function forceDelete(User $user, CommentLike $commentLike): bool
     {
-        //
+        return $user->role === 'admin'; // Тільки адміністратор може остаточно видалити
     }
 }

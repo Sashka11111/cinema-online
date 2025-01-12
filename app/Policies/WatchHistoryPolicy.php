@@ -12,7 +12,8 @@ class WatchHistoryPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        // Дозволити перегляд історії переглядів для авторизованих користувачів
+        return $user->isAuthenticated();
     }
 
     /**
@@ -20,7 +21,8 @@ class WatchHistoryPolicy
      */
     public function view(User $user, WatchHistory $watchHistory): bool
     {
-        //
+        // Дозволити перегляд, якщо це історія переглядів самого користувача
+        return $user->id === $watchHistory->user_id;
     }
 
     /**
@@ -28,7 +30,8 @@ class WatchHistoryPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Дозволити створення запису історії переглядів для авторизованих користувачів
+        return $user->isAuthenticated();
     }
 
     /**
@@ -36,7 +39,8 @@ class WatchHistoryPolicy
      */
     public function update(User $user, WatchHistory $watchHistory): bool
     {
-        //
+        // Дозволити оновлення, якщо це історія переглядів самого користувача
+        return $user->id === $watchHistory->user_id;
     }
 
     /**
@@ -44,7 +48,8 @@ class WatchHistoryPolicy
      */
     public function delete(User $user, WatchHistory $watchHistory): bool
     {
-        //
+        // Дозволити видалення, якщо це історія переглядів самого користувача
+        return $user->id === $watchHistory->user_id;
     }
 
     /**
@@ -52,7 +57,8 @@ class WatchHistoryPolicy
      */
     public function restore(User $user, WatchHistory $watchHistory): bool
     {
-        //
+        // Дозволити відновлення, якщо це історія переглядів самого користувача
+        return $user->id === $watchHistory->user_id;
     }
 
     /**
@@ -60,6 +66,7 @@ class WatchHistoryPolicy
      */
     public function forceDelete(User $user, WatchHistory $watchHistory): bool
     {
-        //
+        // Дозволити остаточне видалення, якщо це історія переглядів самого користувача
+        return $user->id === $watchHistory->user_id;
     }
 }

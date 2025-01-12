@@ -1,10 +1,10 @@
 <?php
 
-namespace Liamtseva\Cinema\Filament\Resources\StudioResource\Pages;
+namespace Liamtseva\Cinema\Filament\Admin\Resources\StudioResource\Pages;
 
+use Liamtseva\Cinema\Filament\Admin\Resources\StudioResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use Liamtseva\Cinema\Filament\Resources\StudioResource;
 
 class EditStudio extends EditRecord
 {

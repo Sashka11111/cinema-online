@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\Notification;
+use Liamtseva\Cinema\Models\User;
 use Livewire\Volt\Volt;
 
 test('reset password link screen can be rendered', function () {
@@ -37,7 +37,7 @@ test('reset password screen can be rendered', function () {
         ->call('sendPasswordResetLink');
 
     Notification::assertSentTo($user, ResetPassword::class, function ($notification) {
-        $response = $this->get('/reset-password/'.$notification->token);
+        $response = $this->get('/reset-password/' . $notification->token);
 
         $response
             ->assertSeeVolt('pages.auth.reset-password')

@@ -12,7 +12,8 @@ class UserListPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        // Дозволити доступ усім авторизованим користувачам
+        return true;
     }
 
     /**
@@ -20,7 +21,8 @@ class UserListPolicy
      */
     public function view(User $user, UserList $userList): bool
     {
-        //
+        // Дозволити перегляд, якщо користувач є власником списку
+        return $user->id === $userList->user_id;
     }
 
     /**
@@ -28,7 +30,8 @@ class UserListPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Дозволити створення тільки авторизованим користувачам
+        return $user->role === 'admin' || $user->role === 'user';
     }
 
     /**
@@ -36,7 +39,8 @@ class UserListPolicy
      */
     public function update(User $user, UserList $userList): bool
     {
-        //
+        // Дозволити оновлення, якщо користувач є власником списку
+        return $user->id === $userList->user_id;
     }
 
     /**
@@ -44,7 +48,8 @@ class UserListPolicy
      */
     public function delete(User $user, UserList $userList): bool
     {
-        //
+        // Дозволити видалення, якщо користувач є власником списку
+        return $user->id === $userList->user_id;
     }
 
     /**
@@ -52,7 +57,8 @@ class UserListPolicy
      */
     public function restore(User $user, UserList $userList): bool
     {
-        //
+        // Дозволити відновлення, якщо користувач є власником списку
+        return $user->id === $userList->user_id;
     }
 
     /**
@@ -60,6 +66,7 @@ class UserListPolicy
      */
     public function forceDelete(User $user, UserList $userList): bool
     {
-        //
+        // Дозволити остаточне видалення, якщо користувач є власником списку
+        return $user->id === $userList->user_id;
     }
 }

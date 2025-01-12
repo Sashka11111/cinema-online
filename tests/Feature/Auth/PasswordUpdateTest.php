@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Liamtseva\Cinema\Models\User;
 use Livewire\Volt\Volt;
 
 test('password can be updated', function () {

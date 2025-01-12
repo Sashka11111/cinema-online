@@ -12,7 +12,8 @@ class TagPolicy
      */
     public function viewAny(User $user): bool
     {
-        //
+        // Example: Allow all authenticated users to view tags
+        return auth()->check();
     }
 
     /**
@@ -20,7 +21,8 @@ class TagPolicy
      */
     public function view(User $user, Tag $tag): bool
     {
-        //
+        // Example: Allow users to view a tag if they have permission or if they are admins
+        return $user->is_admin || $user->hasPermissionTo('view_tags');
     }
 
     /**
@@ -28,7 +30,8 @@ class TagPolicy
      */
     public function create(User $user): bool
     {
-        //
+        // Example: Allow users with "create_tags" permission to create tags
+        return $user->hasPermissionTo('create_tags');
     }
 
     /**
@@ -36,7 +39,8 @@ class TagPolicy
      */
     public function update(User $user, Tag $tag): bool
     {
-        //
+        // Example: Allow users to update a tag if they have the permission or are admins
+        return $user->is_admin || $user->hasPermissionTo('update_tags');
     }
 
     /**
@@ -44,7 +48,8 @@ class TagPolicy
      */
     public function delete(User $user, Tag $tag): bool
     {
-        //
+        // Example: Allow users to delete a tag if they have the permission or are admins
+        return $user->is_admin || $user->hasPermissionTo('delete_tags');
     }
 
     /**
@@ -52,7 +57,8 @@ class TagPolicy
      */
     public function restore(User $user, Tag $tag): bool
     {
-        //
+        // Example: Only allow admins to restore tags
+        return $user->is_admin;
     }
 
     /**
@@ -60,6 +66,7 @@ class TagPolicy
      */
     public function forceDelete(User $user, Tag $tag): bool
     {
-        //
+        // Example: Only allow admins to permanently delete tags
+        return $user->is_admin;
     }
 }
