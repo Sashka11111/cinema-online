@@ -22,105 +22,182 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $modelLabel = 'користувача';
+    protected static ?string $pluralModelLabel = 'Користувачі';
 
     public static function form(Form $form): Form
     {
         return $form->schema([
             TextInput::make('name')
+                ->label('Ім’я')
                 ->required()
                 ->unique(ignoreRecord: true)
                 ->maxLength(255),
+            TextInput::make('email')
+                ->label('Електронна пошта')
+                ->required()
+                ->email()
+                ->maxLength(255),
+            TextInput::make('password')
+                ->label('Пароль')
+                ->password()
+                ->required()
+                ->maxLength(255)
+                ->visibleOn('create'),
+            DatePicker::make('email_verified_at')
+                ->label('Дата підтвердження пошти')
+                ->nullable(),
+            TextInput::make('remember_token')
+                ->label('Токен запам’ятовування')
+                ->maxLength(100),
             Select::make('role')
+                ->label('Роль')
                 ->options(Role::values())
                 ->default(Role::USER->value)
                 ->required(),
             TextInput::make('avatar')
+                ->label('Аватар')
                 ->url()
                 ->maxLength(2048),
             TextInput::make('backdrop')
+                ->label('Фонове зображення')
                 ->url()
                 ->maxLength(2048),
             Select::make('gender')
+                ->label('Стать')
                 ->options(Gender::values())
                 ->nullable(),
             TextInput::make('description')
+                ->label('Опис')
                 ->maxLength(248),
             DatePicker::make('birthday')
+                ->label('Дата народження')
                 ->nullable(),
             Checkbox::make('allow_adult')
-                ->label('Allow Adult Content')
+                ->label('Дозволити дорослий контент')
                 ->default(false),
             Checkbox::make('is_auto_next')
-                ->label('Auto Next')
+                ->label('Автоперехід')
                 ->default(false),
             Checkbox::make('is_auto_play')
-                ->label('Auto Play')
+                ->label('Автовідтворення')
                 ->default(false),
             Checkbox::make('is_auto_skip_intro')
-                ->label('Skip Intro Automatically')
+                ->label('Пропуск вступу автоматично')
                 ->default(false),
             Checkbox::make('is_private_favorites')
-                ->label('Private Favorites')
+                ->label('Приватне обране')
                 ->default(false),
         ]);
     }
 
+
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('name')->sortable()->searchable(),
-            TextColumn::make('role')->sortable()->searchable(),
-            TextColumn::make('gender')->sortable()->searchable(),
-            ImageColumn::make('avatar') // Відображає зображення аватара
-            ->label('Avatar')
-                ->disk('public') // Вказуємо диск (наприклад, 'public')
-                ->width(50) // Ширина зображення
-                ->height(50), // Висота зображення
-            TextColumn::make('birthday')
+            TextColumn::make('name')
+                ->label('Ім’я')
                 ->sortable()
-                ->label('Birthday')
-                ->date('d-m-Y'),
-            IconColumn::make('allow_adult') // Використовуємо іконку для булевого значення
-            ->label('Allow Adult')
+                ->searchable()
+                ->toggleable(),
+            TextColumn::make('email')
+                ->label('Електронна пошта')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+            TextColumn::make('email_verified_at')
+                ->label('Дата підтвердження пошти')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+            TextColumn::make('role')
+                ->label('Роль')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+            TextColumn::make('gender')
+                ->label('Стать')
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+            ImageColumn::make('avatar')
+                ->label('Аватар')
+                ->disk('public')
+                ->width(50)
+                ->height(50)
+                ->toggleable(),
+            TextColumn::make('birthday')
+                ->label('Дата народження')
+                ->sortable()
+                ->searchable()
+                ->date('d-m-Y')
+                ->toggleable(),
+            IconColumn::make('allow_adult')
+                ->label('Дозволити дорослий контент')
                 ->boolean()
                 ->trueIcon('heroicon-o-check-circle')
                 ->falseIcon('heroicon-o-x-circle')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(),
             IconColumn::make('is_auto_next')
-                ->label('Auto Next')
+                ->label('Автоперехід')
                 ->boolean()
                 ->trueIcon('heroicon-o-check-circle')
                 ->falseIcon('heroicon-o-x-circle')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(),
             IconColumn::make('is_auto_play')
-                ->label('Auto Play')
+                ->label('Автовідтворення')
                 ->boolean()
                 ->trueIcon('heroicon-o-check-circle')
                 ->falseIcon('heroicon-o-x-circle')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(),
             IconColumn::make('is_auto_skip_intro')
-                ->label('Skip Intro')
+                ->label('Пропустити вступ')
                 ->boolean()
                 ->trueIcon('heroicon-o-check-circle')
                 ->falseIcon('heroicon-o-x-circle')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(),
             IconColumn::make('is_private_favorites')
-                ->label('Private Favorites')
+                ->label('Вибране')
                 ->boolean()
                 ->trueIcon('heroicon-o-check-circle')
                 ->falseIcon('heroicon-o-x-circle')
-                ->sortable(),
+                ->sortable()
+                ->toggleable(),
             TextColumn::make('last_seen_at')
                 ->sortable()
-                ->label('Last Seen')
-                ->date('d-m-Y H:i:s'),
+                ->searchable()
+                ->label('Востаннє бачили')
+                ->date('d-m-Y H:i:s')
+                ->toggleable(),
         ])
             ->filters([
-                // Add necessary filters here
+//                TextFilter::make('name')
+//                    ->label('Ім’я'),
+//
+//                TextFilter::make('email')
+//                    ->label('Електронна пошта'),
+
+//                SelectFilter::make('role')
+//                    ->label('Роль')
+//                    ->options(Role::values()) // Використовує правильні значення для порівняння
+//                    ->default(Role::USER->value),
+//
+//                SelectFilter::make('gender')
+//                    ->label('Стать')
+//                    ->options(Gender::values()),
+//
+//                DateFilter::make('birthday')
+//                    ->label('Дата народження')
+//                    ->placeholder('Оберіть дату')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
