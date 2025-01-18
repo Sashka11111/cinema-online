@@ -6,14 +6,14 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\Pages;
-use Liamtseva\Cinema\Models\Comment;
+use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\Pages;
+use Liamtseva\Cinema\Models\Person;
 
-class CommentResource extends Resource
+class PersonResource extends Resource
 {
-    protected static ?string $model = Comment::class;
+    protected static ?string $model = Person::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     public static function form(Form $form): Form
     {
@@ -52,9 +52,9 @@ class CommentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListComments::route('/'),
-            'create' => Pages\CreateComment::route('/create'),
-            'edit' => Pages\EditComment::route('/{record}/edit'),
+            'index' => Pages\ListPeople::route('/'),
+            'create' => Pages\CreatePerson::route('/create'),
+            'edit' => Pages\EditPerson::route('/{record}/edit'),
         ];
     }
 }

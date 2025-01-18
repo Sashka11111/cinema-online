@@ -6,14 +6,14 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\Pages;
-use Liamtseva\Cinema\Models\Comment;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\Pages;
+use Liamtseva\Cinema\Models\Movie;
 
-class CommentResource extends Resource
+class MovieResource extends Resource
 {
-    protected static ?string $model = Comment::class;
+    protected static ?string $model = Movie::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
+    protected static ?string $navigationIcon = 'heroicon-o-film';
 
     public static function form(Form $form): Form
     {
@@ -52,9 +52,9 @@ class CommentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListComments::route('/'),
-            'create' => Pages\CreateComment::route('/create'),
-            'edit' => Pages\EditComment::route('/{record}/edit'),
+            'index' => Pages\ListMovies::route('/'),
+            'create' => Pages\CreateMovie::route('/create'),
+            'edit' => Pages\EditMovie::route('/{record}/edit'),
         ];
     }
 }

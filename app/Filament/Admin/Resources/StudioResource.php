@@ -13,7 +13,7 @@ class StudioResource extends Resource
 {
     protected static ?string $model = Studio::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-speaker-wave';
 
     public static function form(Form $form): Form
     {
