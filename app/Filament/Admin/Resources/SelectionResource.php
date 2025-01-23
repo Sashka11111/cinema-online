@@ -15,6 +15,10 @@ class SelectionResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    protected static ?string $pluralModelLabel = 'Підбірки';
+
+    protected static ?string $navigationGroup = 'Медіа та контент';
+
     public static function form(Form $form): Form
     {
         return $form

@@ -15,6 +15,10 @@ class StudioResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-speaker-wave';
 
+    protected static ?string $pluralModelLabel = 'Студії';
+
+    protected static ?string $navigationGroup = 'Персони та студії';
+
     public static function form(Form $form): Form
     {
         return $form

@@ -13,7 +13,7 @@ class SearchHistoryPolicy
     public function viewAny(User $user): bool
     {
         // Example: Allow all authenticated users to view search history
-        return $user->is_authenticated;
+        return auth()->check();
     }
 
     /**
@@ -31,7 +31,7 @@ class SearchHistoryPolicy
     public function create(User $user): bool
     {
         // Example: Allow any authenticated user to create search history records
-        return $user->is_authenticated;
+        return auth()->check();
     }
 
     /**

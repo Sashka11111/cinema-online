@@ -15,6 +15,10 @@ class TagResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
 
+    protected static ?string $pluralModelLabel = 'Теги';
+
+    protected static ?string $navigationGroup = 'Медіа та контент';
+
     public static function form(Form $form): Form
     {
         return $form

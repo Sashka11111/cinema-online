@@ -12,8 +12,7 @@ class SelectionPolicy
      */
     public function viewAny(User $user): bool
     {
-        // Example: Allow all authenticated users to view selections
-        return $user->is_authenticated;
+        return auth()->check();
     }
 
     /**
@@ -30,8 +29,7 @@ class SelectionPolicy
      */
     public function create(User $user): bool
     {
-        // Example: Allow any authenticated user to create a selection
-        return $user->is_authenticated;
+        return auth()->check();
     }
 
     /**

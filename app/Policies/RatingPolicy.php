@@ -31,7 +31,7 @@ class RatingPolicy
     public function create(User $user): bool
     {
         // Example: Allow any authenticated user to create ratings
-        return $user->is_authenticated;
+        return auth()->check();
     }
 
     /**

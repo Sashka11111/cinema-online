@@ -15,6 +15,10 @@ class PersonResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
+    protected static ?string $pluralModelLabel = 'Персони';
+
+    protected static ?string $navigationGroup = 'Персони та студії';
+
     public static function form(Form $form): Form
     {
         return $form

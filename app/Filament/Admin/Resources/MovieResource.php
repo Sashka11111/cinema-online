@@ -15,6 +15,10 @@ class MovieResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-film';
 
+    protected static ?string $pluralModelLabel = 'Фільми';
+
+    protected static ?string $navigationGroup = 'Медіа та контент';
+
     public static function form(Form $form): Form
     {
         return $form

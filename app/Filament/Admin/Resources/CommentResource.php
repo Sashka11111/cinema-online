@@ -15,6 +15,10 @@ class CommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
 
+    protected static ?string $pluralModelLabel = 'Коментарі';
+
+    protected static ?string $navigationGroup = 'Користувачі та взаємодія з контентом';
+
     public static function form(Form $form): Form
     {
         return $form

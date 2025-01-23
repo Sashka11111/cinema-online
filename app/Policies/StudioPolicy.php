@@ -9,7 +9,6 @@ class StudioPolicy
 {
     public function before(User $user, $ability): ?bool
     {
-        // If the user is an admin, they are allowed to perform any action
         if ($user->isAdmin()) {
             return true;
         }
@@ -23,7 +22,7 @@ class StudioPolicy
     public function viewAny(User $user): bool
     {
         // Example: Allow all authenticated users to view studios
-        return $user->is_authenticated;
+        return auth()->check();
     }
 
     /**

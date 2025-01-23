@@ -169,7 +169,11 @@ class User extends Authenticatable implements FilamentUser
         return $this->role == Role::ADMIN;
     }
 
-    // TODO: отримати реальний шлях до картинки
+    public function isAuthenticated(): bool
+    {
+        return auth()->check();  // Перевіряє, чи користувач аутентифікований
+    }
+
 
     protected function casts(): array
     {
@@ -188,4 +192,5 @@ class User extends Authenticatable implements FilamentUser
             get: fn($value) => $value ? asset("storage/$value") : null
         );
     }
+
 }

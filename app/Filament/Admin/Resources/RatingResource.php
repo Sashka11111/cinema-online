@@ -13,7 +13,11 @@ class RatingResource extends Resource
 {
     protected static ?string $model = Rating::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-star';
+
+    protected static ?string $pluralModelLabel = 'Рейтинг';
+
+    protected static ?string $navigationGroup = 'Користувачі та взаємодія з контентом';
 
     public static function form(Form $form): Form
     {
