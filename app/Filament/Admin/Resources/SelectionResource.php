@@ -18,6 +18,7 @@ class SelectionResource extends Resource
     protected static ?string $pluralModelLabel = 'Підбірки';
 
     protected static ?string $navigationGroup = 'Медіа та контент';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

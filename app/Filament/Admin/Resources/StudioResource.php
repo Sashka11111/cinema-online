@@ -18,6 +18,7 @@ class StudioResource extends Resource
     protected static ?string $pluralModelLabel = 'Студії';
 
     protected static ?string $navigationGroup = 'Персони та студії';
+    protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form
     {

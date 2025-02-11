@@ -18,6 +18,7 @@ class PersonResource extends Resource
     protected static ?string $pluralModelLabel = 'Персони';
 
     protected static ?string $navigationGroup = 'Персони та студії';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {

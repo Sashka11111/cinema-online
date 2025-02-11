@@ -2,6 +2,7 @@
 
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -9,9 +10,9 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\Role;
@@ -24,9 +25,14 @@ class UserResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
 
+    protected static ?string $navigationLabel = 'Користувачі';
+
+    protected static ?string $modelLabel = 'Користувача';
+
     protected static ?string $pluralModelLabel = 'Користувачі';
 
     protected static ?string $navigationGroup = 'Користувачі та взаємодія з контентом';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -94,108 +100,94 @@ class UserResource extends Resource
         ]);
     }
 
-
     public static function table(Table $table): Table
     {
         return $table->columns([
-            TextColumn::make('name')
-                ->label('Ім’я')
-                ->sortable()
-                ->searchable()
-                ->toggleable(),
-            TextColumn::make('email')
-                ->label('Електронна пошта')
-                ->sortable()
-                ->searchable()
-                ->toggleable(),
-            TextColumn::make('email_verified_at')
-                ->label('Дата підтвердження пошти')
-                ->sortable()
-                ->searchable()
-                ->toggleable(),
-            TextColumn::make('role')
-                ->label('Роль')
-                ->sortable()
-                ->searchable()
-                ->toggleable(),
-            TextColumn::make('gender')
-                ->label('Стать')
-                ->sortable()
-                ->searchable()
-                ->toggleable(),
             ImageColumn::make('avatar')
                 ->label('Аватар')
                 ->disk('public')
                 ->width(50)
                 ->height(50)
+                ->circular()
                 ->toggleable(),
+
+            TextColumn::make('name')
+                ->label('Ім\'я та пошта')
+                ->description(fn(User $user): string => $user->email)
+                ->searchable()
+                ->sortable(),
+
+            TextColumn::make('role')
+                ->label('Роль')
+                ->badge()
+                ->color(fn(User $user): string => match ($user->role) {
+                    Role::USER => 'success',       // Звичайний користувач - зелений
+                    Role::MODERATOR => 'primary',  // Модератор - синій
+                    Role::ADMIN => 'danger',       // Адмін - червоний
+                })
+                ->icon(fn(User $user): string => match ($user->role) {
+                    Role::USER => 'heroicon-o-user',
+                    Role::MODERATOR => 'tabler-user-cog',
+                    Role::ADMIN => 'ri-admin-line',
+                })
+                ->searchable()
+                ->sortable(),
+
+            TextColumn::make('gender')
+                ->label('Стать')
+                ->badge()
+                ->color(fn(User $user): string => match ($user->gender) {
+                    Gender::MALE => 'info',       // Чоловіки - синій
+                    Gender::FEMALE => 'warning',     // Жінки - рожевий
+                    Gender::OTHER => 'gray',      // Інші - сірий
+                })
+                ->icon(fn(User $user): string => match ($user->gender) {
+                    Gender::MALE => 'fas-male',  // Іконка для чоловіків
+                    Gender::FEMALE => 'fas-female',       // Іконка для жінок
+                    Gender::OTHER => 'bx-male-female', // Іконка для інших
+                })
+                ->sortable()
+                ->searchable()
+                ->toggleable(),
+
             TextColumn::make('birthday')
                 ->label('Дата народження')
                 ->sortable()
                 ->searchable()
                 ->date('d-m-Y')
                 ->toggleable(),
-            IconColumn::make('allow_adult')
-                ->label('Дозволити дорослий контент')
-                ->boolean()
-                ->trueIcon('heroicon-o-check-circle')
-                ->falseIcon('heroicon-o-x-circle')
-                ->sortable()
-                ->toggleable(),
-            IconColumn::make('is_auto_next')
-                ->label('Автоперехід')
-                ->boolean()
-                ->trueIcon('heroicon-o-check-circle')
-                ->falseIcon('heroicon-o-x-circle')
-                ->sortable()
-                ->toggleable(),
-            IconColumn::make('is_auto_play')
-                ->label('Автовідтворення')
-                ->boolean()
-                ->trueIcon('heroicon-o-check-circle')
-                ->falseIcon('heroicon-o-x-circle')
-                ->sortable()
-                ->toggleable(),
-            IconColumn::make('is_auto_skip_intro')
-                ->label('Пропустити вступ')
-                ->boolean()
-                ->trueIcon('heroicon-o-check-circle')
-                ->falseIcon('heroicon-o-x-circle')
-                ->sortable()
-                ->toggleable(),
-            IconColumn::make('is_private_favorites')
-                ->label('Вибране')
-                ->boolean()
-                ->trueIcon('heroicon-o-check-circle')
-                ->falseIcon('heroicon-o-x-circle')
-                ->sortable()
-                ->toggleable(),
+
             TextColumn::make('last_seen_at')
+                ->label('Востаннє бачили')
+                ->badge()
+                ->color(fn(User $user): string => match (true) {
+                    !$user->last_seen_at => 'gray', // Якщо не заходив
+                    now()->diffInHours(Carbon::parse($user->last_seen_at)) < 1 => 'success',
+                    default => 'warning',  // Давно не заходив
+                })
+                ->formatStateUsing(fn(User $user) => $user->last_seen_at
+                    ? Carbon::parse($user->last_seen_at)->diffForHumans()
+                    : 'Ніколи')
                 ->sortable()
                 ->searchable()
-                ->label('Востаннє бачили')
-                ->date('d-m-Y H:i:s')
-                ->toggleable(),
+                ->toggleable()
+
         ])
             ->filters([
-//                TextFilter::make('name')
-//                    ->label('Ім’я'),
-//
-//                TextFilter::make('email')
-//                    ->label('Електронна пошта'),
-
-//                SelectFilter::make('role')
-//                    ->label('Роль')
-//                    ->options(Role::values()) // Використовує правильні значення для порівняння
-//                    ->default(Role::USER->value),
-//
-//                SelectFilter::make('gender')
-//                    ->label('Стать')
-//                    ->options(Gender::values()),
-//
-//                DateFilter::make('birthday')
-//                    ->label('Дата народження')
-//                    ->placeholder('Оберіть дату')
+                SelectFilter::make('role')
+                    ->label('Роль')
+                    ->options([
+                        Role::USER->value => 'Користувач',
+                        Role::MODERATOR->value => 'Модератор',
+                        Role::ADMIN->value => 'Адмін',
+                    ]),
+                SelectFilter::make('gender')
+                    ->label('Стать')
+                    ->options([
+                        Gender::MALE->value => 'Чоловік',
+                        Gender::FEMALE->value => 'Жінка',
+                        Gender::OTHER->value => 'Інше',
+                    ]),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -207,6 +199,7 @@ class UserResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {
