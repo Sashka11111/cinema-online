@@ -159,21 +159,20 @@ class User extends Authenticatable implements FilamentUser
             ->where('type', UserListType::REWATCHING->value);
     }
 
+    public function isAuthenticated(): bool
+    {
+        return auth()->check();  // Перевіряє, чи користувач аутентифікований
+    }
+
     public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->isAdmin();
     }
 
     public function isAdmin(): bool
     {
         return $this->role == Role::ADMIN;
     }
-
-    public function isAuthenticated(): bool
-    {
-        return auth()->check();  // Перевіряє, чи користувач аутентифікований
-    }
-
 
     protected function casts(): array
     {
@@ -192,5 +191,4 @@ class User extends Authenticatable implements FilamentUser
             get: fn($value) => $value ? asset("storage/$value") : null
         );
     }
-
 }

@@ -6,6 +6,7 @@ use Filament\Actions;
 use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Liamtseva\Cinema\Filament\Admin\Resources\UserResource;
+use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Widgets\UserStats;
 
 class ListUsers extends ListRecords
 {
@@ -40,6 +41,13 @@ class ListUsers extends ListRecords
     {
         return [
             Actions\CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            UserStats::class,
         ];
     }
 }

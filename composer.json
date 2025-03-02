@@ -8,11 +8,13 @@
         "php": "^8.3",
         "andreiio/blade-remix-icon": "^3.6",
         "filament/filament": "^3.2",
+        "laravel-lang/common": "^6.5",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
-        "owenvoke/blade-fontawesome": "^2.8"
+        "owenvoke/blade-fontawesome": "^2.8",
+        "secondnetwork/blade-tabler-icons": "^3.30"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",
