@@ -17,7 +17,7 @@ class MovieResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Фільми';
 
-    protected static ?string $navigationGroup = 'Медіа та контент';
+    protected static ?string $navigationGroup = 'Контент';
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form

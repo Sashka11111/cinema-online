@@ -17,7 +17,7 @@ class RatingResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Рейтинг';
 
-    protected static ?string $navigationGroup = 'Користувачі та взаємодія з контентом';
+    protected static ?string $navigationGroup = 'Користувацька активність';
     protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form

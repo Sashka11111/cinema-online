@@ -17,7 +17,7 @@ class EpisodeResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Епізоди';
 
-    protected static ?string $navigationGroup = 'Медіа та контент';
+    protected static ?string $navigationGroup = 'Контент';
     protected static ?int $navigationSort = 2;
 
     public static function form(Form $form): Form

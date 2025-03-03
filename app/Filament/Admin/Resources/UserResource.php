@@ -31,7 +31,7 @@ class UserResource extends Resource
     protected static ?string $navigationLabel = 'Користувачі';
     protected static ?string $modelLabel = 'користувача';
     protected static ?string $pluralModelLabel = 'Користувачі';
-    protected static ?string $navigationGroup = 'Користувачі та взаємодія з контентом';
+    protected static ?string $navigationGroup = 'Користувацька активність';
     protected static ?int $navigationSort = 1;
 
     public static function table(Table $table): Table
@@ -106,7 +106,6 @@ class UserResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->toggleable()
-
             ])
                 ->filters([
                     SelectFilter::make('role')
@@ -152,17 +151,21 @@ class UserResource extends Resource
                         ->label('Логін')
                         ->required()
                         ->maxLength(255)
-                        ->unique(),
+                        ->prefixIcon('clarity-text-line')
+                        ->unique(ignoreRecord: true),
 
                     TextInput::make('email')
                         ->label('Email')
                         ->email()
                         ->required()
                         ->maxLength(255)
+                        ->prefixIcon('clarity-email-outline-badged')
                         ->unique(ignoreRecord: true),
 
                     DatePicker::make('birthday')
                         ->label('Дата народження')
+                        ->prefixIcon('clarity-date-line')
+                        ->native(false)
                         ->nullable(),
 
                     Select::make('gender')
@@ -172,16 +175,19 @@ class UserResource extends Resource
                             'female' => 'Жіноча',
                             'other' => 'Інша',
                         ])
+                        ->prefixIcon('bx-male-female')
                         ->nullable(),
 
                     DateTimePicker::make('last_seen_at')
                         ->label('Остання активність')
                         ->displayFormat('d.m.Y H:i')
+                        ->prefixIcon('clarity-date-line')
                         ->disabled(),
 
                     DateTimePicker::make('email_verified_at')
                         ->label('Дата підтвердження email')
                         ->displayFormat('d.m.Y H:i')
+                        ->prefixIcon('clarity-date-line')
                         ->disabled(),
                 ])
                 ->columns(2),
@@ -193,8 +199,19 @@ class UserResource extends Resource
                         ->password()
                         ->maxLength(255)
                         ->dehydrated(fn($state) => filled($state))
+                        ->prefixIcon('carbon-password')
                         ->nullable(),
-                ]),
+                    Select::make('role')
+                        ->label('Роль')
+                        ->options([
+                            'user' => 'Користувач',
+                            'admin' => 'Адміністратор',
+                            'moderator' => 'Модератор',
+                        ])
+                        ->prefixIcon('bx-user')
+                        ->required(),
+                ])
+                ->columns(2),
 
             Section::make('Налаштування акаунту')
                 ->schema([
@@ -222,14 +239,6 @@ class UserResource extends Resource
 
             Section::make('Додатково')
                 ->schema([
-                    Select::make('role')
-                        ->label('Роль')
-                        ->options([
-                            'user' => 'Користувач',
-                            'admin' => 'Адміністратор',
-                            'moderator' => 'Модератор',
-                        ])
-                        ->required(),
 
                     FileUpload::make('avatar')
                         ->label('Аватар')
@@ -251,7 +260,8 @@ class UserResource extends Resource
                         ->label('Опис профілю')
                         ->columnSpanFull()
                         ->rows(4)
-                        ->nullable(),
+                        ->nullable()
+                        ->maxLength(500),
                 ])
                 ->columns(2)
         ]);

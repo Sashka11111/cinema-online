@@ -24,11 +24,13 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->id('admin')
             ->path('admin')
+            ->brandName('Cinema')
             ->colors([
                 'primary' => '#93b3f4',
             ])
             ->font('DM Sans')
             ->brandLogo(asset('images/icon.svg'))
+            ->favicon(asset('images/icon.svg'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'Liamtseva\\Cinema\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'Liamtseva\Cinema\\Filament\\Admin\\Pages')
             ->pages([

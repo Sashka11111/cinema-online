@@ -17,7 +17,7 @@ class TagResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Теги';
 
-    protected static ?string $navigationGroup = 'Медіа та контент';
+    protected static ?string $navigationGroup = 'Контент';
     protected static ?int $navigationSort = 4;
 
     public static function form(Form $form): Form

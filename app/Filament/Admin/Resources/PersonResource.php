@@ -23,7 +23,7 @@ use Liamtseva\Cinema\Models\Person;
 class PersonResource extends Resource
 {
     protected static ?string $model = Person::class;
-    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationLabel = 'Персони';
     protected static ?string $modelLabel = 'персону';
     protected static ?string $pluralModelLabel = 'Персони';

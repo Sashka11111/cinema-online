@@ -7,6 +7,7 @@ use Filament\Resources\Components\Tab;
 use Filament\Resources\Pages\ListRecords;
 use Liamtseva\Cinema\Filament\Admin\Resources\UserResource;
 use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Widgets\UserStats;
+use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Widgets\UserStatsOverview;
 
 class ListUsers extends ListRecords
 {
@@ -48,6 +49,8 @@ class ListUsers extends ListRecords
     {
         return [
             UserStats::class,
+            // LatestUsers::class,
+            UserStatsOverview::class,
         ];
     }
 }
