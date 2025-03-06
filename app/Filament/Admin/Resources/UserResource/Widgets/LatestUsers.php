@@ -2,44 +2,41 @@
 
 namespace Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Widgets;
 
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Table;
-use Filament\Widgets\TableWidget;
+use Filament\Widgets\StatsOverviewWidget as BaseWidget;
+use Filament\Widgets\StatsOverviewWidget\Stat;
 use Liamtseva\Cinema\Enums\Role;
 use Liamtseva\Cinema\Models\User;
 
-class LatestUsers extends TableWidget
+class LatestUsers extends BaseWidget
 {
-    protected static ?string $heading = 'Останні зареєстровані користувачі';
+    protected ?string $heading = 'Останні активні користувачі';
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 1;
 
-    public function table(Table $table): Table
+    protected function getStats(): array
     {
-        return $table
-            ->query(User::query()->latest()->limit(5))
-            ->columns([
-                ImageColumn::make('avatar')
-                    ->circular()
-                    ->defaultImageUrl('/images/default-avatar.png')
-                    ->width(40)
-                    ->height(40),
-                TextColumn::make('name')
-                    ->label('Ім’я')
-                    ->searchable(),
-                TextColumn::make('role')
-                    ->label('Роль')
-                    ->badge()
-                    ->color(fn($state) => match ($state) {
-                        Role::USER => 'success',
-                        Role::MODERATOR => 'primary',
-                        Role::ADMIN => 'danger',
-                    }),
-                TextColumn::make('created_at')
-                    ->label('Дата реєстрації')
-                    ->dateTime('d-m-Y H:i'),
-            ])
-            ->paginated(false); // Вимикаємо пагінацію
+        $latestUsers = User::latest()->limit(6)->get();
+
+        $stats = [];
+
+        foreach ($latestUsers as $user) {
+            $role = $user->role;
+            $stats[] = Stat::make($user->name, '')
+                ->icon($this->getRoleIcon($role))
+                ->description("Роль: {$role->value} | Зареєстровано: {$user->created_at->format('d.m.Y')}")
+                ->color('primary');
+        }
+
+        return $stats;
     }
+
+    protected function getRoleIcon(Role $role): string
+    {
+        return match ($role) {
+            Role::USER => 'heroicon-o-user',
+            Role::MODERATOR => 'tabler-user-cog',
+            Role::ADMIN => 'ri-admin-line',
+        };
+    }
+
 }

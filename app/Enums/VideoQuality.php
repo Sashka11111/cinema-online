@@ -4,10 +4,10 @@ namespace Liamtseva\Cinema\Enums;
 
 enum VideoQuality: string
 {
-    case SD = 'sd'; // Standard Definition
-    case HD = 'hd'; // High Definition
-    case FULL_HD = 'full_hd'; // Full High Definition
-    case UHD = 'uhd'; // Ultra High Definition
+    case SD = 'sd';
+    case HD = 'hd';
+    case FULL_HD = 'full_hd';
+    case UHD = 'uhd';
 
     public function name(): string
     {

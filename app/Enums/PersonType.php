@@ -24,28 +24,28 @@ enum PersonType: string
     case PRODUCTION_DESIGNER = 'production_designer';
     case VISUAL_EFFECTS_SUPERVISOR = 'visual_effects_supervisor';
 
-    public function name(): string
+    public static function getLabels(): array
     {
-        return match ($this) {
-            self::ACTOR => 'Актор',
-            self::CHARACTER => 'Персонаж',
-            self::DIRECTOR => 'Режисер',
-            self::PRODUCER => 'Продюсер',
-            self::WRITER => 'Сценарист',
-            self::EDITOR => 'Монтажер',
-            self::CINEMATOGRAPHER => 'Оператор',
-            self::COMPOSER => 'Композитор',
-            self::ART_DIRECTOR => 'Художник-постановник',
-            self::SOUND_DESIGNER => 'Звуковий дизайнер',
-            self::COSTUME_DESIGNER => 'Художник з костюмів',
-            self::MAKEUP_ARTIST => 'Візажист',
-            self::VOICE_ACTOR => 'Актор дубляжу',
-            self::STUNT_PERFORMER => 'Каскадер',
-            self::ASSISTANT_DIRECTOR => 'Помічник режисера',
-            self::PRODUCER_ASSISTANT => 'Помічник продюсера',
-            self::SCRIPT_SUPERVISOR => 'Супервайзер сценарію',
-            self::PRODUCTION_DESIGNER => 'Продакшн-дизайнер',
-            self::VISUAL_EFFECTS_SUPERVISOR => 'Супервайзер візуальних ефектів',
-        };
+        return [
+            self::ACTOR->value => __('person_type.actor'),
+            self::CHARACTER->value => __('person_type.character'),
+            self::DIRECTOR->value => __('person_type.director'),
+            self::PRODUCER->value => __('person_type.producer'),
+            self::WRITER->value => __('person_type.writer'),
+            self::EDITOR->value => __('person_type.editor'),
+            self::CINEMATOGRAPHER->value => __('person_type.cinematographer'),
+            self::COMPOSER->value => __('person_type.composer'),
+            self::ART_DIRECTOR->value => __('person_type.art_director'),
+            self::SOUND_DESIGNER->value => __('person_type.sound_designer'),
+            self::COSTUME_DESIGNER->value => __('person_type.costume_designer'),
+            self::MAKEUP_ARTIST->value => __('person_type.makeup_artist'),
+            self::VOICE_ACTOR->value => __('person_type.voice_actor'),
+            self::STUNT_PERFORMER->value => __('person_type.stunt_performer'),
+            self::ASSISTANT_DIRECTOR->value => __('person_type.assistant_director'),
+            self::PRODUCER_ASSISTANT->value => __('person_type.producer_assistant'),
+            self::SCRIPT_SUPERVISOR->value => __('person_type.script_supervisor'),
+            self::PRODUCTION_DESIGNER->value => __('person_type.production_designer'),
+            self::VISUAL_EFFECTS_SUPERVISOR->value => __('person_type.visual_effects_supervisor'),
+        ];
     }
 }

@@ -27,11 +27,17 @@ use Liamtseva\Cinema\Models\User;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationLabel = 'Користувачі';
+
     protected static ?string $modelLabel = 'користувача';
+
     protected static ?string $pluralModelLabel = 'Користувачі';
+
     protected static ?string $navigationGroup = 'Користувацька активність';
+
     protected static ?int $navigationSort = 1;
 
     public static function table(Table $table): Table
@@ -48,19 +54,20 @@ class UserResource extends Resource
 
                 TextColumn::make('name')
                     ->label('Ім\'я та пошта')
-                    ->description(fn(User $user): string => $user->email)
+                    ->description(fn (User $user): string => $user->email)
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('role')
                     ->label('Роль')
+                    ->formatStateUsing(fn (Role $state) => Role::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn(User $user): string => match ($user->role) {
+                    ->color(fn (User $user): string => match ($user->role) {
                         Role::USER => 'success',       // Звичайний користувач - зелений
                         Role::MODERATOR => 'primary',  // Модератор - синій
                         Role::ADMIN => 'danger',       // Адмін - червоний
                     })
-                    ->icon(fn(User $user): string => match ($user->role) {
+                    ->icon(fn (User $user): string => match ($user->role) {
                         Role::USER => 'heroicon-o-user',
                         Role::MODERATOR => 'tabler-user-cog',
                         Role::ADMIN => 'ri-admin-line',
@@ -70,13 +77,14 @@ class UserResource extends Resource
 
                 TextColumn::make('gender')
                     ->label('Стать')
+                    ->formatStateUsing(fn (Gender $state) => Gender::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn(User $user): string => match ($user->gender) {
+                    ->color(fn (User $user): string => match ($user->gender) {
                         Gender::MALE => 'info',       // Чоловіки - синій
                         Gender::FEMALE => 'warning',     // Жінки - рожевий
                         Gender::OTHER => 'gray',      // Інші - сірий
                     })
-                    ->icon(fn(User $user): string => match ($user->gender) {
+                    ->icon(fn (User $user): string => match ($user->gender) {
                         Gender::MALE => 'fas-male',  // Іконка для чоловіків
                         Gender::FEMALE => 'fas-female',       // Іконка для жінок
                         Gender::OTHER => 'bx-male-female', // Іконка для інших
@@ -95,41 +103,34 @@ class UserResource extends Resource
                 TextColumn::make('last_seen_at')
                     ->label('Востаннє бачили')
                     ->badge()
-                    ->color(fn(User $user): string => match (true) {
-                        !$user->last_seen_at => 'gray', // Якщо не заходив
+                    ->color(fn (User $user): string => match (true) {
+                        ! $user->last_seen_at => 'gray', // Якщо не заходив
                         now()->diffInHours(Carbon::parse($user->last_seen_at)) < 1 => 'success',
-                        default => 'warning',  // Давно не заходив
+                        default => 'warning',
                     })
-                    ->formatStateUsing(fn(User $user) => $user->last_seen_at
+                    ->formatStateUsing(fn (User $user) => $user->last_seen_at
                         ? Carbon::parse($user->last_seen_at)->diffForHumans()
                         : 'Ніколи')
                     ->sortable()
                     ->searchable()
-                    ->toggleable()
+                    ->toggleable(),
             ])
                 ->filters([
                     SelectFilter::make('role')
                         ->label('Роль')
-                        ->options([
-                            Role::USER->value => 'Користувач',
-                            Role::MODERATOR->value => 'Модератор',
-                            Role::ADMIN->value => 'Адмін',
-                        ]),
+                        ->options(Role::getLabels()),
+
                     SelectFilter::make('gender')
                         ->label('Стать')
-                        ->options([
-                            Gender::MALE->value => 'Чоловік',
-                            Gender::FEMALE->value => 'Жінка',
-                            Gender::OTHER->value => 'Інше',
-                        ]),
+                        ->options(Gender::getLabels()),
                     Filter::make('birthday')
                         ->form([
-                            DatePicker::make('birthday_from')->label('Дата народження від'),
-                            DatePicker::make('birthday_to')->label('Дата народження до'),
+                            DatePicker::make('birthday_from')->label('Дата народження від')->prefixIcon('clarity-date-line')->native(false),
+                            DatePicker::make('birthday_to')->label('Дата народження до')->prefixIcon('clarity-date-line')->native(false),
                         ])
-                        ->query(fn($query, $data) => $query
-                            ->when($data['birthday_from'], fn($query, $date) => $query->where('birthday', '>=', $date))
-                            ->when($data['birthday_to'], fn($query, $date) => $query->where('birthday', '<=', $date))),
+                        ->query(fn ($query, $data) => $query
+                            ->when($data['birthday_from'], fn ($query, $date) => $query->where('birthday', '>=', $date))
+                            ->when($data['birthday_to'], fn ($query, $date) => $query->where('birthday', '<=', $date))),
                 ])
                 ->actions([
                     Tables\Actions\EditAction::make(),
@@ -146,6 +147,7 @@ class UserResource extends Resource
     {
         return $form->schema([
             Section::make('Основна інформація')
+                ->icon('heroicon-o-information-circle')
                 ->schema([
                     TextInput::make('name')
                         ->label('Логін')
@@ -166,17 +168,26 @@ class UserResource extends Resource
                         ->label('Дата народження')
                         ->prefixIcon('clarity-date-line')
                         ->native(false)
+                        ->before(now())
                         ->nullable(),
 
                     Select::make('gender')
                         ->label('Стать')
-                        ->options([
-                            'male' => 'Чоловіча',
-                            'female' => 'Жіноча',
-                            'other' => 'Інша',
-                        ])
+                        ->options(Gender::getLabels())
                         ->prefixIcon('bx-male-female')
                         ->nullable(),
+
+                    DateTimePicker::make('created_at')
+                        ->label('Дата створення')
+                        ->displayFormat('d.m.Y H:i')
+                        ->prefixIcon('clarity-date-line')
+                        ->disabled(),
+
+                    DateTimePicker::make('updated_at')
+                        ->label('Дата оновлення')
+                        ->displayFormat('d.m.Y H:i')
+                        ->prefixIcon('clarity-date-line')
+                        ->disabled(),
 
                     DateTimePicker::make('last_seen_at')
                         ->label('Остання активність')
@@ -193,27 +204,25 @@ class UserResource extends Resource
                 ->columns(2),
 
             Section::make('Безпека')
+                ->icon('heroicon-o-lock-closed')
                 ->schema([
                     TextInput::make('password')
                         ->label('Пароль')
                         ->password()
                         ->maxLength(255)
-                        ->dehydrated(fn($state) => filled($state))
+                        ->dehydrated(fn ($state) => filled($state))
                         ->prefixIcon('carbon-password')
                         ->nullable(),
                     Select::make('role')
                         ->label('Роль')
-                        ->options([
-                            'user' => 'Користувач',
-                            'admin' => 'Адміністратор',
-                            'moderator' => 'Модератор',
-                        ])
+                        ->options(Role::getLabels())
                         ->prefixIcon('bx-user')
                         ->required(),
                 ])
                 ->columns(2),
 
             Section::make('Налаштування акаунту')
+                ->icon('clarity-settings-line')
                 ->schema([
                     Toggle::make('allow_adult')
                         ->label('Доступ до контенту для дорослих')
@@ -238,8 +247,8 @@ class UserResource extends Resource
                 ->columns(2),
 
             Section::make('Додатково')
+                ->icon('heroicon-o-sparkles')
                 ->schema([
-
                     FileUpload::make('avatar')
                         ->label('Аватар')
                         ->image()
@@ -263,15 +272,8 @@ class UserResource extends Resource
                         ->nullable()
                         ->maxLength(500),
                 ])
-                ->columns(2)
+                ->columns(2),
         ]);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            // Add relations if any
-        ];
     }
 
     public static function getPages(): array

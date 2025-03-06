@@ -3,12 +3,12 @@
 namespace Liamtseva\Cinema\Models;
 
 use Database\Factories\StudioFactory;
-use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
 /**
@@ -29,7 +29,7 @@ class Studio extends Model
     // TODO: fulltext search
     public function scopeByName(Builder $query, string $name): Builder
     {
-        return $query->where('name', 'like', '%'.$name.'%');
+        return $query->where('name', 'like', '%' . $name . '%');
     }
 
     public function scopeSearch(Builder $query, string $search): Builder

@@ -7,13 +7,23 @@ use Liamtseva\Cinema\Models\User;
 
 class PersonPolicy
 {
+    public function before(User $user, $ability): ?bool
+    {
+        // Якщо користувач адміністратор, дозволяємо всі дії
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any models.
      * Усі авторизовані користувачі можуть переглядати список осіб.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAuthenticated(); // Перевіряємо, чи користувач авторизований
+        return $user->isAuthenticated(); // Перевірка авторизації користувача
     }
 
     /**

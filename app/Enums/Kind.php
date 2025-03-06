@@ -10,47 +10,58 @@ enum Kind: string
     case ANIMATED_SERIES = 'animated_series';
     case ANIME = 'anime';
 
+    public static function getLabels(): array
+    {
+        return [
+            self::MOVIE->value => __('kind.movie'),
+            self::TV_SERIES->value => __('kind.tv_series'),
+            self::ANIMATED_MOVIE->value => __('kind.animated_movie'),
+            self::ANIMATED_SERIES->value => __('kind.animated_series'),
+            self::ANIME->value => __('kind.anime'),
+        ];
+    }
+
     public function name(): string
     {
         return match ($this) {
-            self::MOVIE => 'Фільм',
-            self::TV_SERIES => 'ТВ серіал',
-            self::ANIMATED_MOVIE => 'Мультфільм',
-            self::ANIMATED_SERIES => 'Мультсеріал',
-            self::ANIME => 'Аніме',
+            self::MOVIE => __('kind.movie_name'),
+            self::TV_SERIES => __('kind.tv_series_name'),
+            self::ANIMATED_MOVIE => __('kind.animated_movie_name'),
+            self::ANIMATED_SERIES => __('kind.animated_series_name'),
+            self::ANIME => __('kind.anime_name'),
         };
     }
 
     public function description(): string
     {
         return match ($this) {
-            self::MOVIE => 'Повнометражний фільм, який триває від 1 до кількох годин.',
-            self::TV_SERIES => 'Телекінематографічний серіал, який складається з кількох сезонів.',
-            self::ANIMATED_MOVIE => 'Мультфільм, який представляє собою анімацію у вигляді повнометражного фільму.',
-            self::ANIMATED_SERIES => 'Мультсеріал, що складається з кількох епізодів, де основна історія розгортається в анімаційному форматі.',
-            self::ANIME => 'Японська анімація, що включає як серіали, так і фільми, із характерним стилем та сюжетом.',
+            self::MOVIE => __('kind.movie_description'),
+            self::TV_SERIES => __('kind.tv_series_description'),
+            self::ANIMATED_MOVIE => __('kind.animated_movie_description'),
+            self::ANIMATED_SERIES => __('kind.animated_series_description'),
+            self::ANIME => __('kind.anime_description'),
         };
     }
 
     public function metaTitle(): string
     {
         return match ($this) {
-            self::MOVIE => 'Фільми онлайн | Кінопортал',
-            self::TV_SERIES => 'ТВ серіали онлайн | Кінопортал',
-            self::ANIMATED_MOVIE => 'Мультфільми онлайн | Кінопортал',
-            self::ANIMATED_SERIES => 'Мультсеріали онлайн | Кінопортал',
-            self::ANIME => 'Аніме онлайн | Кінопортал',
+            self::MOVIE => __('kind.movie_meta_title'),
+            self::TV_SERIES => __('kind.tv_series_meta_title'),
+            self::ANIMATED_MOVIE => __('kind.animated_movie_meta_title'),
+            self::ANIMATED_SERIES => __('kind.animated_series_meta_title'),
+            self::ANIME => __('kind.anime_meta_title'),
         };
     }
 
     public function metaDescription(): string
     {
         return match ($this) {
-            self::MOVIE => 'Перегляньте найкращі фільми онлайн, від класики до новинок кіноіндустрії.',
-            self::TV_SERIES => 'Ознайомтеся з найкращими ТВ серіалами онлайн, від комедій до драм.',
-            self::ANIMATED_MOVIE => 'Перегляньте анімаційні фільми, що захоплюють своєю графікою та сюжетами.',
-            self::ANIMATED_SERIES => 'Дивіться мультсеріали для всіх вікових категорій онлайн.',
-            self::ANIME => 'Огляньте кращі аніме серіали та фільми онлайн, від популярних до рідкісних тайтлів.',
+            self::MOVIE => __('kind.movie_meta_description'),
+            self::TV_SERIES => __('kind.tv_series_meta_description'),
+            self::ANIMATED_MOVIE => __('kind.animated_movie_meta_description'),
+            self::ANIMATED_SERIES => __('kind.animated_series_meta_description'),
+            self::ANIME => __('kind.anime_meta_description'),
         };
     }
 

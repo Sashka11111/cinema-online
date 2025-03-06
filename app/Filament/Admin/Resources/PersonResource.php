@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Gender;
@@ -23,11 +24,17 @@ use Liamtseva\Cinema\Models\Person;
 class PersonResource extends Resource
 {
     protected static ?string $model = Person::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
+
     protected static ?string $navigationLabel = 'Персони';
+
     protected static ?string $modelLabel = 'персону';
+
     protected static ?string $pluralModelLabel = 'Персони';
+
     protected static ?string $navigationGroup = 'Персони та студії';
+
     protected static ?int $navigationSort = 1;
 
     public static function table(Table $table): Table
@@ -40,77 +47,86 @@ class PersonResource extends Resource
                     ->width(50)
                     ->height(50)
                     ->circular()
-                    ->toggleable()
-                    ->defaultImageUrl(url('/images/default-avatar.png')),
+                    ->toggleable(),
 
                 TextColumn::make('name')
                     ->label('Ім’я')
-                    ->description(fn(Person $record): string => $record->slug)
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
+                    ->toggleable(),
+
+                TextColumn::make('original_name')
+                    ->label('Оригінальне ім’я')
+                    ->default('Немає оригінального імені')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('description')
+                    ->label('Опис')
+                    ->limit(50)
+                    ->searchable()
+                    ->toggleable(),
 
                 TextColumn::make('type')
                     ->label('Тип')
+                    ->formatStateUsing(fn (PersonType $state) => PersonType::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn($state): string => match ($state) {
+                    ->color(fn ($state): string => match ($state) {
                         PersonType::ACTOR => 'success',
                         PersonType::DIRECTOR => 'info',
                         PersonType::WRITER => 'warning',
-                        default => 'gray',
+                        default => 'primary',
                     })
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
 
                 TextColumn::make('gender')
                     ->label('Стать')
+                    ->formatStateUsing(fn (Gender $state) => Gender::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn($state): ?string => match ($state) {
+                    ->color(fn ($state): ?string => match ($state) {
                         Gender::MALE => 'info',
-                        Gender::FEMALE => 'pink',
+                        Gender::FEMALE => 'warning',
                         Gender::OTHER => 'gray',
                         null => null,
                     })
-                    ->icon(fn($state): ?string => match ($state) {
-                        Gender::MALE => 'heroicon-o-user',
-                        Gender::FEMALE => 'heroicon-o-user',
-                        Gender::OTHER => 'heroicon-o-users',
+                    ->icon(fn ($state): ?string => match ($state) {
+                        Gender::MALE => 'fas-male',
+                        Gender::FEMALE => 'fas-female',
+                        Gender::OTHER => 'bx-male-female',
                         null => null,
                     })
+                    ->sortable()
+                    ->searchable()
                     ->toggleable(),
 
                 TextColumn::make('birthday')
-                    ->label('Дата народження')
-                    ->date('d-m-Y')
+                    ->label('Дата та місце народження')
+                    ->formatStateUsing(fn (Person $record) => $record->birthday->format('d-m-Y').
+                        ($record->birthplace ? ' ('.$record->birthplace.')' : ''))
                     ->sortable()
-                    ->toggleable()
-                    ->default('-'),
-
-                TextColumn::make('created_at')
-                    ->label('Створено')
-                    ->dateTime('d-m-Y H:i')
-                    ->sortable()
-                    ->toggleable()
-                    ->color('gray'),
+                    ->toggleable(),
             ])
             ->filters([
                 SelectFilter::make('type')
                     ->label('Тип')
-                    ->options(PersonType::class)
+                    ->options(PersonType::getLabels())
                     ->multiple(),
 
                 SelectFilter::make('gender')
                     ->label('Стать')
-                    ->options(Gender::class)
+                    ->options(Gender::getLabels())
                     ->multiple(),
 
-                Tables\Filters\Filter::make('birthday')
+                Filter::make('birthday')
                     ->form([
                         DatePicker::make('birthday_from')->label('Дата народження від'),
                         DatePicker::make('birthday_to')->label('Дата народження до'),
                     ])
-                    ->query(fn($query, $data) => $query
-                        ->when($data['birthday_from'], fn($q, $date) => $q->where('birthday', '>=', $date))
-                        ->when($data['birthday_to'], fn($q, $date) => $q->where('birthday', '<=', $date))),
+                    ->query(fn ($query, $data) => $query
+                        ->when($data['birthday_from'], fn ($q, $date) => $q->where('birthday', '>=', $date))
+                        ->when($data['birthday_to'], fn ($q, $date) => $q->where('birthday', '<=', $date))),
             ])
             ->actions([
                 Tables\Actions\EditAction::make()
@@ -140,7 +156,7 @@ class PersonResource extends Resource
                         ->required()
                         ->maxLength(128)
                         ->reactive()
-                        ->afterStateUpdated(fn($state, callable $set) => $set('slug', str()->slug($state))),
+                        ->afterStateUpdated(fn ($state, callable $set) => $set('slug', str()->slug($state))),
 
                     TextInput::make('slug')
                         ->label('Слаг')
@@ -156,13 +172,13 @@ class PersonResource extends Resource
 
                     Select::make('type')
                         ->label('Тип')
-                        ->options(PersonType::class)
+                        ->options(PersonType::getLabels())
                         ->required()
                         ->native(false),
 
                     Select::make('gender')
                         ->label('Стать')
-                        ->options(Gender::class)
+                        ->options(Gender::getLabels())
                         ->nullable()
                         ->native(false),
                 ])

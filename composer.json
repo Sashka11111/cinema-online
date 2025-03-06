@@ -10,6 +10,7 @@
         "codeat3/blade-carbon-icons": "^2.33",
         "codeat3/blade-clarity-icons": "^1.10",
         "filament/filament": "^3.2",
+        "flowframe/laravel-trend": "^0.4.0",
         "laravel-lang/common": "^6.5",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",

@@ -8,9 +8,13 @@ enum Gender: string
     case FEMALE = 'female';
     case OTHER = 'other';
 
-    public static function values(): array
+    public static function getLabels(): array
     {
-        return array_column(self::cases(), 'value');
+        return [
+            self::MALE->value => __('gender.male'),
+            self::FEMALE->value => __('gender.female'),
+            self::OTHER->value => __('gender.other'),
+        ];
     }
-}
 
+}

@@ -27,40 +27,40 @@ enum Period: string
     public function name(): string
     {
         return match ($this) {
-            self::SPRING => 'Весна',
-            self::SUMMER => 'Літо',
-            self::AUTUMN => 'Осінь',
-            self::WINTER => 'Зима',
+            self::SPRING => __('period.spring'),
+            self::SUMMER => __('period.summer'),
+            self::AUTUMN => __('period.autumn'),
+            self::WINTER => __('period.winter'),
         };
     }
 
     public function description(): string
     {
         return match ($this) {
-            self::SPRING => 'Сезон нових початків, коли природа оживає, цвітуть квіти та збільшується кількість кіноновинок.',
-            self::SUMMER => 'Час відпочинку і блокбастерів, коли кінозали наповнюються глядачами, що шукають розваг і свіжих прем\'єр.',
-            self::AUTUMN => 'Пора для глибоких історій та фільмів, коли погода охолоджується, і люди частіше звертаються до кінозалів.',
-            self::WINTER => 'Сезон святкових фільмів і кіно для всієї родини, ідеальний для перегляду в затишному залі кінотеатру.',
+            self::SPRING => __('period.spring_description'),
+            self::SUMMER => __('period.summer_description'),
+            self::AUTUMN => __('period.autumn_description'),
+            self::WINTER => __('period.winter_description'),
         };
     }
 
     public function metaTitle(): string
     {
         return match ($this) {
-            self::SPRING => 'Весняні прем\'єри та кіноновинки | '.config('app.name'),
-            self::SUMMER => 'Літні блокбастери та найкращі фільми | '.config('app.name'),
-            self::AUTUMN => 'Осінні кінопрем\'єри та кінохіти | '.config('app.name'),
-            self::WINTER => 'Зимові фільми та святкові прем\'єри | '.config('app.name'),
+            self::SPRING => __('period.spring_meta_title'),
+            self::SUMMER => __('period.summer_meta_title'),
+            self::AUTUMN => __('period.autumn_meta_title'),
+            self::WINTER => __('period.winter_meta_title'),
         };
     }
 
     public function metaDescription(): string
     {
         return match ($this) {
-            self::SPRING => 'Дізнайтеся про весняні прем\'єри та нові кінофільми, які відображають настрій пробудження та відновлення природи.',
-            self::SUMMER => 'Огляньте літні кінопрем\'єри: блокбастери, комедії та новинки кіно, які ідеально підійдуть для відпочинку.',
-            self::AUTUMN => 'Відкрийте для себе осінні кінопрем\'єри: драматичні історії, кінофестивалі та нові фільми, що приносять теплоту восени.',
-            self::WINTER => 'Пориньте у світ зимових прем\'єр: святкові фільми, сімейне кіно та класика для затишних вечорів у кінотеатрі.',
+            self::SPRING => __('period.spring_meta_description'),
+            self::SUMMER => __('period.summer_meta_description'),
+            self::AUTUMN => __('period.autumn_meta_description'),
+            self::WINTER => __('period.winter_meta_description'),
         };
     }
 
@@ -72,5 +72,15 @@ enum Period: string
             self::AUTUMN => '/images/seo/autumn-movies.jpg',
             self::WINTER => '/images/seo/winter-holidays-movies.jpg',
         };
+    }
+
+    public static function getLabels(): array
+    {
+        return [
+            self::WINTER->value => __('period.winter'),
+            self::SPRING->value => __('period.spring'),
+            self::SUMMER->value => __('period.summer'),
+            self::AUTUMN->value => __('period.autumn'),
+        ];
     }
 }

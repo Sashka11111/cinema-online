@@ -8,8 +8,12 @@ enum Role: string
     case ADMIN = 'admin';
     case MODERATOR = 'moderator';
 
-    public static function values(): array
+    public static function getLabels(): array
     {
-        return array_column(self::cases(), 'value');
+        return [
+            self::USER->value => __('role.user'),
+            self::ADMIN->value => __('role.admin'),
+            self::MODERATOR->value => __('role.moderator'),
+        ];
     }
 }
