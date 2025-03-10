@@ -14,6 +14,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -22,6 +23,7 @@ use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\Role;
 use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Pages;
+use Liamtseva\Cinema\Filament\Exports\UserExporter;
 use Liamtseva\Cinema\Models\User;
 
 class UserResource extends Resource
@@ -39,6 +41,11 @@ class UserResource extends Resource
     protected static ?string $navigationGroup = 'Користувацька активність';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        return (string) User::count();
+    }
 
     public static function table(Table $table): Table
     {
@@ -69,8 +76,8 @@ class UserResource extends Resource
                     })
                     ->icon(fn (User $user): string => match ($user->role) {
                         Role::USER => 'heroicon-o-user',
-                        Role::MODERATOR => 'tabler-user-cog',
-                        Role::ADMIN => 'ri-admin-line',
+                        Role::MODERATOR => 'clarity-user-outline-badged',
+                        Role::ADMIN => 'clarity-administrator-line',
                     })
                     ->searchable()
                     ->sortable(),
@@ -104,7 +111,7 @@ class UserResource extends Resource
                     ->label('Востаннє бачили')
                     ->badge()
                     ->color(fn (User $user): string => match (true) {
-                        ! $user->last_seen_at => 'gray', // Якщо не заходив
+                        ! $user->last_seen_at => 'gray',
                         now()->diffInHours(Carbon::parse($user->last_seen_at)) < 1 => 'success',
                         default => 'warning',
                     })
@@ -125,12 +132,17 @@ class UserResource extends Resource
                         ->options(Gender::getLabels()),
                     Filter::make('birthday')
                         ->form([
-                            DatePicker::make('birthday_from')->label('Дата народження від')->prefixIcon('clarity-date-line')->native(false),
-                            DatePicker::make('birthday_to')->label('Дата народження до')->prefixIcon('clarity-date-line')->native(false),
+                            DatePicker::make('birthday_from')->label('Дата народження від')->native(false),
+                            DatePicker::make('birthday_to')->label('Дата народження до')->native(false),
                         ])
                         ->query(fn ($query, $data) => $query
                             ->when($data['birthday_from'], fn ($query, $date) => $query->where('birthday', '>=', $date))
                             ->when($data['birthday_to'], fn ($query, $date) => $query->where('birthday', '<=', $date))),
+                ])
+                ->headerActions([
+                    ExportAction::make()
+                        ->exporter(UserExporter::class)
+                        ->label('Експортувати користувачів'),
                 ])
                 ->actions([
                     Tables\Actions\EditAction::make(),
@@ -166,7 +178,7 @@ class UserResource extends Resource
 
                     DatePicker::make('birthday')
                         ->label('Дата народження')
-                        ->prefixIcon('clarity-date-line')
+
                         ->native(false)
                         ->before(now())
                         ->nullable(),
@@ -180,25 +192,25 @@ class UserResource extends Resource
                     DateTimePicker::make('created_at')
                         ->label('Дата створення')
                         ->displayFormat('d.m.Y H:i')
-                        ->prefixIcon('clarity-date-line')
+
                         ->disabled(),
 
                     DateTimePicker::make('updated_at')
                         ->label('Дата оновлення')
                         ->displayFormat('d.m.Y H:i')
-                        ->prefixIcon('clarity-date-line')
+
                         ->disabled(),
 
                     DateTimePicker::make('last_seen_at')
                         ->label('Остання активність')
                         ->displayFormat('d.m.Y H:i')
-                        ->prefixIcon('clarity-date-line')
+
                         ->disabled(),
 
                     DateTimePicker::make('email_verified_at')
                         ->label('Дата підтвердження email')
                         ->displayFormat('d.m.Y H:i')
-                        ->prefixIcon('clarity-date-line')
+
                         ->disabled(),
                 ])
                 ->columns(2),
@@ -211,8 +223,9 @@ class UserResource extends Resource
                         ->password()
                         ->maxLength(255)
                         ->dehydrated(fn ($state) => filled($state))
-                        ->prefixIcon('carbon-password')
+                        ->prefixIcon('clarity-key-line')
                         ->nullable(),
+
                     Select::make('role')
                         ->label('Роль')
                         ->options(Role::getLabels())

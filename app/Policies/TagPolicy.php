@@ -7,66 +7,69 @@ use Liamtseva\Cinema\Models\User;
 
 class TagPolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user): bool
+    public function before(?User $user, $ability): ?bool
     {
-        // Example: Allow all authenticated users to view tags
-        return auth()->check();
+        // Якщо користувач адміністратор, дозволяємо всі дії
+        if ($user && $user->isAdmin()) {
+            return true;
+        }
+
+        return null; // Продовжуємо перевірку в інших методах
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Усі користувачі (включаючи неавторизованих) можуть переглядати список тегів.
      */
-    public function view(User $user, Tag $tag): bool
+    public function viewAny(?User $user): bool
     {
-        // Example: Allow users to view a tag if they have permission or if they are admins
-        return $user->is_admin || $user->hasPermissionTo('view_tags');
+        return true; // Теги зазвичай публічні, тому доступні всім
     }
 
     /**
-     * Determine whether the user can create models.
+     * Усі користувачі (включаючи неавторизованих) можуть переглядати окремий тег.
+     */
+    public function view(?User $user, Tag $tag): bool
+    {
+        return true; // Окремий тег також доступний для перегляду всім
+    }
+
+    /**
+     * Тільки авторизовані користувачі можуть створювати нові теги.
      */
     public function create(User $user): bool
     {
-        // Example: Allow users with "create_tags" permission to create tags
-        return $user->hasPermissionTo('create_tags');
+        return $user !== null; // Дозволяємо створення тільки авторизованим
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Тільки адміністратори можуть оновлювати теги.
      */
     public function update(User $user, Tag $tag): bool
     {
-        // Example: Allow users to update a tag if they have the permission or are admins
-        return $user->is_admin || $user->hasPermissionTo('update_tags');
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Тільки адміністратори можуть видаляти теги.
      */
     public function delete(User $user, Tag $tag): bool
     {
-        // Example: Allow users to delete a tag if they have the permission or are admins
-        return $user->is_admin || $user->hasPermissionTo('delete_tags');
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Тільки адміністратори можуть відновлювати теги.
      */
     public function restore(User $user, Tag $tag): bool
     {
-        // Example: Only allow admins to restore tags
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Тільки адміністратори можуть остаточно видаляти теги.
      */
     public function forceDelete(User $user, Tag $tag): bool
     {
-        // Example: Only allow admins to permanently delete tags
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 }

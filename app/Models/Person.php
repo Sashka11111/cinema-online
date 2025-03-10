@@ -62,7 +62,7 @@ class Person extends Model
 
     public function movies(): BelongsToMany
     {
-        //return $this->belongsToMany(Movie::class, 'movie_person')
+        // return $this->belongsToMany(Movie::class, 'movie_person')
         return $this->belongsToMany(Movie::class)
             ->withPivot('character_name');
     }

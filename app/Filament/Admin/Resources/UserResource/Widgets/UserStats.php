@@ -29,8 +29,8 @@ class UserStats extends ChartWidget
                 [
                     'label' => 'Нові користувачі',
                     'data' => $data,
-                    'backgroundColor' => '#4CAF50',
-                    'borderColor' => '#388E3C',
+                    'backgroundColor' => '#3b82f6',
+                    'borderColor' => '#2563eb',
                     'borderWidth' => 1,
                 ],
             ],

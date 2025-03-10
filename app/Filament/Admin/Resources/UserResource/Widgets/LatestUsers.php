@@ -34,9 +34,8 @@ class LatestUsers extends BaseWidget
     {
         return match ($role) {
             Role::USER => 'heroicon-o-user',
-            Role::MODERATOR => 'tabler-user-cog',
-            Role::ADMIN => 'ri-admin-line',
+            Role::MODERATOR => 'clarity-user-outline-badged',
+            Role::ADMIN => 'clarity-administrator-line',
         };
     }
-
 }

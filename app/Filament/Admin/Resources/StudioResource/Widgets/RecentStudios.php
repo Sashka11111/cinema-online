@@ -22,7 +22,7 @@ class RecentStudios extends BaseWidget
             $stats[] = Stat::make($studio->name, '')
                 ->icon('heroicon-o-building-office')
                 ->description("Додано: {$studio->created_at->format('d.m.Y H:i')}")
-                ->color('success');
+                ->color('primary');
         }
 
         return $stats;

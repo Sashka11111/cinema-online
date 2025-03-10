@@ -9,6 +9,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -65,6 +66,7 @@ class PersonResource extends Resource
                 TextColumn::make('description')
                     ->label('Опис')
                     ->limit(50)
+                    ->tooltip(fn (Person $person): string => $person->description)
                     ->searchable()
                     ->toggleable(),
 
@@ -155,14 +157,20 @@ class PersonResource extends Resource
                         ->label('Ім’я')
                         ->required()
                         ->maxLength(128)
-                        ->reactive()
-                        ->afterStateUpdated(fn ($state, callable $set) => $set('slug', str()->slug($state))),
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $set('slug', str($state)->slug());
+                            $set('meta_title', $state.' | Cinema');
+                        }),
 
                     TextInput::make('slug')
                         ->label('Слаг')
                         ->required()
                         ->maxLength(128)
-                        ->unique(ignoreRecord: true)
+                        ->unique(Person::class, 'slug', ignoreRecord: true)
                         ->helperText('Автоматично генерується з імені'),
 
                     TextInput::make('original_name')
@@ -234,6 +242,7 @@ class PersonResource extends Resource
                     TextInput::make('meta_title')
                         ->label('Meta Title')
                         ->maxLength(128)
+                        ->helperText('Автоматично генерується з імені')
                         ->nullable(),
 
                     Textarea::make('meta_description')

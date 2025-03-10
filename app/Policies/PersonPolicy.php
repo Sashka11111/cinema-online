@@ -9,7 +9,6 @@ class PersonPolicy
 {
     public function before(User $user, $ability): ?bool
     {
-        // Якщо користувач адміністратор, дозволяємо всі дії
         if ($user->isAdmin()) {
             return true;
         }
@@ -18,67 +17,58 @@ class PersonPolicy
     }
 
     /**
-     * Determine whether the user can view any models.
-     * Усі авторизовані користувачі можуть переглядати список осіб.
+     * Усі користувачі (включаючи неавторизованих) можуть переглядати список осіб.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(?User $user): bool
     {
-        return $user->isAuthenticated(); // Перевірка авторизації користувача
+        return true;
     }
 
     /**
-     * Determine whether the user can view the model.
-     * Дозволяється переглядати, якщо користувач є адміністратором
-     * або самою особою, яку він переглядає.
+     * Усі користувачі (включаючи неавторизованих) можуть переглядати окремий запис.
      */
-    public function view(User $user, Person $person): bool
+    public function view(?User $user, Person $person): bool
     {
-        return $user->is_admin || $user->id === $person->user_id;
+        return true;
     }
 
     /**
-     * Determine whether the user can create models.
      * Тільки адміністратор може створювати нові записи про осіб.
      */
     public function create(User $user): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can update the model.
-     * Дозволяється, якщо користувач є адміністратором
-     * або власником запису про особу.
+     * Дозволяється, якщо користувач є адміністратором або власником запису.
      */
     public function update(User $user, Person $person): bool
     {
-        return $user->is_admin || $user->id === $person->user_id;
+        return $user->isAdmin() || $user->id === $person->user_id;
     }
 
     /**
-     * Determine whether the user can delete the model.
      * Тільки адміністратор може видаляти записи.
      */
     public function delete(User $user, Person $person): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can restore the model.
      * Тільки адміністратор може відновлювати записи.
      */
     public function restore(User $user, Person $person): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
      * Тільки адміністратор може остаточно видаляти записи.
      */
     public function forceDelete(User $user, Person $person): bool
     {
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 }

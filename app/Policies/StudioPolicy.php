@@ -14,11 +14,9 @@ class StudioPolicy
         }
 
         return null;
+
     }
 
-    /**
-     * Determine whether the user can view any models.
-     */
     public function viewAny(User $user): bool
     {
         // Example: Allow all authenticated users to view studios

@@ -25,6 +25,16 @@ class Comment extends Model
         return $this->morphTo();
     }
 
+    public function getTranslatedTypeAttribute(): string
+    {
+        return match ($this->commentable_type) {
+            Movie::class => 'Фільм',
+            Episode::class => 'Епізод',
+            Selection::class => 'Підбірка',
+            default => 'Невідомий контент',
+        };
+    }
+
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');

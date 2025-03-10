@@ -7,66 +7,68 @@ use Liamtseva\Cinema\Models\User;
 
 class MoviePolicy
 {
-    /**
-     * Determine whether the user can view any models.
-     * Наприклад, усі авторизовані користувачі можуть переглядати список фільмів.
-     */
-    public function viewAny(User $user): bool
+    public function before(User $user, $ability): ?bool
     {
-        return $user->isAuthenticated(); // Перевіряємо, чи користувач авторизований
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
     }
 
     /**
-     * Determine whether the user can view the model.
-     * Наприклад, публічні фільми доступні всім, інші — тільки адміністратору.
+     * Усі користувачі (включаючи неавторизованих) можуть переглядати список фільмів.
      */
-    public function view(User $user, Movie $movie): bool
+    public function viewAny(?User $user): bool
     {
-        return $movie->is_public || $user->is_admin; // Публічні фільми або доступ для адміністратора
+        return true;
     }
 
     /**
-     * Determine whether the user can create models.
-     * Наприклад, тільки адміністратор може створювати нові фільми.
+     * Усі користувачі (включаючи неавторизованих) можуть переглядати публічні фільми, адміністратори — усі.
+     */
+    public function view(?User $user, Movie $movie): bool
+    {
+        return $movie->is_public || ($user && $user->isAdmin());
+    }
+
+    /**
+     * Тільки адміністратор може створювати нові фільми.
      */
     public function create(User $user): bool
     {
-        return $user->is_admin; // Дозвіл тільки адміністратору
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can update the model.
-     * Наприклад, адміністратор або автор фільму можуть його редагувати.
+     * Дозволяється, якщо користувач є адміністратором або власником фільму.
      */
     public function update(User $user, Movie $movie): bool
     {
-        return $user->is_admin || $user->id === $movie->author_id; // Перевірка прав доступу
+        return $user->isAdmin() || $user->id === $movie->user_id;
     }
 
     /**
-     * Determine whether the user can delete the model.
-     * Наприклад, тільки адміністратор може видаляти фільми.
+     * Тільки адміністратор може видаляти фільми.
      */
     public function delete(User $user, Movie $movie): bool
     {
-        return $user->is_admin; // Доступ до видалення тільки адміністратору
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can restore the model.
-     * Наприклад, відновлення фільмів доступне лише адміністратору.
+     * Тільки адміністратор може відновлювати фільми.
      */
     public function restore(User $user, Movie $movie): bool
     {
-        return $user->is_admin; // Відновлення доступне тільки адміністратору
+        return $user->isAdmin();
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
-     * Наприклад, тільки адміністратор може остаточно видалити фільми.
+     * Тільки адміністратор може остаточно видаляти фільми.
      */
     public function forceDelete(User $user, Movie $movie): bool
     {
-        return $user->is_admin; // Остаточне видалення дозволено тільки адміністратору
+        return $user->isAdmin();
     }
 }

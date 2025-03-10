@@ -26,7 +26,7 @@ class CommentReportSeeder extends Seeder
             foreach ($randomUsers as $user) {
                 CommentReport::factory()
                     ->forCommentAndUser($comment, $user)  // Призначаємо конкретний коментар та користувача
-                    ->withType($this->getRandomReportType())  // Встановлюємо випадковий тип репорту
+                    ->withType($this->getRandomReportType())
                     ->create();
             }
         }

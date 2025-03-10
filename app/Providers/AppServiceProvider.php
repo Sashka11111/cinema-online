@@ -12,17 +12,15 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
-        TextInput::configureUsing(fn($component) => $component->prefixIconColor('primary'));
-        DatePicker::configureUsing(fn($component) => $component->prefixIconColor('primary'));
-        Select::configureUsing(fn($component) => $component->prefixIconColor('primary'));
-        DateTimePicker::configureUsing(fn($component) => $component->prefixIconColor('primary'));
-        Section::configureUsing(fn($component) => $component->iconColor('primary'));
+        TextInput::configureUsing(fn ($component) => $component->prefixIconColor('primary')->prefixIcon('heroicon-o-information-circle'));
+        DatePicker::configureUsing(fn ($component) => $component->prefixIconColor('primary')->prefixIcon('clarity-date-line'));
+        Select::configureUsing(fn ($component) => $component->prefixIconColor('primary'));
+        DateTimePicker::configureUsing(fn ($component) => $component->prefixIconColor('primary')->prefixIcon('clarity-date-line'));
+        Section::configureUsing(fn ($component) => $component->iconColor('primary'));
         Model::unguard();
         Model::shouldBeStrict();
     }

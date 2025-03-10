@@ -7,66 +7,76 @@ use Liamtseva\Cinema\Models\User;
 
 class CommentPolicy
 {
+    public function before(User $user, $ability): ?bool
+    {
+        // Якщо користувач адміністратор, дозволяємо всі дії
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any models.
-     * Наприклад, будь-який авторизований користувач може переглядати коментарі.
+     * Усі авторизовані користувачі можуть переглядати список коментарів.
      */
     public function viewAny(User $user): bool
     {
-        return true; // Усі користувачі можуть переглядати список коментарів
+        return $user->isAuthenticated(); // Перевірка авторизації користувача
     }
 
     /**
      * Determine whether the user can view the model.
-     * Наприклад, користувач може переглядати коментар, якщо він опублікований.
+     * Усі авторизовані користувачі можуть переглядати коментар.
      */
     public function view(User $user, Comment $comment): bool
     {
-        return $comment->is_published; // Дозволяємо переглядати лише опубліковані коментарі
+        return $user->isAuthenticated(); // Усі авторизовані можуть переглядати коментарі
     }
 
     /**
      * Determine whether the user can create models.
-     * Наприклад, лише авторизовані користувачі можуть створювати коментарі.
+     * Тільки авторизовані користувачі можуть створювати коментарі.
      */
     public function create(User $user): bool
     {
-        return $user->isAuthenticated(); // Припустимо, метод isAuthenticated() перевіряє авторизацію
+        return $user->isAuthenticated(); // Тільки авторизовані можуть створювати
     }
 
     /**
      * Determine whether the user can update the model.
-     * Наприклад, користувач може редагувати тільки свої коментарі.
+     * Дозволяється, якщо користувач є адміністратором або автором коментаря.
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id; // Дозволяємо редагувати тільки свій коментар
+        return $user->isAdmin() || $user->id === $comment->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
-     * Наприклад, адмін або автор коментаря можуть видалити його.
+     * Дозволяється, якщо користувач є адміністратором або автором коментаря.
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->id === $comment->user_id || $user->is_admin; // Автор або адміністратор
+        return $user->isAdmin() || $user->id === $comment->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
-     * Наприклад, тільки адмін може відновити коментар.
+     * Тільки адміністратор може відновлювати коментарі.
      */
     public function restore(User $user, Comment $comment): bool
     {
-        return $user->is_admin; // Тільки адміністратор може відновити коментар
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can permanently delete the model.
-     * Наприклад, тільки адмін може остаточно видалити коментар.
+     * Тільки адміністратор може остаточно видаляти коментарі.
      */
     public function forceDelete(User $user, Comment $comment): bool
     {
-        return $user->is_admin; // Тільки адміністратор може видаляти назавжди
+        return $user->isAdmin();
     }
 }

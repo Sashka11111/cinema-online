@@ -20,27 +20,27 @@ class ListUsers extends ListRecords
             Tab::make('all')
                 ->label('Усі користувачі')
                 ->icon('heroicon-o-users')
-                ->query(fn($query) => $query),
+                ->query(fn ($query) => $query),
 
             Tab::make('admins')
                 ->label('Адміністратори')
-                ->icon('ri-admin-line')
-                ->query(fn($query) => $query->where('role', 'admin')),
+                ->icon('clarity-administrator-line')
+                ->query(fn ($query) => $query->where('role', 'admin')),
 
             Tab::make('users')
                 ->label('Користувачі')
                 ->icon('heroicon-o-user')
-                ->query(fn($query) => $query->where('role', 'user')),
+                ->query(fn ($query) => $query->where('role', 'user')),
 
             Tab::make('moderators')
                 ->label('Модератори')
-                ->icon('tabler-user-cog')
-                ->query(fn($query) => $query->where('role', 'moderator')),
+                ->icon('clarity-user-outline-badged')
+                ->query(fn ($query) => $query->where('role', 'moderator')),
 
             Tab::make('unverified')
                 ->label('Непідтверджені')
                 ->icon('heroicon-o-exclamation-triangle')
-                ->query(fn($query) => $query->whereNull('email_verified_at')),
+                ->query(fn ($query) => $query->whereNull('email_verified_at')),
         ];
     }
 

@@ -7,66 +7,79 @@ use Liamtseva\Cinema\Models\User;
 
 class RatingPolicy
 {
+    public function before(User $user, $ability): ?bool
+    {
+        // Якщо користувач адміністратор, дозволяємо всі дії
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any models.
+     * Усі авторизовані користувачі можуть переглядати список оцінок.
      */
     public function viewAny(User $user): bool
     {
-        // Example: Allow all users to view ratings
-        return true; // or add your own logic here
+        return $user->isAuthenticated(); // Перевірка авторизації користувача
     }
 
     /**
      * Determine whether the user can view the model.
+     * Дозволяється переглядати, якщо користувач є адміністратором
+     * або автором оцінки.
      */
     public function view(User $user, Rating $rating): bool
     {
-        // Example: Only allow the owner or an admin to view the rating
-        return $user->id === $rating->user_id || $user->is_admin;
+        return $user->isAdmin() || $user->id === $rating->user_id;
     }
 
     /**
      * Determine whether the user can create models.
+     * Тільки авторизовані користувачі можуть створювати оцінки.
      */
     public function create(User $user): bool
     {
-        // Example: Allow any authenticated user to create ratings
-        return auth()->check();
+        return $user->isAuthenticated();
     }
 
     /**
      * Determine whether the user can update the model.
+     * Дозволяється, якщо користувач є адміністратором
+     * або автором оцінки.
      */
     public function update(User $user, Rating $rating): bool
     {
-        // Example: Only allow the owner or an admin to update the rating
-        return $user->id === $rating->user_id || $user->is_admin;
+        return $user->isAdmin() || $user->id === $rating->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
+     * Дозволяється, якщо користувач є адміністратором
+     * або автором оцінки.
      */
     public function delete(User $user, Rating $rating): bool
     {
-        // Example: Only allow the owner or an admin to delete the rating
-        return $user->id === $rating->user_id || $user->is_admin;
+        return $user->isAdmin() || $user->id === $rating->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
+     * Тільки адміністратор може відновлювати оцінки.
      */
     public function restore(User $user, Rating $rating): bool
     {
-        // Example: Only an admin can restore ratings
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
      * Determine whether the user can permanently delete the model.
+     * Тільки адміністратор може остаточно видаляти оцінки.
      */
     public function forceDelete(User $user, Rating $rating): bool
     {
-        // Example: Only an admin can permanently delete ratings
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 }

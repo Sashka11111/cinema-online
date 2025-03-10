@@ -2,7 +2,6 @@
 
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
-use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
@@ -23,13 +22,17 @@ use Liamtseva\Cinema\Models\Studio;
 class StudioResource extends Resource
 {
     protected static ?string $model = Studio::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-building-office';
+
     protected static ?string $navigationLabel = 'Студії';
 
     protected static ?string $modelLabel = 'студію';
 
     protected static ?string $pluralModelLabel = 'Студії';
+
     protected static ?string $navigationGroup = 'Персони та студії';
+
     protected static ?int $navigationSort = 2;
 
     public static function table(Table $table): Table
@@ -63,7 +66,7 @@ class StudioResource extends Resource
 
                 TextColumn::make('name')
                     ->label('Назва')
-                    ->description(fn(Studio $studio): string => $studio->slug)
+                    ->description(fn (Studio $studio): string => $studio->slug)
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -83,23 +86,26 @@ class StudioResource extends Resource
             ->filters([
                 Filter::make('name')
                     ->form([
-                        TextInput::make('name')->label('Пошук за назвою')->prefixIcon('heroicon-o-information-circle'),
+                        TextInput::make('name')->label('Пошук за назвою'),
                     ])
-                    ->query(fn($query, $data) => $query->when(
+                    ->query(fn ($query, $data) => $query->when(
                         $data['name'],
-                        fn($query) => $query->where('name', 'ilike', '%' . $data['name'] . '%')
+                        fn ($query) => $query->where('name', 'ilike', '%'.$data['name'].'%')
                     )),
 
                 Filter::make('created_at')
-                    ->label('Дата створення')
                     ->form([
-                        DatePicker::make('created_at')
-                            ->label('Виберіть дату створення')
-                            ->prefixIcon('heroicon-o-calendar')
+                        DatePicker::make('created_from')
+                            ->label('Дата створення від')
+                            ->placeholder('Виберіть дату'),
+                        DatePicker::make('created_until')
+                            ->label('До')
+                            ->placeholder('Виберіть дату'),
                     ])
-                    ->query(function ($query, $data) {
+                    ->query(function ($query, array $data) {
                         return $query
-                            ->when($data['created_at'], fn($query, $date) => $query->whereDate('created_at', '=', Carbon::createFromFormat('Y-m-d', $date)->startOfDay()));
+                            ->when($data['created_from'], fn ($query) => $query->whereDate('created_at', '>=', $data['created_from']))
+                            ->when($data['created_until'], fn ($query) => $query->whereDate('created_at', '<=', $data['created_until']));
                     }),
 
             ])

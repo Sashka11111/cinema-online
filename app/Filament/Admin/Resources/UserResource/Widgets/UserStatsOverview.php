@@ -23,7 +23,7 @@ class UserStatsOverview extends BaseWidget
             Stat::make('Адміністратори', $admins)
                 ->description('Кількість адмінів')
                 ->color('danger')
-                ->icon('ri-admin-line'),
+                ->icon('clarity-administrator-line'),
             Stat::make('Активні за тиждень', $activeUsers)
                 ->description('Останні 7 днів')
                 ->color('success')

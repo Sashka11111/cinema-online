@@ -10,50 +10,55 @@ enum Status: string
     case CANCELED = 'canceled';
     case RUMORED = 'rumored';
 
+    /**
+     * Повертає масив із перекладеними назвами для використання у фільтрах чи списках.
+     */
+    public static function getLabels(): array
+    {
+        return [
+            self::ANONS->value => __('status.anons'),
+            self::ONGOING->value => __('status.ongoing'),
+            self::RELEASED->value => __('status.released'),
+            self::CANCELED->value => __('status.canceled'),
+            self::RUMORED->value => __('status.rumored'),
+        ];
+    }
+
+    /**
+     * Повертає перекладену назву статусу.
+     */
     public function name(): string
     {
-        return match ($this) {
-            self::ANONS => 'Анонс',
-            self::ONGOING => 'У процесі',
-            self::RELEASED => 'Випущено',
-            self::CANCELED => 'Скасовано',
-            self::RUMORED => 'Чутки',
-        };
+        return __(sprintf('status.%s', $this->value));
     }
 
+    /**
+     * Повертає опис статусу.
+     */
     public function description(): string
     {
-        return match ($this) {
-            self::ANONS => 'Нові фільми та серіали, які скоро з\'являться на екранах.',
-            self::ONGOING => 'Фільми та серіали, що зараз показуються або випускаються епізодами.',
-            self::RELEASED => 'Фільми та серіали, які вже доступні до перегляду.',
-            self::CANCELED => 'Проекти, які були скасовані і більше не будуть випущені.',
-            self::RUMORED => 'Проекти, які знаходяться на стадії чуток і ще не були офіційно анонсовані.',
-        };
+        return __(sprintf('status.%s_description', $this->value));
     }
 
+    /**
+     * Повертає мета-заголовок для SEO.
+     */
     public function metaTitle(): string
     {
-        return match ($this) {
-            self::ANONS => 'Анонс нових фільмів та серіалів | Кінопортал',
-            self::ONGOING => 'Серіали та фільми у процесі показу | Кінопортал',
-            self::RELEASED => 'Доступні фільми та серіали | Кінопортал',
-            self::CANCELED => 'Скасовані проекти | Кінопортал',
-            self::RUMORED => 'Чутки про майбутні проекти | Кінопортал',
-        };
+        return __(sprintf('status.%s_meta_title', $this->value));
     }
 
+    /**
+     * Повертає мета-опис для SEO.
+     */
     public function metaDescription(): string
     {
-        return match ($this) {
-            self::ANONS => 'Дізнайтеся про нові анонси фільмів та серіалів, які скоро будуть доступні на великому екрані.',
-            self::ONGOING => 'Ознайомтеся з фільмами та серіалами, які зараз виходять, і залишайтеся в курсі нових епізодів.',
-            self::RELEASED => 'Перегляньте всі доступні фільми та серіали, що вже випущені для перегляду.',
-            self::CANCELED => 'Дізнайтеся про фільми та серіали, які були скасовані і більше не будуть випущені.',
-            self::RUMORED => 'Перегляньте фільми та серіали, які зараз вважаються чутками і ще не підтверджені.',
-        };
+        return __(sprintf('status.%s_meta_description', $this->value));
     }
 
+    /**
+     * Повертає шлях до мета-зображення для SEO.
+     */
     public function metaImage(): string
     {
         return match ($this) {
