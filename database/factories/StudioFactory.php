@@ -9,11 +9,6 @@ class StudioFactory extends Factory
     public function definition(): array
     {
         $company = $this->faker->unique()->company();
-        /*        $slug = Str::slug($company);
-
-                // Ensure unique slug by checking if it already exists
-                $slug = $this->ensureUniqueSlug($slug);
-        */
 
         return [
             'slug' => $company,
@@ -25,10 +20,4 @@ class StudioFactory extends Factory
             'meta_image' => $this->faker->imageUrl(),
         ];
     }
-
-    /*
-    protected function ensureUniqueSlug(string $name): string
-        {
-            return Str::slug($name).'-'.Str::random(6);
-        }*/
 }

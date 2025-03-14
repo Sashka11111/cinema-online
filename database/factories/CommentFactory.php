@@ -17,7 +17,6 @@ class CommentFactory extends Factory
 {
     public function definition(): array
     {
-        // Список доступних класів для `commentable_type`
         $commentableClasses = [
             Movie::class,
             Episode::class,

@@ -3,9 +3,10 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -22,11 +23,11 @@ class RatingResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-star';
 
-    protected static ?string $navigationLabel = 'Оцінки';
+    protected static ?string $navigationLabel = 'Рейтинги';
 
-    protected static ?string $modelLabel = 'оцінку';
+    protected static ?string $modelLabel = 'рейтинг';
 
-    protected static ?string $pluralModelLabel = 'Оцінки';
+    protected static ?string $pluralModelLabel = 'Рейтинг';
 
     protected static ?string $navigationGroup = 'Користувацька активність';
 
@@ -65,6 +66,7 @@ class RatingResource extends Resource
                     ->label('Відгук')
                     ->limit(50)
                     ->tooltip(fn (Rating $rating): ?string => $rating->review)
+                    ->sortable()
                     ->searchable()
                     ->toggleable(),
 
@@ -123,17 +125,9 @@ class RatingResource extends Resource
                 Section::make('Основна інформація')
                     ->icon('heroicon-o-information-circle')
                     ->schema([
-                        Select::make('user_id')
-                            ->label('Користувач')
-                            ->relationship('user', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->prefixIcon('heroicon-o-user'),
-
                         Select::make('movie_id')
                             ->label('Фільм')
-                            ->relationship('movie', 'title')
+                            ->relationship('movie', 'name')
                             ->searchable()
                             ->preload()
                             ->required()
@@ -145,10 +139,26 @@ class RatingResource extends Resource
                             ->required()
                             ->prefixIcon('heroicon-o-star'),
 
-                        Textarea::make('review')
+                        DateTimePicker::make('created_at')
+                            ->label('Дата створення')
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        DateTimePicker::make('updated_at')
+                            ->label('Дата оновлення')
+                            ->prefixIcon('heroicon-o-clock')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        RichEditor::make('review')
                             ->label('Відгук')
-                            ->rows(5)
-                            ->nullable()
+                            ->columnSpanFull()
+                            ->disableToolbarButtons(['attachFiles'])
                             ->columnSpanFull()
                             ->maxLength(65535),
                     ])

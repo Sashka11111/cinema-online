@@ -6,9 +6,9 @@ use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -191,26 +191,30 @@ class UserResource extends Resource
 
                     DateTimePicker::make('created_at')
                         ->label('Дата створення')
+                        ->prefixIcon('heroicon-o-calendar')
                         ->displayFormat('d.m.Y H:i')
-
-                        ->disabled(),
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
 
                     DateTimePicker::make('updated_at')
                         ->label('Дата оновлення')
+                        ->prefixIcon('heroicon-o-clock')
                         ->displayFormat('d.m.Y H:i')
-
-                        ->disabled(),
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
 
                     DateTimePicker::make('last_seen_at')
                         ->label('Остання активність')
                         ->displayFormat('d.m.Y H:i')
-
+                        ->hiddenOn('create')
                         ->disabled(),
 
                     DateTimePicker::make('email_verified_at')
                         ->label('Дата підтвердження email')
                         ->displayFormat('d.m.Y H:i')
-
+                        ->hiddenOn('create')
                         ->disabled(),
                 ])
                 ->columns(2),
@@ -221,10 +225,12 @@ class UserResource extends Resource
                     TextInput::make('password')
                         ->label('Пароль')
                         ->password()
+                        ->minLength(8)
                         ->maxLength(255)
+                        ->required()
                         ->dehydrated(fn ($state) => filled($state))
                         ->prefixIcon('clarity-key-line')
-                        ->nullable(),
+                        ->disabled(fn ($context) => $context === 'edit'),
 
                     Select::make('role')
                         ->label('Роль')
@@ -261,6 +267,7 @@ class UserResource extends Resource
 
             Section::make('Додатково')
                 ->icon('heroicon-o-sparkles')
+                ->collapsed()
                 ->schema([
                     FileUpload::make('avatar')
                         ->label('Аватар')
@@ -278,12 +285,12 @@ class UserResource extends Resource
                         ->directory('backdrops')
                         ->nullable(),
 
-                    Textarea::make('description')
-                        ->label('Опис профілю')
+                    RichEditor::make('description')
+                        ->label('Опис')
+                        ->required()
+                        ->maxLength(512)
                         ->columnSpanFull()
-                        ->rows(4)
-                        ->nullable()
-                        ->maxLength(500),
+                        ->disableToolbarButtons(['attachFiles']),
                 ])
                 ->columns(2),
         ]);

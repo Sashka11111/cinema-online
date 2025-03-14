@@ -1,23 +1,23 @@
 <?php
 
-namespace Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Widgets;
+namespace Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
-use Liamtseva\Cinema\Filament\Admin\Resources\UserResource;
+use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource;
 
-class UserStats extends ChartWidget
+class PersonCreationChart extends ChartWidget
 {
-    protected static ?string $heading = 'Статистика нових користувачів';
+    protected static ?string $heading = 'Кількість персон за місяцями';
 
     protected static string $color = 'primary';
 
-    protected static ?string $maxHeight = '300px';
+    protected static ?string $maxHeight = '200px';
 
     protected function getData(): array
     {
-        $modelClass = UserResource::getModel();
+        $modelClass = PersonResource::getModel();
 
         $data = Trend::model($modelClass)
             ->between(
@@ -30,7 +30,7 @@ class UserStats extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Нові користувачі',
+                    'label' => 'Нові персони',
                     'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => '#3490dc',
                     'borderColor' => '#2b6cb0',

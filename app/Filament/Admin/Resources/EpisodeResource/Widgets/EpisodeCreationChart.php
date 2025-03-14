@@ -1,15 +1,15 @@
 <?php
 
-namespace Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Widgets;
+namespace Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\Widgets;
 
 use Filament\Widgets\ChartWidget;
 use Flowframe\Trend\Trend;
 use Flowframe\Trend\TrendValue;
-use Liamtseva\Cinema\Filament\Admin\Resources\UserResource;
+use Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource;
 
-class UserStats extends ChartWidget
+class EpisodeCreationChart extends ChartWidget
 {
-    protected static ?string $heading = 'Статистика нових користувачів';
+    protected static ?string $heading = 'Кількість епізодів за місяцями';
 
     protected static string $color = 'primary';
 
@@ -17,7 +17,7 @@ class UserStats extends ChartWidget
 
     protected function getData(): array
     {
-        $modelClass = UserResource::getModel();
+        $modelClass = EpisodeResource::getModel();
 
         $data = Trend::model($modelClass)
             ->between(
@@ -30,7 +30,7 @@ class UserStats extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Нові користувачі',
+                    'label' => 'Нові епізоди',
                     'data' => $data->map(fn (TrendValue $value) => $value->aggregate),
                     'backgroundColor' => '#3490dc',
                     'borderColor' => '#2b6cb0',

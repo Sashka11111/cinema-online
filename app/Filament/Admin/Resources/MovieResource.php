@@ -4,21 +4,27 @@ namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TagsColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Kind;
+use Liamtseva\Cinema\Enums\Period;
+use Liamtseva\Cinema\Enums\RestrictedRating;
+use Liamtseva\Cinema\Enums\Source;
 use Liamtseva\Cinema\Enums\Status;
 use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\Pages;
 use Liamtseva\Cinema\Models\Movie;
@@ -29,11 +35,11 @@ class MovieResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-film';
 
-    protected static ?string $navigationLabel = 'Фільми';
+    protected static ?string $navigationLabel = 'Медіа';
 
-    protected static ?string $modelLabel = 'фільм';
+    protected static ?string $modelLabel = 'медіа';
 
-    protected static ?string $pluralModelLabel = 'Фільми';
+    protected static ?string $pluralModelLabel = 'Медіа';
 
     protected static ?string $navigationGroup = 'Контент';
 
@@ -56,7 +62,13 @@ class MovieResource extends Resource
                         ->maxLength(248)
                         ->prefixIcon('clarity-text-line')
                         ->reactive()
-                        ->afterStateUpdated(fn (callable $set, $state) => $set('slug', str()->slug($state))),
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
+                            $set('meta_title', $state.' | Cinema');
+                        }),
 
                     TextInput::make('slug')
                         ->label('url-посилання')
@@ -83,11 +95,23 @@ class MovieResource extends Resource
             Section::make('додаткові деталі')
                 ->icon('heroicon-o-document-text')
                 ->schema([
-                    Textarea::make('description')
-                        ->label('опис')
+                    RichEditor::make('description')
                         ->required()
-                        ->rows(4)
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->label('Опис')
+                        ->toolbarButtons([
+                            'bold', 'italic', 'underline', 'strike',
+                            'h2', 'h3', 'h4', 'bulletList', 'orderedList',
+                            'link', 'blockquote', 'codeBlock', 'undo', 'redo',
+                        ])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $plainText = strip_tags($state);
+                            $set('meta_description', Movie::makeMetaDescription($plainText));
+                        }),
 
                     TextInput::make('duration')
                         ->label('тривалість (хв)')
@@ -219,12 +243,119 @@ class MovieResource extends Resource
                     ->sortable()
                     ->wrap(),
 
+                TextColumn::make('description')
+                    ->label('Опис')
+                    ->limit(50)
+                    ->tooltip(fn ($record) => $record->description)
+                    ->searchable()
+                    ->toggleable(),
+
                 TextColumn::make('studio.name')
                     ->label('Студія')
                     ->searchable()
                     ->sortable()
                     ->toggleable()
                     ->color('gray'),
+
+                TextColumn::make('countries')
+                    ->label('Країни')
+                    ->formatStateUsing(function ($state) {
+                        $decoded = json_decode($state, true);
+
+                        return is_array($decoded) ? implode(', ', $decoded) : $state;
+                    })
+                    ->searchable()
+                    ->toggleable()
+                    ->wrap(),
+
+                ImageColumn::make('poster')
+                    ->label('Постер')
+                    ->disk('public')
+                    ->width(50)
+                    ->height(50)
+                    ->circular()
+                    ->toggleable(),
+
+                TextColumn::make('duration')
+                    ->label('Тривалість')
+                    ->formatStateUsing(fn ($state) => $state ? "$state хв" : '—')
+                    ->sortable()
+                    ->toggleable()
+                    ->alignCenter(),
+
+                TextColumn::make('episodes_count')
+                    ->label('Епізоди')
+                    ->formatStateUsing(fn ($state) => $state ?? '—')
+                    ->sortable()
+                    ->toggleable()
+                    ->alignCenter(),
+
+                TextColumn::make('first_air_date')
+                    ->label('Початок ефіру')
+                    ->date('d-m-Y')
+                    ->sortable()
+                    ->toggleable()
+                    ->color('gray')
+                    ->alignCenter(),
+
+                TextColumn::make('last_air_date')
+                    ->label('Завершення ефіру')
+                    ->date('d-m-Y')
+                    ->sortable()
+                    ->toggleable()
+                    ->color('gray')
+                    ->alignCenter(),
+
+                TextColumn::make('imdb_score')
+                    ->label('Рейтинг IMDb')
+                    ->sortable()
+                    ->toggleable()
+                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 1) : '—')
+                    ->color(fn ($state) => $state >= 7 ? 'success' : ($state >= 5 ? 'warning' : 'danger'))
+                    ->alignCenter(),
+
+                TagsColumn::make('attachments')
+                    ->label('Прикріплення')
+                    ->formatStateUsing(fn ($state) => is_array($state) ? $state : json_decode($state ?? '[]', true))
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TagsColumn::make('related')
+                    ->label('Пов’язані')
+                    ->formatStateUsing(fn ($state) => is_array($state) ? $state : json_decode($state ?? '[]', true))
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TagsColumn::make('similars')
+                    ->label('Схожі')
+                    ->formatStateUsing(fn ($state) => is_array($state) ? $state : json_decode($state ?? '[]', true))
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                BooleanColumn::make('is_published')
+                    ->label('Опубліковано')
+                    ->sortable()
+                    ->toggleable()
+                    ->trueColor('success')
+                    ->falseColor('danger')
+                    ->alignCenter(),
+
+                TextColumn::make('meta_title')
+                    ->label('SEO Заголовок')
+                    ->limit(30)
+                    ->tooltip(fn ($record) => $record->meta_title)
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('meta_description')
+                    ->label('SEO Опис')
+                    ->limit(50)
+                    ->tooltip(fn ($record) => $record->meta_description)
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                ImageColumn::make('meta_image')
+                    ->label('SEO Зображення')
+                    ->disk('public')
+                    ->width(50)
+                    ->height(50)
+                    ->circular()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('kind')
                     ->label('Тип')
@@ -250,43 +381,38 @@ class MovieResource extends Resource
                     })
                     ->toggleable(),
 
-                TextColumn::make('duration')
-                    ->label('Тривалість')
-                    ->formatStateUsing(fn ($state) => $state ? "$state хв" : '—')
-                    ->sortable()
-                    ->toggleable()
-                    ->alignCenter(),
+                TextColumn::make('period')
+                    ->label('Період')
+                    ->formatStateUsing(fn (?Period $state) => $state ? Period::getLabels()[$state->value] : '—')
+                    ->badge()
+                    ->color('info')
+                    ->toggleable(),
 
-                TextColumn::make('episodes_count')
-                    ->label('Епізоди')
-                    ->formatStateUsing(fn ($state) => $state ?? '—')
-                    ->sortable()
-                    ->toggleable()
-                    ->alignCenter(),
+                TextColumn::make('restricted_rating')
+                    ->label('Вікове обмеження')
+                    ->formatStateUsing(fn (RestrictedRating $state) => RestrictedRating::getLabels()[$state->value])
+                    ->badge()
+                    ->color('warning')
+                    ->toggleable(),
 
-                BooleanColumn::make('is_published')
-                    ->label('Опубліковано')
-                    ->sortable()
-                    ->toggleable()
-                    ->trueColor('success')
-                    ->falseColor('danger')
-                    ->alignCenter(),
-
-                TextColumn::make('first_air_date')
-                    ->label('Початок ефіру')
-                    ->date('d-m-Y')
-                    ->sortable()
-                    ->toggleable()
+                TextColumn::make('source')
+                    ->label('Джерело')
+                    ->formatStateUsing(fn (Source $state) => Source::getLabels()[$state->value])
+                    ->badge()
                     ->color('gray')
-                    ->alignCenter(),
+                    ->toggleable(),
 
-                TextColumn::make('imdb_score')
-                    ->label('Рейтинг IMDb')
+                TextColumn::make('created_at')
+                    ->label('Створено')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable()
-                    ->toggleable()
-                    ->formatStateUsing(fn ($state) => $state ? number_format($state, 1) : '—')
-                    ->color(fn ($state) => $state >= 7 ? 'success' : ($state >= 5 ? 'warning' : 'danger'))
-                    ->alignCenter(),
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('updated_at')
+                    ->label('Оновлено')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('kind')
@@ -305,7 +431,6 @@ class MovieResource extends Resource
 
                 TernaryFilter::make('is_published')
                     ->label('Опубліковано'),
-
             ])
             ->actions([
                 Tables\Actions\EditAction::make()

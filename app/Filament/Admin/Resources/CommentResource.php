@@ -3,12 +3,12 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -44,6 +44,13 @@ class CommentResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('parent.body')
+                    ->label('Батьківський коментар')
+                    ->default('—')
+                    ->tooltip(fn (Comment $comment): ?string => $comment->parent?->body)
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('body')
                     ->label('Текст коментаря')
@@ -136,48 +143,74 @@ class CommentResource extends Resource
                 Section::make('Основна інформація')
                     ->icon('heroicon-o-information-circle')
                     ->schema([
-                        Select::make('user_id')
-                            ->label('Автор')
-                            ->relationship('user', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->prefixIcon('heroicon-o-user'),
-
-                        Textarea::make('body')
-                            ->label('Текст коментаря')
-                            ->required()
-                            ->rows(5)
-                            ->columnSpanFull(),
-
                         Select::make('commentable_type')
                             ->label('Тип контенту')
+                            ->options([
+                                Movie::class => (new Comment)->setAttribute('commentable_type', Movie::class)->translated_type,
+                                Episode::class => (new Comment)->setAttribute('commentable_type', Episode::class)->translated_type,
+                                Selection::class => (new Comment)->setAttribute('commentable_type', Selection::class)->translated_type,
+                            ])
                             ->required()
                             ->prefixIcon('heroicon-o-film'),
+                        Select::make('commentable_id')
+                            ->label('Контент')
+                            ->options(function (callable $get) {
+                                $type = $get('commentable_type');
+                                if (! $type) {
+                                    return [];
+                                }
 
-                        TextInput::make('commentable_id')
-                            ->label('ID контенту')
+                                return match ($type) {
+                                    Movie::class => Movie::pluck('name', 'id')->all(),
+                                    Episode::class => Episode::pluck('name', 'id')->all(),
+                                    Selection::class => Selection::pluck('name', 'id')->all(),
+                                    default => [],
+                                };
+                            })
+                            ->searchable()
                             ->required()
-                            ->numeric()
                             ->prefixIcon('heroicon-o-identification'),
 
+                        RichEditor::make('body')
+                            ->label('Текст коментаря')
+                            ->required()
+                            ->columnSpanFull()
+                            ->toolbarButtons([
+                                'bold', 'italic', 'underline', 'strike',
+                                'h1', 'h2', 'h3',
+                                'bulletList', 'orderedList',
+                                'link', 'blockquote', 'codeBlock',
+                                'undo', 'redo',
+                            ])
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (string $operation, string $state, Set $set) {
+                                if ($operation === 'edit' || empty($state)) {
+                                    return;
+                                }
+                                $plainText = strip_tags($state);
+                                $set('meta_description', Comment::makeMetaDescription($plainText));
+                            }),
+                    ])
+                    ->columns(2),
+                Section::make('Налаштування')
+                    ->icon('clarity-settings-line')
+                    ->schema([
                         Select::make('parent_id')
                             ->label('Батьківський коментар')
                             ->relationship('parent', 'body', fn ($query) => $query->limit(50))
                             ->searchable()
                             ->nullable()
-                            ->prefixIcon('heroicon-o-arrow-up-on-square'),
-                    ])
-                    ->columns(2),
+                            ->prefixIcon('heroicon-o-arrow-up-on-square')
+                            ->helperText('Виберіть, якщо це відповідь на інший коментар'),
 
-                Section::make('Налаштування')
-                    ->icon('clarity-settings-line')
-                    ->schema([
                         Toggle::make('is_spoiler')
                             ->label('Позначити як спойлер')
-                            ->default(false),
-                    ]),
+                            ->default(false)
+                            ->helperText('Увімкніть, якщо коментар містить спойлери'),
+                    ])
+                    ->columns(2),
             ]);
+
     }
 
     public static function getRelations(): array

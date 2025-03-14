@@ -3,13 +3,15 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -55,14 +57,6 @@ class TagResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
-
-                TextColumn::make('description')
-                    ->label('Опис')
-                    ->limit(60)
-                    ->tooltip(fn (Tag $tag): string => $tag->description)
-                    ->searchable()
-                    ->toggleable()
-                    ->wrap(),
 
                 TextColumn::make('aliases')
                     ->label('Аліаси')
@@ -142,21 +136,23 @@ class TagResource extends Resource
                             ->label('Назва')
                             ->required()
                             ->maxLength(128)
-                            ->prefixIcon('heroicon-o-tag'),
+                            ->prefixIcon('heroicon-o-tag')
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                                if ($operation == 'edit' || empty($state)) {
+                                    return;
+                                }
+                                $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
+                                $set('meta_title', $state.' | Cinema');
+                            }),
 
                         TextInput::make('slug')
-                            ->label('Слаг')
+                            ->label('Slug')
                             ->required()
                             ->maxLength(128)
-                            ->unique(ignoreRecord: true)
+                            ->unique(Tag::class, 'slug', ignoreRecord: true)
+                            ->helperText('Автоматично генерується з імені')
                             ->prefixIcon('heroicon-o-link'),
-
-                        Textarea::make('description')
-                            ->label('Опис')
-                            ->required()
-                            ->maxLength(512)
-                            ->rows(3)
-                            ->columnSpanFull(),
 
                         FileUpload::make('image')
                             ->label('Зображення')
@@ -169,6 +165,37 @@ class TagResource extends Resource
                         Toggle::make('is_genre')
                             ->label('Позначити як жанр')
                             ->default(false),
+
+                        DateTimePicker::make('created_at')
+                            ->label('Дата створення')
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        DateTimePicker::make('updated_at')
+                            ->label('Дата оновлення')
+                            ->prefixIcon('heroicon-o-clock')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        RichEditor::make('description')
+                            ->label('Опис')
+                            ->required()
+                            ->maxLength(512)
+                            ->columnSpanFull()
+                            ->disableToolbarButtons(['attachFiles'])
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (string $operation, string $state, Set $set) {
+                                if ($operation == 'edit' || empty($state)) {
+                                    return;
+                                }
+                                $plainText = strip_tags($state);
+                                $set('meta_description', Tag::makeMetaDescription($plainText));
+                            }),
                     ])
                     ->columns(2),
 
@@ -181,21 +208,16 @@ class TagResource extends Resource
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Мета-дані')
+                Section::make('SEO налаштування')
                     ->icon('heroicon-o-globe-alt')
+                    ->collapsed()
                     ->schema([
                         TextInput::make('meta_title')
                             ->label('Мета-заголовок')
                             ->maxLength(128)
                             ->nullable()
+                            ->disabled()
                             ->prefixIcon('heroicon-o-document-text'),
-
-                        Textarea::make('meta_description')
-                            ->label('Мета-опис')
-                            ->maxLength(376)
-                            ->rows(3)
-                            ->nullable()
-                            ->columnSpanFull(),
 
                         FileUpload::make('meta_image')
                             ->label('Мета-зображення')
@@ -204,6 +226,14 @@ class TagResource extends Resource
                             ->maxSize(2048)
                             ->directory('meta-tags')
                             ->nullable(),
+
+                        RichEditor::make('meta_description')
+                            ->label('Мета-опис')
+                            ->maxLength(376)
+                            ->nullable()
+                            ->disableToolbarButtons(['attachFiles'])
+                            ->helperText('Автоматично генерується з опису')
+                            ->columnSpanFull(),
                     ])
                     ->columns(2),
             ]);

@@ -29,9 +29,9 @@ class EpisodeFactory extends Factory
             'slug' => $name,
             'name' => $name,
             'description' => $this->faker->paragraph(),
-            'duration' => $this->faker->numberBetween(20, 120), // Duration in minutes
+            'duration' => $this->faker->numberBetween(20, 120),
             'air_date' => $this->faker->optional()->dateTimeBetween('-2 years', 'now'),
-            'is_filler' => $this->faker->boolean(10), // 10% chance of being filler
+            'is_filler' => $this->faker->boolean(10),
             'pictures' => json_encode($this->generatePictureUrls(rand(1, 3))),
             'video_players' => $this->generateVideoPlayers(),
             'meta_title' => $this->faker->optional()->sentence(5),
@@ -48,7 +48,6 @@ class EpisodeFactory extends Factory
             return 1; // Для фільмів завжди номер 1
         }
 
-        // Отримуємо всі існуючі номери для конкретного фільму
         $existingNumbers = collect(Episode::where('movie_id', $movieId)->pluck('number'));
 
         // Знаходимо наступний доступний номер

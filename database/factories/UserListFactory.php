@@ -19,7 +19,6 @@ class UserListFactory extends Factory
 {
     public function definition(): array
     {
-        // Список доступних класів для `listable_type`
         $listableClasses = [
             Movie::class,
             Episode::class,

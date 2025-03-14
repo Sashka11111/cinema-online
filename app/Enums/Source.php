@@ -14,78 +14,43 @@ enum Source: string
     case TV_SHOW = 'tv_show';
     case MOVIE = 'movie';
 
-    public function name(): string
+    // Статичний метод для міток
+    public static function getLabels(): array
     {
-        return match ($this) {
-            self::DORAMA => 'Дорама',
-            self::MANGA => 'Манга',
-            self::GAME => 'Гра',
-            self::NOVEL => 'Роман',
-            self::COMIC => 'Комікс',
-            self::LIGHT_NOVEL => 'Лайт-новел',
-            self::WEBTOON => 'Вебтун',
-            self::TV_SHOW => 'Телешоу',
-            self::MOVIE => 'Фільм',
-        };
+        return [
+            self::DORAMA->value => __('source.dorama.name'),
+            self::MANGA->value => __('source.manga.name'),
+            self::GAME->value => __('source.game.name'),
+            self::NOVEL->value => __('source.novel.name'),
+            self::COMIC->value => __('source.comic.name'),
+            self::LIGHT_NOVEL->value => __('source.light_novel.name'),
+            self::WEBTOON->value => __('source.webtoon.name'),
+            self::TV_SHOW->value => __('source.tv_show.name'),
+            self::MOVIE->value => __('source.movie.name'),
+        ];
     }
 
+    // Метод для отримання опису
     public function description(): string
     {
-        return match ($this) {
-            self::DORAMA => 'Дорама — це популярний жанр японських або корейських телевізійних серіалів, які часто базуються на манзі чи романах.',
-            self::MANGA => 'Манга — японські комікси, які часто стають основою для аніме або фільмів.',
-            self::GAME => 'Гри, на основі яких створюються аніме, фільми або серіали, часто мають своїх унікальних персонажів та сюжет.',
-            self::NOVEL => 'Роман — це літературний твір, який часто адаптується в інші формати, такі як фільми чи серіали.',
-            self::COMIC => 'Комікси — це твори в жанрі малюнкової графіки, що можуть стати основою для адаптацій в кіно чи аніме.',
-            self::LIGHT_NOVEL => 'Лайт-новели — японські короткі романи з ілюстраціями, часто адаптовані в аніме або мангу.',
-            self::WEBTOON => 'Вебтуни — це цифрові комікси, що публікуються онлайн, часто мають захоплюючі сюжети та персонажів.',
-            self::TV_SHOW => 'Телешоу — різноманітні телевізійні програми, серіали та реаліті-шоу, що можуть служити основою для фільмів або аніме.',
-            self::MOVIE => 'Фільми — це кінематографічні твори, часто створюються на основі книг, коміксів або реальних подій.',
-        };
+        return __("source.{$this->value}.description");
     }
 
+    // Метод для отримання meta title
     public function metaTitle(): string
     {
-        return match ($this) {
-            self::DORAMA => 'Дорама: Твори японської та корейської культури',
-            self::MANGA => 'Манга: Сучасні японські комікси та їх екранізації',
-            self::GAME => 'Гри, що стали основою для кіно та аніме',
-            self::NOVEL => 'Романи, що адаптовані в кіно та серіали',
-            self::COMIC => 'Комікси: Від класики до сучасних адаптацій',
-            self::LIGHT_NOVEL => 'Лайт-новели: Від тексту до аніме',
-            self::WEBTOON => 'Вебтуни: Цифрові комікси для сучасної аудиторії',
-            self::TV_SHOW => 'Телешоу: Експлорація формату з усіх куточків світу',
-            self::MOVIE => 'Фільми: Кінематографічні шедеври та їх адаптації',
-        };
+        return __("source.{$this->value}.meta_title");
     }
 
+    // Метод для отримання meta description
     public function metaDescription(): string
     {
-        return match ($this) {
-            self::DORAMA => 'Дорама — це японські та корейські телевізійні серіали, які здобули популярність завдяки емоційному сюжету та глибоким персонажам.',
-            self::MANGA => 'Манга — це японські комікси, відомі своїм унікальним стилем та сюжетами, які часто адаптуються в аніме чи фільми.',
-            self::GAME => 'Гри часто стають основою для кінофільмів або аніме, що дозволяє геймерам насолоджуватися своїми улюбленими персонажами та світом в інших форматах.',
-            self::NOVEL => 'Романи часто перетворюються на фільми та серіали, надаючи нове життя літературним творам, що вражають читачів глибокими сюжетами.',
-            self::COMIC => 'Комікси, від класичних до сучасних, стають основою для великих екранізацій, привертаючи увагу фанатів у всьому світі.',
-            self::LIGHT_NOVEL => 'Лайт-новели — це короткі японські романи з ілюстраціями, які часто адаптовані в аніме або мангу, привертаючи увагу молодої аудиторії.',
-            self::WEBTOON => 'Вебтуни — це цифрові комікси, які публікуються онлайн, і мають великий вплив на молодіжну культуру та сучасний кінематограф.',
-            self::TV_SHOW => 'Телешоу стали невід’ємною частиною поп-культури, вражаючи глядачів новими форматами та розважальними програмами.',
-            self::MOVIE => 'Фільми — це кінематографічні твори, які часто адаптують книги, комікси або реальні події в захоплюючі історії для широкої аудиторії.',
-        };
+        return __("source.{$this->value}.meta_description");
     }
 
+    // Метод для отримання meta image
     public function metaImage(): string
     {
-        return match ($this) {
-            self::DORAMA => '/images/seo/dorama.jpg',
-            self::MANGA => '/images/seo/manga.jpg',
-            self::GAME => '/images/seo/game.jpg',
-            self::NOVEL => '/images/seo/novel.jpg',
-            self::COMIC => '/images/seo/comic.jpg',
-            self::LIGHT_NOVEL => '/images/seo/light_novel.jpg',
-            self::WEBTOON => '/images/seo/webtoon.jpg',
-            self::TV_SHOW => '/images/seo/tv_show.jpg',
-            self::MOVIE => '/images/seo/movie.jpg',
-        };
+        return __("source.{$this->value}.meta_image");
     }
 }

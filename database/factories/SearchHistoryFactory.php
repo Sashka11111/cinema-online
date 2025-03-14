@@ -18,13 +18,4 @@ class SearchHistoryFactory extends Factory
             'query' => $this->faker->word(),
         ];
     }
-
-    public function forUserWithCount(int $count, $user = null): self
-    {
-        return $this->state(function (array $attributes) use ($user) {
-            return [
-                'user_id' => $user->id,
-            ];
-        })->count($count);
-    }
 }

@@ -18,26 +18,15 @@ trait HasSeo
         return 'slug';
     }
 
-    protected function metaImage(): Attribute
+    public function metaImage(): Attribute
     {
         return Attribute::make(
             get: fn ($value) => $value ? asset("storage/$value") : null
         );
     }
 
-    protected function slug(): Attribute
+    public static function makeMetaDescription(string $description): string
     {
-        return Attribute::make(
-            get: fn ($value) => $value,
-            set: fn ($value) => str($value)->slug().'-'.str(str()->random(6))->lower()
-        );
-    }
-
-    protected function metaDescription(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value) => $value,
-            set: fn ($value) => Str::length($value) > 376 ? Str::substr($value, 0, 373).'...' : $value
-        );
+        return Str::length($description) > 376 ? Str::substr($description, 0, 373).'...' : $description;
     }
 }

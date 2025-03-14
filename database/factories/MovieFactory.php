@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Liamtseva\Cinema\Enums\ApiSourceName;
 use Liamtseva\Cinema\Enums\AttachmentType;
 use Liamtseva\Cinema\Enums\Country;
@@ -20,7 +21,6 @@ use Liamtseva\Cinema\ValueObjects\ApiSource;
 use Liamtseva\Cinema\ValueObjects\Attachment;
 use Liamtseva\Cinema\ValueObjects\MovieRelate;
 
-// Баг
 class MovieFactory extends Factory
 {
     public function definition(): array
@@ -46,9 +46,9 @@ class MovieFactory extends Factory
 
         return [
             'api_sources' => $this->getApiSources($movieData),
-            'slug' => $title,
-            'name' => $title,
-            'description' => $this->getDescription($movieData),
+            'slug' => Str::limit($title, 255, ''), // Зміна тут
+            'name' => Str::limit($title, 255, ''), // Зміна тут
+            'description' => $this->getDescription($movieData), // Зміна в getDescription
             'image_name' => $this->faker->imageUrl(200, 100, 'movies'),
             'aliases' => collect([$originalTitle]),
             'studio_id' => Studio::query()->inRandomOrder()->value('id') ?? Studio::factory(),
@@ -68,15 +68,12 @@ class MovieFactory extends Factory
             'related' => $this->generateRelatedMovies(),
             'similars' => [],
             'is_published' => $this->faker->boolean(),
-            'meta_title' => "Дивитись онлайн $title | ".config('app.name'),
-            'meta_description' => $this->getDescription($movieData),
+            'meta_title' => Str::limit("Дивитись онлайн $title | ".config('app.name'), 255, '...'), // Зміна тут
+            'meta_description' => $this->getDescription($movieData), // Зміна в getDescription
             'meta_image' => $this->getBackdrop($movieData),
         ];
     }
 
-    /**
-     * Отримуємо дані фільму або серіалу з TMDB API
-     */
     private function getMovieData(string $movieOrTv): array
     {
         $randomId = $movieOrTv === 'movie' ? $this->faker->numberBetween(70_000, 90_000) : $this->faker->numberBetween(4_000, 5_000);
@@ -113,9 +110,6 @@ class MovieFactory extends Factory
         return data_get($movieData, 'overview', $this->faker->sentence(15));
     }
 
-    /**
-     * Визначаємо статус залежно від доступних даних
-     */
     public function determineStatus(array $movieData): Status
     {
         if (isset($movieData['status'])) {
@@ -137,22 +131,17 @@ class MovieFactory extends Factory
         return $this->faker->randomElement(Status::cases());
     }
 
-    /**
-     * Отримуємо країни
-     * TODO: не робить, виправити, лише USA ставить :)
-     */
     public function getCountries(array $movieData): Collection
     {
         $countries = $movieData['production_countries'] ?? [];
 
         return collect($countries)->map(function ($country) {
-            return Country::tryFrom($country['iso_3166_1']) ?? Country::USA;
-        });
+            $isoCode = $country['iso_3166_1'] ?? 'US';
+
+            return Country::tryFrom($isoCode) ?? $isoCode;
+        })->filter();
     }
 
-    /**
-     * Отримуємо постер
-     */
     public function getPoster(array $movieData): string
     {
         return isset($movieData['poster_path']) ? "https://image.tmdb.org/t/p/w500{$movieData['poster_path']}" : $this->faker->imageUrl(800, 1200);
@@ -187,7 +176,7 @@ class MovieFactory extends Factory
     }
 
     /**
-     * Генеруємо зв'язки з іншими фільмами (наприклад, сезони, приквели, сиквели)
+     * Генеруємо зв'язки з іншими фільмами
      */
     private function generateRelatedMovies(): Collection
     {

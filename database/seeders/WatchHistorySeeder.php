@@ -23,7 +23,7 @@ class WatchHistorySeeder extends Seeder
                 WatchHistory::create([
                     'user_id' => $user->id,
                     'episode_id' => $episode->id,
-                    'progress_time' => rand(0, $episode->duration), // Випадковий прогрес в секундах
+                    'progress_time' => rand(0, $episode->duration),
                 ]);
             }
         }

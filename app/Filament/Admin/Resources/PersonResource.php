@@ -3,7 +3,9 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -61,13 +63,6 @@ class PersonResource extends Resource
                     ->default('Немає оригінального імені')
                     ->searchable()
                     ->sortable()
-                    ->toggleable(),
-
-                TextColumn::make('description')
-                    ->label('Опис')
-                    ->limit(50)
-                    ->tooltip(fn (Person $person): string => $person->description)
-                    ->searchable()
                     ->toggleable(),
 
                 TextColumn::make('type')
@@ -151,18 +146,17 @@ class PersonResource extends Resource
         return $form->schema([
             Section::make('Основна інформація')
                 ->icon('heroicon-o-information-circle')
-                ->collapsible()
                 ->schema([
                     TextInput::make('name')
                         ->label('Ім’я')
                         ->required()
                         ->maxLength(128)
                         ->live(onBlur: true)
-                        ->afterStateUpdated(function (string $operation, string $state, Set $set) {
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                             if ($operation == 'edit' || empty($state)) {
                                 return;
                             }
-                            $set('slug', str($state)->slug());
+                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
                             $set('meta_title', $state.' | Cinema');
                         }),
 
@@ -172,11 +166,6 @@ class PersonResource extends Resource
                         ->maxLength(128)
                         ->unique(Person::class, 'slug', ignoreRecord: true)
                         ->helperText('Автоматично генерується з імені'),
-
-                    TextInput::make('original_name')
-                        ->label('Оригінальне ім’я')
-                        ->maxLength(128)
-                        ->nullable(),
 
                     Select::make('type')
                         ->label('Тип')
@@ -189,13 +178,32 @@ class PersonResource extends Resource
                         ->options(Gender::getLabels())
                         ->nullable()
                         ->native(false),
+                    DateTimePicker::make('created_at')
+                        ->label('Дата створення')
+                        ->prefixIcon('heroicon-o-calendar')
+                        ->displayFormat('d.m.Y H:i')
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
+
+                    DateTimePicker::make('updated_at')
+                        ->label('Дата оновлення')
+                        ->prefixIcon('heroicon-o-clock')
+                        ->displayFormat('d.m.Y H:i')
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
                 ])
                 ->columns(2),
 
             Section::make('Особисті дані')
                 ->icon('heroicon-o-calendar')
-                ->collapsible()
                 ->schema([
+                    TextInput::make('original_name')
+                        ->label('Оригінальне ім’я')
+                        ->maxLength(128)
+                        ->nullable(),
+
                     DatePicker::make('birthday')
                         ->label('Дата народження')
                         ->displayFormat('d/m/Y')
@@ -206,12 +214,24 @@ class PersonResource extends Resource
                         ->label('Місце народження')
                         ->maxLength(248)
                         ->nullable(),
-                ])
-                ->columns(2),
 
-            Section::make('Медіа')
+                    RichEditor::make('description')
+                        ->label('Опис')
+                        ->columnSpanFull()
+                        ->disableToolbarButtons(['attachFiles'])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation === 'edit' || empty($state)) {
+                                return;
+                            }
+                            $plainText = strip_tags($state);
+                            $set('meta_description', Person::makeMetaDescription($plainText));
+                        }),
+                ])
+                ->columns(3),
+
+            Section::make('Зображення')
                 ->icon('heroicon-o-photo')
-                ->collapsible()
                 ->schema([
                     FileUpload::make('image')
                         ->label('Фото')
@@ -223,21 +243,9 @@ class PersonResource extends Resource
                         ->nullable(),
                 ]),
 
-            Section::make('Опис')
-                ->icon('heroicon-o-document-text')
-                ->collapsible()
-                ->schema([
-                    Textarea::make('description')
-                        ->label('Опис')
-                        ->maxLength(512)
-                        ->rows(4)
-                        ->nullable()
-                        ->columnSpanFull(),
-                ]),
-
             Section::make('SEO налаштування')
                 ->icon('heroicon-o-globe-alt')
-                ->collapsible()
+                ->collapsed()
                 ->schema([
                     TextInput::make('meta_title')
                         ->label('Meta Title')
@@ -245,17 +253,17 @@ class PersonResource extends Resource
                         ->helperText('Автоматично генерується з імені')
                         ->nullable(),
 
-                    Textarea::make('meta_description')
-                        ->label('Meta Description')
-                        ->maxLength(376)
-                        ->rows(3)
-                        ->nullable(),
-
                     FileUpload::make('meta_image')
                         ->label('Meta зображення')
                         ->image()
                         ->maxSize(2048)
                         ->directory('people/meta')
+                        ->nullable(),
+
+                    Textarea::make('meta_description')
+                        ->label('Meta Description')
+                        ->maxLength(376)
+                        ->rows(3)
                         ->nullable(),
                 ])
                 ->columns(2),

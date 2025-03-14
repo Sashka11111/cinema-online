@@ -11,6 +11,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -70,8 +71,12 @@ class EpisodeResource extends Resource
                         ->maxLength(128)
                         ->prefixIcon('clarity-text-line')
                         ->reactive()
-                        ->afterStateUpdated(function (callable $set, $state) {
-                            $set('slug', str()->slug($state));
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
+                            $set('meta_title', $state.' | Cinema');
                         }),
 
                     TextInput::make('slug')
@@ -116,18 +121,17 @@ class EpisodeResource extends Resource
                 ->schema([
                     TagsInput::make('pictures')
                         ->label('Зображення')
-                        ->placeholder('Додайте URL зображень')
-                        ->nested(),
+                        ->placeholder('Додайте URL зображень'),
 
                     TagsInput::make('video_players')
                         ->label('Відеоплеєри')
-                        ->placeholder('Додайте URL плеєрів')
-                        ->nested(),
+                        ->placeholder('Додайте URL плеєрів'),
                 ])
                 ->columns(2),
 
             Section::make('SEO налаштування')
                 ->icon('heroicon-o-globe-alt')
+                ->collapsed()
                 ->schema([
                     TextInput::make('meta_title')
                         ->label('SEO Заголовок')

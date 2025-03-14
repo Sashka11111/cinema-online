@@ -47,7 +47,7 @@ class CommentReportResource extends Resource
             ->schema([
                 Section::make('Інформація про скаргу')
                     ->icon('heroicon-o-information-circle')
-                    ->collapsible()
+                    ->collapsed()
                     ->schema([
                         Select::make('comment_id')
                             ->label('Коментар')
@@ -69,7 +69,7 @@ class CommentReportResource extends Resource
 
                 Section::make('Статус обробки')
                     ->icon('heroicon-o-check-circle')
-                    ->collapsible()
+                    ->collapsed()
                     ->schema([
                         Toggle::make('is_resolved')
                             ->label('Вирішено')

@@ -98,4 +98,15 @@ class Comment extends Model
             set: fn ($value) => trim($value)
         );
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($rating) {
+            if (! $rating->user_id) {
+                $rating->user_id = auth()->id();
+            }
+        });
+    }
 }

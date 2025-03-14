@@ -6,7 +6,6 @@ use Database\Factories\MovieFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
-use Illuminate\Database\Eloquent\Casts\AsEnumCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,9 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
-use Liamtseva\Cinema\Casts\ApiSourcesCast;
-use Liamtseva\Cinema\Casts\AttachmentsCast;
-use Liamtseva\Cinema\Casts\MovieRelateCast;
 use Liamtseva\Cinema\Enums\Country;
 use Liamtseva\Cinema\Enums\Kind;
 use Liamtseva\Cinema\Enums\Period;
@@ -157,15 +153,14 @@ class Movie extends Model
     {
         return [
             'aliases' => AsCollection::class,
-            'countries' => AsEnumCollection::of(Country::class),
-            'attachments' => AttachmentsCast::class,
-            // 'related' => MovieRelateCast::class,
+            'countries' => 'array',
+            'attachments' => 'array',
             'related' => 'array',
             'similars' => AsCollection::class,
             'imdb_score' => 'float',
             'first_air_date' => 'date',
             'last_air_date' => 'date',
-            'api_sources' => ApiSourcesCast::class,
+            'api_sources' => 'array',
             'kind' => Kind::class,
             'status' => Status::class,
             'period' => Period::class,

@@ -10,15 +10,15 @@ enum RestrictedRating: string
     case NC_17 = 'nc_17';
     case G = 'g';
 
-    public function value(): int
+    public static function getLabels(): array
     {
-        return match ($this) {
-            self::PG => 0,
-            self::PG_13 => 13,
-            self::R => 17,
-            self::NC_17 => 18,
-            self::G => 0,
-        };
+        return [
+            self::PG->value => 'PG',
+            self::PG_13->value => 'PG-13',
+            self::R->value => 'R',
+            self::NC_17->value => 'NC-17',
+            self::G->value => 'G',
+        ];
     }
 
     public function hint(): string

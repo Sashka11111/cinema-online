@@ -22,7 +22,7 @@ class UserFactory extends Factory
             'name' => fake()->unique()->userName(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => fake()->randomElement([now(), null]),
-            'password' => static::$password ??= Hash::make('password'), // Кешування пароля
+            'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'role' => fake()->randomElement([Role::USER->value, Role::ADMIN->value]),
             'avatar' => fake()->imageUrl(200, 200, 'people', true, 'avatar'),

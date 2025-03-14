@@ -7,9 +7,6 @@ use Liamtseva\Cinema\Models\Studio;
 
 class StudioSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         Studio::factory(50)->create();

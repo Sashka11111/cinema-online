@@ -29,7 +29,22 @@ class RatingController extends Controller
      */
     public function store(StoreRatingRequest $request)
     {
-        //
+        $existingRating = Rating::where('user_id', auth()->id())
+            ->where('movie_id', $request->movie_id)
+            ->first();
+
+        if ($existingRating) {
+            return redirect()->back()->with('error', 'Ви вже залишили відгук для цього фільму!');
+        }
+
+        Rating::create([
+            'user_id' => auth()->id(),
+            'movie_id' => $request->movie_id,
+            'number' => $request->number,
+            'review' => $request->review,
+        ]);
+
+        return redirect()->back()->with('success', 'Ваш відгук додано!');
     }
 
     /**

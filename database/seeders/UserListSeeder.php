@@ -57,16 +57,6 @@ class UserListSeeder extends Seeder
                     'type' => UserListType::WATCHING->value,
                 ]);
             }
-
-            // Заплановані фільми
-            /*            $plannedMovies = Movie::inRandomOrder()->take(rand(5, 15))->get();
-                        foreach ($plannedMovies as $movie) {
-                            $user->userLists()->create([
-                                'listable_id' => $movie->id,
-                                'listable_type' => Movie::class,
-                                'type' => UserListType::PLANNED->value,
-                            ]);
-                        }*/
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\PersonType;
 use Liamtseva\Cinema\Models\Person;
@@ -17,7 +18,7 @@ class PersonFactory extends Factory
         $name = $this->faker->name();
 
         return [
-            'slug' => $name,
+            'slug' => Str::slug($name).'-'.Str::ulid(),
             'name' => $name,
             'original_name' => $this->faker->optional()->name(),
             'gender' => $this->faker->randomElement(Gender::cases())->value,

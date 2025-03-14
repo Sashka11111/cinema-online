@@ -16,7 +16,7 @@ class SelectionFactory extends Factory
         $name = $this->faker->sentence;
 
         return [
-            'user_id' => User::inRandomOrder()->value('id'),  // Вибір випадкового користувача
+            'user_id' => User::inRandomOrder()->value('id'),
             'slug' => $name,
             'name' => $name,
             'description' => $this->faker->optional()->paragraph,

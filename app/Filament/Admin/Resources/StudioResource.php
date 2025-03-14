@@ -5,10 +5,11 @@ namespace Liamtseva\Cinema\Filament\Admin\Resources;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\ImageColumn;
@@ -130,39 +131,54 @@ class StudioResource extends Resource
                         ->label('Назва')
                         ->required()
                         ->maxLength(128)
-                        ->reactive()
-                        ->afterStateUpdated(function ($state, callable $set) {
-                            $set('slug', str()->slug($state));
-                        })
-                        ->prefixIcon('clarity-text-line'),
+                        ->live(onBlur: true)
+                        ->prefixIcon('clarity-text-line')
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
+                            $set('meta_title', $state.' | Cinema');
+                        }),
 
                     TextInput::make('slug')
                         ->label('Slug')
                         ->required()
                         ->maxLength(128)
-                        ->unique(ignoreRecord: true)
+                        ->unique(Studio::class, 'slug', ignoreRecord: true)
+                        ->helperText('Автоматично генерується з імені')
                         ->prefixIcon('heroicon-o-link'),
 
-                    Textarea::make('description')
+                    RichEditor::make('description')
                         ->label('Опис')
                         ->required()
                         ->maxLength(512)
-                        ->rows(4)
-                        ->columnSpanFull(),
+                        ->columnSpanFull()
+                        ->disableToolbarButtons(['attachFiles'])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $plainText = strip_tags($state);
+                            $set('meta_description', Studio::makeMetaDescription($plainText));
+                        }),
 
                     DateTimePicker::make('created_at')
                         ->label('Дата створення')
                         ->prefixIcon('heroicon-o-calendar')
                         ->displayFormat('d.m.Y H:i')
                         ->disabled()
-                        ->default(now()),
+                        ->default(now())
+                        ->hiddenOn('create'),
 
                     DateTimePicker::make('updated_at')
                         ->label('Дата оновлення')
                         ->prefixIcon('heroicon-o-clock')
                         ->displayFormat('d.m.Y H:i')
                         ->disabled()
-                        ->default(now()),
+                        ->default(now())
+                        ->hiddenOn('create'),
                 ])
                 ->columns(2),
 
@@ -178,7 +194,7 @@ class StudioResource extends Resource
                         ->nullable(),
                 ]),
 
-            Section::make('SEO')
+            Section::make('SEO налаштування')
                 ->icon('heroicon-o-globe-alt')
                 ->schema([
                     TextInput::make('meta_title')
@@ -195,15 +211,12 @@ class StudioResource extends Resource
                         ->directory('studios/meta')
                         ->nullable(),
 
-                    Textarea::make('meta_description')
+                    RichEditor::make('meta_description')
                         ->label('Meta опис')
                         ->maxLength(376)
-                        ->rows(3)
-                        ->nullable()
                         ->columnSpanFull(),
                 ])
-                ->collapsible()
-                ->collapsed(true)
+                ->collapsed()
                 ->columns(2),
         ]);
     }
