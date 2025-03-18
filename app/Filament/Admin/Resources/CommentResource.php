@@ -3,12 +3,12 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\IconColumn;
@@ -30,6 +30,10 @@ class CommentResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Коментарі';
 
+    protected static ?string $navigationLabel = 'Коментарі';
+
+    protected static ?string $modelLabel = 'коментарі';
+
     protected static ?string $navigationGroup = 'Користувацька активність';
 
     protected static ?int $navigationSort = 2;
@@ -38,6 +42,12 @@ class CommentResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('user.name')
                     ->label('Автор')
                     ->description(fn (Comment $comment): string => $comment->user->email)
@@ -50,6 +60,8 @@ class CommentResource extends Resource
                     ->default('—')
                     ->tooltip(fn (Comment $comment): ?string => $comment->parent?->body)
                     ->sortable()
+                    ->limit(50)
+                    ->tooltip(fn (Comment $comment): string => $comment->body)
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('body')
@@ -84,6 +96,12 @@ class CommentResource extends Resource
                     ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('is_spoiler')
@@ -171,25 +189,27 @@ class CommentResource extends Resource
                             ->required()
                             ->prefixIcon('heroicon-o-identification'),
 
+                        DateTimePicker::make('created_at')
+                            ->label('Дата створення')
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        DateTimePicker::make('updated_at')
+                            ->label('Дата оновлення')
+                            ->prefixIcon('heroicon-o-clock')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
                         RichEditor::make('body')
                             ->label('Текст коментаря')
                             ->required()
                             ->columnSpanFull()
-                            ->toolbarButtons([
-                                'bold', 'italic', 'underline', 'strike',
-                                'h1', 'h2', 'h3',
-                                'bulletList', 'orderedList',
-                                'link', 'blockquote', 'codeBlock',
-                                'undo', 'redo',
-                            ])
-                            ->live(onBlur: true)
-                            ->afterStateUpdated(function (string $operation, string $state, Set $set) {
-                                if ($operation === 'edit' || empty($state)) {
-                                    return;
-                                }
-                                $plainText = strip_tags($state);
-                                $set('meta_description', Comment::makeMetaDescription($plainText));
-                            }),
+                            ->disableToolbarButtons(['attachFiles']),
                     ])
                     ->columns(2),
                 Section::make('Налаштування')
@@ -200,6 +220,7 @@ class CommentResource extends Resource
                             ->relationship('parent', 'body', fn ($query) => $query->limit(50))
                             ->searchable()
                             ->nullable()
+                            ->preload()
                             ->prefixIcon('heroicon-o-arrow-up-on-square')
                             ->helperText('Виберіть, якщо це відповідь на інший коментар'),
 

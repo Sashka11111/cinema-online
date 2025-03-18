@@ -46,4 +46,15 @@ class CommentReport extends Model
     {
         return $query->where('is_viewed', false);
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($rating) {
+            if (! $rating->user_id) {
+                $rating->user_id = auth()->id();
+            }
+        });
+    }
 }

@@ -83,6 +83,12 @@ class StudioResource extends Resource
                     ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Filter::make('name')

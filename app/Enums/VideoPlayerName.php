@@ -7,11 +7,11 @@ enum VideoPlayerName: string
     case KODIK = 'kodik';
     case ALOHA = 'aloha';
 
-    public function name(): string
+    public static function getLabels(): array
     {
-        return match ($this) {
-            self::KODIK => 'Kodik',
-            self::ALOHA => 'Aloha',
-        };
+        return [
+            self::KODIK->value => __('video_player_name.kodik'),
+            self::ALOHA->value => __('video_player_name.aloha'),
+        ];
     }
 }

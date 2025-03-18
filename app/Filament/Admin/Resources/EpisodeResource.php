@@ -3,10 +3,12 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -20,6 +22,8 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Liamtseva\Cinema\Enums\VideoPlayerName;
+use Liamtseva\Cinema\Enums\VideoQuality;
 use Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\Pages;
 use Liamtseva\Cinema\Models\Episode;
 
@@ -51,7 +55,7 @@ class EpisodeResource extends Resource
                 ->icon('heroicon-o-information-circle')
                 ->schema([
                     Select::make('movie_id')
-                        ->label('Фільм/Серіал')
+                        ->label('Медіа')
                         ->relationship('movie', 'name')
                         ->required()
                         ->prefixIcon('heroicon-o-film')
@@ -85,17 +89,42 @@ class EpisodeResource extends Resource
                         ->maxLength(128)
                         ->prefixIcon('heroicon-o-link')
                         ->unique(ignoreRecord: true),
+
+                    DateTimePicker::make('created_at')
+                        ->label('Дата створення')
+                        ->prefixIcon('heroicon-o-calendar')
+                        ->displayFormat('d.m.Y H:i')
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
+
+                    DateTimePicker::make('updated_at')
+                        ->label('Дата оновлення')
+                        ->prefixIcon('heroicon-o-clock')
+                        ->displayFormat('d.m.Y H:i')
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
                 ])
                 ->columns(2),
 
             Section::make('Деталі епізоду')
                 ->icon('heroicon-o-document-text')
                 ->schema([
-                    Textarea::make('description')
+                    RichEditor::make('description')
                         ->label('Опис')
+                        ->required()
                         ->maxLength(512)
-                        ->nullable()
-                        ->rows(3),
+                        ->columnSpanFull()
+                        ->disableToolbarButtons(['attachFiles'])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $plainText = strip_tags($state);
+                            $set('meta_description', Episode::makeMetaDescription($plainText));
+                        }),
 
                     TextInput::make('duration')
                         ->label('Тривалість (хв)')
@@ -119,13 +148,57 @@ class EpisodeResource extends Resource
             Section::make('Медіа')
                 ->icon('heroicon-o-photo')
                 ->schema([
-                    TagsInput::make('pictures')
+                    Repeater::make('pictures')
                         ->label('Зображення')
-                        ->placeholder('Додайте URL зображень'),
+                        ->schema([
+                            TextInput::make('name')
+                                ->label('Назва')
+                                ->maxLength(128)
+                                ->nullable(),
+                            TextInput::make('url')
+                                ->label('URL зображення')
+                                ->required()
+                                ->url(),
+                            TextInput::make('file_url')
+                                ->label('URL файлу')
+                                ->url()
+                                ->nullable(),
+                            Select::make('quality')
+                                ->label('Якість')
+                                ->options(VideoQuality::getLabels())
+                                ->nullable(),
+                            TextInput::make('locale_code')
+                                ->label('Код локалі')
+                                ->maxLength(2)
+                                ->nullable(),
+                        ])
+                        ->columns(3),
 
-                    TagsInput::make('video_players')
+                    Repeater::make('video_players')
                         ->label('Відеоплеєри')
-                        ->placeholder('Додайте URL плеєрів'),
+                        ->schema([
+                            Select::make('name')
+                                ->label('Назва')
+                                ->options(VideoPlayerName::getLabels())
+                                ->required(),
+                            TextInput::make('url')
+                                ->label('URL плеєра')
+                                ->required()
+                                ->url(),
+                            TextInput::make('file_url')
+                                ->label('URL файлу')
+                                ->url()
+                                ->nullable(),
+                            Select::make('quality')
+                                ->label('Якість')
+                                ->options(VideoQuality::getLabels())
+                                ->nullable(),
+                            TextInput::make('locale_code')
+                                ->label('Код локалі')
+                                ->maxLength(2)
+                                ->nullable(),
+                        ])
+                        ->columns(3),
                 ])
                 ->columns(2),
 
@@ -134,22 +207,21 @@ class EpisodeResource extends Resource
                 ->collapsed()
                 ->schema([
                     TextInput::make('meta_title')
-                        ->label('SEO Заголовок')
+                        ->label('Meta назва')
                         ->maxLength(128)
                         ->nullable(),
 
-                    Textarea::make('meta_description')
-                        ->label('SEO Опис')
-                        ->maxLength(376)
-                        ->rows(3)
+                    FileUpload::make('meta_image')
+                        ->label('Meta зображення')
+                        ->image()
+                        ->maxSize(2048)
+                        ->directory('people/meta')
                         ->nullable(),
 
-                    FileUpload::make('meta_image')
-                        ->label('SEO Зображення')
-                        ->image()
-                        ->imagePreviewHeight('100')
-                        ->maxSize(2048)
-                        ->directory('episode-meta-images')
+                    Textarea::make('meta_description')
+                        ->label('Meta опис')
+                        ->maxLength(376)
+                        ->rows(3)
                         ->nullable(),
                 ])
                 ->columns(2),
@@ -160,6 +232,12 @@ class EpisodeResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('number')
                     ->label('Номер епізоду')
                     ->sortable()
@@ -178,11 +256,38 @@ class EpisodeResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('description')
+                    ->label('Опис')
+                    ->limit(50)
+                    ->tooltip(fn (Episode $record): ?string => $record->description)
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('duration')
                     ->label('Тривалість')
                     ->formatStateUsing(fn ($state) => $state ? "$state хв" : '-')
                     ->sortable()
+                    ->searchable()
                     ->toggleable(),
+
+                TextColumn::make('pictures')
+                    ->label('Зображення')
+                    ->formatStateUsing(fn ($state) => collect($state)->pluck('url')->implode(', '))
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('video_players')
+                    ->label('Відеоплеєри')
+                    ->formatStateUsing(fn ($state) => collect($state)->pluck('url')->implode(', '))
+                    ->limit(50)
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 IconColumn::make('is_filler')
                     ->label('Філер')
@@ -197,6 +302,18 @@ class EpisodeResource extends Resource
                     ->date('d-m-Y')
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Дата створення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('movie')

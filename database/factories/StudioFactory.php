@@ -3,15 +3,17 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 class StudioFactory extends Factory
 {
     public function definition(): array
     {
         $company = $this->faker->unique()->company();
+        $slug = Str::slug($company).'-'.Str::random(6);
 
         return [
-            'slug' => $company,
+            'slug' => $slug,
             'name' => $company,
             'description' => $this->faker->paragraph(),
             'image' => $this->faker->imageUrl(),

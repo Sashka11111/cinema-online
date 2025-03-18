@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('meta_image', 2048)->nullable();
             $table->timestamps();
 
-            $table->unique(['movie_id', 'number']); // Забезпечує унікальність номера епізоду в рамках фільму
+            $table->unique(['movie_id', 'number']);
         });
     }
 

@@ -16,9 +16,10 @@ class PersonFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->name();
+        $slug = Str::slug($name).'-'.Str::random(6);
 
         return [
-            'slug' => Str::slug($name).'-'.Str::ulid(),
+            'slug' => $slug,
             'name' => $name,
             'original_name' => $this->faker->optional()->name(),
             'gender' => $this->faker->randomElement(Gender::cases())->value,

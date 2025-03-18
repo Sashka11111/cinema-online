@@ -9,43 +9,43 @@ enum VideoQuality: string
     case FULL_HD = 'full_hd';
     case UHD = 'uhd';
 
-    public function name(): string
+    public static function getLabels(): array
     {
-        return match ($this) {
-            self::SD => 'Стандартне визначення (SD)',
-            self::HD => 'Висока якість (HD)',
-            self::FULL_HD => 'Повне HD (Full HD)',
-            self::UHD => 'Ультрависока якість (UHD)',
-        };
+        return [
+            self::SD->value => __('video_quality.sd'),
+            self::HD->value => __('video_quality.hd'),
+            self::FULL_HD->value => __('video_quality.full_hd'),
+            self::UHD->value => __('video_quality.uhd'),
+        ];
     }
 
-    public function metaTitle(): string
+    public static function getMetaTitles(): array
     {
-        return match ($this) {
-            self::SD => 'Стандартне визначення (SD) - Погляньте на якість відео',
-            self::HD => 'Висока якість (HD) - Насолоджуйтеся чітким відео',
-            self::FULL_HD => 'Повне HD (Full HD) - Відео з найкращою якістю',
-            self::UHD => 'Ультрависока якість (UHD) - Чіткість без компромісів',
-        };
+        return [
+            self::SD->value => __('video_quality.meta_title.sd'),
+            self::HD->value => __('video_quality.meta_title.hd'),
+            self::FULL_HD->value => __('video_quality.meta_title.full_hd'),
+            self::UHD->value => __('video_quality.meta_title.uhd'),
+        ];
     }
 
-    public function metaDescription(): string
+    public static function getMetaDescriptions(): array
     {
-        return match ($this) {
-            self::SD => 'Відео з якістю стандартного визначення, ідеально підходить для старих пристроїв.',
-            self::HD => 'Висока якість відео для кращих деталей і чіткості.',
-            self::FULL_HD => 'Відео в Full HD роздільній здатності для найкращого перегляду.',
-            self::UHD => 'Ультрависока якість з чіткістю до 4K для неймовірно реалістичного зображення.',
-        };
+        return [
+            self::SD->value => __('video_quality.meta_description.sd'),
+            self::HD->value => __('video_quality.meta_description.hd'),
+            self::FULL_HD->value => __('video_quality.meta_description.full_hd'),
+            self::UHD->value => __('video_quality.meta_description.uhd'),
+        ];
     }
 
-    public function metaImage(): string
+    public static function getMetaImages(): array
     {
-        return match ($this) {
-            self::SD => 'url_to_sd_image.jpg',
-            self::HD => 'url_to_hd_image.jpg',
-            self::FULL_HD => 'url_to_full_hd_image.jpg',
-            self::UHD => 'url_to_uhd_image.jpg',
-        };
+        return [
+            self::SD->value => __('video_quality.meta_image.sd'),
+            self::HD->value => __('video_quality.meta_image.hd'),
+            self::FULL_HD->value => __('video_quality.meta_image.full_hd'),
+            self::UHD->value => __('video_quality.meta_image.uhd'),
+        ];
     }
 }

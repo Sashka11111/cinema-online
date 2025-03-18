@@ -13,10 +13,11 @@ class TagFactory extends Factory
 {
     public function definition(): array
     {
-        $name = $this->faker->word().' '.Str::substr(Str::ulid(), 0, 6);
+        $name = $this->faker->word();
+        $slug = Str::slug($name).'-'.Str::random(6);
 
         return [
-            'slug' => Str::slug($name).'-'.Str::random(5),
+            'slug' => $slug,
             'name' => $name,
             'description' => $this->faker->sentence(10),
             'image' => $this->faker->boolean(50) ? $this->faker->imageUrl(640, 480, 'tags') : null,

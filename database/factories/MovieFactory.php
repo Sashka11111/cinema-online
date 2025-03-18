@@ -46,9 +46,9 @@ class MovieFactory extends Factory
 
         return [
             'api_sources' => $this->getApiSources($movieData),
-            'slug' => Str::limit($title, 255, ''), // Зміна тут
-            'name' => Str::limit($title, 255, ''), // Зміна тут
-            'description' => $this->getDescription($movieData), // Зміна в getDescription
+            'slug' => $title,
+            'name' => $title,
+            'description' => $this->getDescription($movieData),
             'image_name' => $this->faker->imageUrl(200, 100, 'movies'),
             'aliases' => collect([$originalTitle]),
             'studio_id' => Studio::query()->inRandomOrder()->value('id') ?? Studio::factory(),
@@ -69,7 +69,7 @@ class MovieFactory extends Factory
             'similars' => [],
             'is_published' => $this->faker->boolean(),
             'meta_title' => Str::limit("Дивитись онлайн $title | ".config('app.name'), 255, '...'), // Зміна тут
-            'meta_description' => $this->getDescription($movieData), // Зміна в getDescription
+            'meta_description' => $this->getDescription($movieData),
             'meta_image' => $this->getBackdrop($movieData),
         ];
     }

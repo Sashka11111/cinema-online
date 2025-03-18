@@ -43,6 +43,12 @@ class TagResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 ImageColumn::make('image')
                     ->label('Зображення')
                     ->disk('public')
@@ -57,6 +63,13 @@ class TagResource extends Resource
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('description')
+                    ->label('Опис')
+                    ->limit(50)
+                    ->tooltip(fn (Tag $record): ?string => $record->description)
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('aliases')
                     ->label('Аліаси')
@@ -82,6 +95,12 @@ class TagResource extends Resource
                     ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('is_genre')

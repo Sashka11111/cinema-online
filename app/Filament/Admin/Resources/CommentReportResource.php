@@ -3,9 +3,10 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -28,7 +29,7 @@ class CommentReportResource extends Resource
 
     protected static ?string $navigationLabel = 'Скарги на коментарі';
 
-    protected static ?string $modelLabel = 'скарга на коментар';
+    protected static ?string $modelLabel = 'скаргу на коментар';
 
     protected static ?string $pluralModelLabel = 'Скарги на коментарі';
 
@@ -47,39 +48,46 @@ class CommentReportResource extends Resource
             ->schema([
                 Section::make('Інформація про скаргу')
                     ->icon('heroicon-o-information-circle')
-                    ->collapsed()
                     ->schema([
                         Select::make('comment_id')
                             ->label('Коментар')
-                            ->relationship('comment', 'content')
+                            ->relationship('comment', 'body')
                             ->required()
                             ->searchable()
                             ->preload()
-                            ->disabled(fn (string $operation) => $operation === 'edit'), // Не редагувати після створення
+                            ->disabled(fn (string $operation): bool => $operation === 'edit'),
 
-                        Select::make('user_id')
-                            ->label('Користувач')
-                            ->relationship('user', 'name') // Припускаю відношення до моделі User
+                        Select::make('type')
+                            ->label('Тип скарги')
+                            ->options(CommentReportType::getLabels())
                             ->required()
-                            ->searchable()
-                            ->preload()
-                            ->disabled(fn (string $operation) => $operation === 'edit'), // Не редагувати після створення
-                    ])
-                    ->columns(2),
+                            ->enum(CommentReportType::class),
 
-                Section::make('Статус обробки')
-                    ->icon('heroicon-o-check-circle')
-                    ->collapsed()
-                    ->schema([
-                        Toggle::make('is_resolved')
-                            ->label('Вирішено')
-                            ->default(false),
+                        DateTimePicker::make('created_at')
+                            ->label('Дата створення')
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
 
-                        Textarea::make('resolution_note')
-                            ->label('Примітка до вирішення')
-                            ->maxLength(512)
-                            ->rows(3)
+                        DateTimePicker::make('updated_at')
+                            ->label('Дата оновлення')
+                            ->prefixIcon('heroicon-o-clock')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        Toggle::make('is_viewed')
+                            ->label('Переглянуто')
+                            ->default(false)
+                            ->visible(fn (string $operation): bool => $operation === 'edit'),
+
+                        RichEditor::make('body')
+                            ->label('Текст скарги')
                             ->nullable()
+                            ->disableToolbarButtons(['attachFiles'])
                             ->columnSpanFull(),
                     ])
                     ->columns(2),
@@ -90,6 +98,12 @@ class CommentReportResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('comment.body')
                     ->label('Коментар')
                     ->limit(50)
@@ -118,7 +132,7 @@ class CommentReportResource extends Resource
                     ->tooltip(fn ($record) => $record->body)
                     ->searchable()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('type')
                     ->label('Тип скарги')
@@ -132,6 +146,12 @@ class CommentReportResource extends Resource
                     ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('user')

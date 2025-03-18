@@ -3,13 +3,12 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Liamtseva\Cinema\Enums\Kind;
 use Liamtseva\Cinema\Enums\VideoPlayerName;
 use Liamtseva\Cinema\Enums\VideoQuality;
 use Liamtseva\Cinema\Models\Episode;
 use Liamtseva\Cinema\Models\Movie;
-use Liamtseva\Cinema\ValueObjects\VideoPlayer;
 
 /**
  * @extends Factory<Episode>
@@ -22,11 +21,12 @@ class EpisodeFactory extends Factory
         $isMovieKind = $movie->kind === Kind::MOVIE; // Перевірка типу Movie
 
         $name = $this->faker->sentence(3);
+        $slug = Str::slug($name).'-'.Str::random(6);
 
         return [
             'movie_id' => $movie->id,
             'number' => $this->generateUniqueNumber($movie->id, $isMovieKind),
-            'slug' => $name,
+            'slug' => $slug,
             'name' => $name,
             'description' => $this->faker->paragraph(),
             'duration' => $this->faker->numberBetween(20, 120),
@@ -48,7 +48,7 @@ class EpisodeFactory extends Factory
             return 1; // Для фільмів завжди номер 1
         }
 
-        $existingNumbers = collect(Episode::where('movie_id', $movieId)->pluck('number'));
+        $existingNumbers = Episode::where('movie_id', $movieId)->pluck('number');
 
         // Знаходимо наступний доступний номер
         $newNumber = 1;
@@ -68,38 +68,28 @@ class EpisodeFactory extends Factory
         ], $count);
     }
 
-    /**
-     * @return Collection<VideoPlayer>
-     */
-    private function generateVideoPlayers(): Collection
+    private function generateVideoPlayers(): array
     {
-        $videoPlayers = collect([
+        $videoPlayers = [
             [
-                'name' => VideoPlayerName::KODIK,
+                'name' => VideoPlayerName::KODIK->value,
                 'url' => $this->faker->url(),
                 'file_url' => $this->faker->url(),
                 'dubbing' => $this->faker->boolean(50) ? 'uk' : 'en',
-                'quality' => VideoQuality::HD,
+                'quality' => VideoQuality::HD->value,
                 'locale_code' => $this->faker->randomElement(['uk', 'en']),
             ],
             [
-                'name' => VideoPlayerName::ALOHA,
+                'name' => VideoPlayerName::ALOHA->value,
                 'url' => $this->faker->url(),
                 'file_url' => $this->faker->url(),
                 'dubbing' => $this->faker->boolean(50) ? 'uk' : 'en',
-                'quality' => VideoQuality::FULL_HD,
+                'quality' => VideoQuality::FULL_HD->value,
                 'locale_code' => $this->faker->randomElement(['uk', 'en']),
             ],
-        ]);
+        ];
 
-        return $videoPlayers->map(fn ($data) => new VideoPlayer(
-            $data['name'],
-            $data['url'],
-            $data['file_url'],
-            $data['dubbing'],
-            $data['quality'],
-            $data['locale_code']
-        ));
+        return $videoPlayers;
     }
 
     public function forMovie(Movie $movie): self

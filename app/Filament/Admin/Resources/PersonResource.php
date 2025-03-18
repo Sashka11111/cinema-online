@@ -44,6 +44,12 @@ class PersonResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 ImageColumn::make('image')
                     ->label('Фото')
                     ->disk('public')
@@ -67,14 +73,7 @@ class PersonResource extends Resource
 
                 TextColumn::make('type')
                     ->label('Тип')
-                    ->formatStateUsing(fn (PersonType $state) => PersonType::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn ($state): string => match ($state) {
-                        PersonType::ACTOR => 'success',
-                        PersonType::DIRECTOR => 'info',
-                        PersonType::WRITER => 'warning',
-                        default => 'primary',
-                    })
                     ->sortable()
                     ->toggleable(),
 
@@ -104,11 +103,36 @@ class PersonResource extends Resource
                         ($record->birthplace ? ' ('.$record->birthplace.')' : ''))
                     ->sortable()
                     ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('description')
+                    ->label('Опис')
+                    ->limit(50)
+                    ->tooltip(fn (Person $record): ?string => $record->description)
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('created_at')
+                    ->label('Дата створення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('type')
                     ->label('Тип')
-                    ->options(PersonType::getLabels())
+                    ->options(PersonType::class)
                     ->multiple(),
 
                 SelectFilter::make('gender')
@@ -161,7 +185,7 @@ class PersonResource extends Resource
                         }),
 
                     TextInput::make('slug')
-                        ->label('Слаг')
+                        ->label('Slug')
                         ->required()
                         ->maxLength(128)
                         ->unique(Person::class, 'slug', ignoreRecord: true)
@@ -169,7 +193,7 @@ class PersonResource extends Resource
 
                     Select::make('type')
                         ->label('Тип')
-                        ->options(PersonType::getLabels())
+                        ->options(PersonType::class)
                         ->required()
                         ->native(false),
 
@@ -248,7 +272,7 @@ class PersonResource extends Resource
                 ->collapsed()
                 ->schema([
                     TextInput::make('meta_title')
-                        ->label('Meta Title')
+                        ->label('Meta назва')
                         ->maxLength(128)
                         ->helperText('Автоматично генерується з імені')
                         ->nullable(),
@@ -261,7 +285,7 @@ class PersonResource extends Resource
                         ->nullable(),
 
                     Textarea::make('meta_description')
-                        ->label('Meta Description')
+                        ->label('Meta опис')
                         ->maxLength(376)
                         ->rows(3)
                         ->nullable(),
