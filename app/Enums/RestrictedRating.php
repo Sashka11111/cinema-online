@@ -2,77 +2,89 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum RestrictedRating: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum RestrictedRating: string implements HasColor, HasIcon, HasLabel
 {
+    case G = 'g';
     case PG = 'pg';
     case PG_13 = 'pg_13';
     case R = 'r';
     case NC_17 = 'nc_17';
-    case G = 'g';
 
-    public static function getLabels(): array
+    /**
+     * Повертає перекладену мітку для Filament із файлу локалізації.
+     */
+    public function getLabel(): ?string
     {
-        return [
-            self::PG->value => 'PG',
-            self::PG_13->value => 'PG-13',
-            self::R->value => 'R',
-            self::NC_17->value => 'NC-17',
-            self::G->value => 'G',
-        ];
+        return __('restricted_rating.'.$this->value);
     }
 
-    public function hint(): string
+    /**
+     * Повертає колір для відображення у Filament.
+     */
+    public function getColor(): string|array|null
     {
         return match ($this) {
-            self::PG => 'Рекомендовано для загальної аудиторії.',
-            self::PG_13 => 'Дозволено для глядачів від 13 років і старше.',
-            self::R => 'Обмеження для глядачів старше 17 років.',
-            self::NC_17 => 'Тільки для глядачів старше 18 років.',
-            self::G => 'Підходить для всіх вікових груп.',
+            self::G => 'success',    // Зелене — без обмежень
+            self::PG => 'info',      // Блакитне — м’які обмеження
+            self::PG_13 => 'warning', // Жовте — помірні обмеження
+            self::R => 'danger',     // Червоне — серйозні обмеження
+            self::NC_17 => 'gray',   // Сіре — найвищий рівень
         };
     }
 
-    public function icon(): ?string
+    /**
+     * Повертає іконку для Filament (шляхи до кастомних зображень).
+     */
+    public function getIcon(): ?string
     {
         return match ($this) {
+            self::G => '/icons/ratings/g.png',
             self::PG => '/icons/ratings/pg.png',
             self::PG_13 => '/icons/ratings/pg-13.png',
             self::R => '/icons/ratings/r.png',
             self::NC_17 => '/icons/ratings/nc-17.png',
-            self::G => '/icons/ratings/g.png',
         };
     }
 
-    public function metaTitle(): string
+    /**
+     * Повертає підказку для користувача з файлу локалізації.
+     */
+    public function getHint(): string
     {
-        return match ($this) {
-            self::PG => 'Фільми і серіали з рейтингом PG',
-            self::PG_13 => 'Фільми і серіали з рейтингом PG-13',
-            self::R => 'Фільми і серіали з рейтингом R',
-            self::NC_17 => 'Фільми і серіали з рейтингом NC-17',
-            self::G => 'Фільми і серіали з рейтингом G',
-        };
+        return __("restricted_rating.{$this->value}_hint");
     }
 
-    public function metaDescription(): string
+    /**
+     * Повертає мета-заголовок для SEO з файлу локалізації.
+     */
+    public function getMetaTitle(): string
     {
-        return match ($this) {
-            self::PG => 'Фільми, які підходять для загальної аудиторії без обмежень.',
-            self::PG_13 => 'Фільми, дозволені для глядачів від 13 років.',
-            self::R => 'Фільми для глядачів старше 17 років через вміст, що містить насильство або інші обмеження.',
-            self::NC_17 => 'Фільми для глядачів старше 18 років, що містять інтенсивний вміст.',
-            self::G => 'Фільми, які підходять для всіх вікових категорій.',
-        };
+        return __("restricted_rating.{$this->value}_meta_title");
     }
 
-    public function metaImage(): string
+    /**
+     * Повертає мета-опис для SEO з файлу локалізації.
+     */
+    public function getMetaDescription(): string
+    {
+        return __("restricted_rating.{$this->value}_meta_description");
+    }
+
+    /**
+     * Повертає шлях до мета-зображення для SEO.
+     */
+    public function getMetaImage(): string
     {
         return match ($this) {
+            self::G => '/images/seo/g.jpg',
             self::PG => '/images/seo/pg.jpg',
             self::PG_13 => '/images/seo/pg-13.jpg',
             self::R => '/images/seo/r.jpg',
             self::NC_17 => '/images/seo/nc-17.jpg',
-            self::G => '/images/seo/g.jpg',
         };
     }
 }

@@ -3,10 +3,12 @@
 namespace Liamtseva\Cinema\Enums;
 
 use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum PersonType: string implements HasColor, HasLabel
+enum PersonType: string implements HasColor, HasIcon, HasLabel
 {
+    // Визначення типів персон
     case ACTOR = 'actor';
     case CHARACTER = 'character';
     case DIRECTOR = 'director';
@@ -27,38 +29,48 @@ enum PersonType: string implements HasColor, HasLabel
     case PRODUCTION_DESIGNER = 'production_designer';
     case VISUAL_EFFECTS_SUPERVISOR = 'visual_effects_supervisor';
 
+    // Локалізовані мітки
     public function getLabel(): ?string
     {
-        return match ($this) {
-            self::ACTOR => __('person_type.actor'),
-            self::CHARACTER => __('person_type.character'),
-            self::DIRECTOR => __('person_type.director'),
-            self::PRODUCER => __('person_type.producer'),
-            self::WRITER => __('person_type.writer'),
-            self::EDITOR => __('person_type.editor'),
-            self::CINEMATOGRAPHER => __('person_type.cinematographer'),
-            self::COMPOSER => __('person_type.composer'),
-            self::ART_DIRECTOR => __('person_type.art_director'),
-            self::SOUND_DESIGNER => __('person_type.sound_designer'),
-            self::COSTUME_DESIGNER => __('person_type.costume_designer'),
-            self::MAKEUP_ARTIST => __('person_type.makeup_artist'),
-            self::VOICE_ACTOR => __('person_type.voice_actor'),
-            self::STUNT_PERFORMER => __('person_type.stunt_performer'),
-            self::ASSISTANT_DIRECTOR => __('person_type.assistant_director'),
-            self::PRODUCER_ASSISTANT => __('person_type.producer_assistant'),
-            self::SCRIPT_SUPERVISOR => __('person_type.script_supervisor'),
-            self::PRODUCTION_DESIGNER => __('person_type.production_designer'),
-            self::VISUAL_EFFECTS_SUPERVISOR => __('person_type.visual_effects_supervisor'),
-        };
+        return __('person_type.'.$this->value);
     }
 
+    // Кольори для відображення у Filament
     public function getColor(): string|array|null
     {
         return match ($this) {
-            PersonType::ACTOR => 'success',
-            PersonType::DIRECTOR => 'info',
-            PersonType::WRITER => 'warning',
+            self::ACTOR => 'success',
+            self::DIRECTOR => 'info',
+            self::WRITER => 'warning',
+            self::PRODUCER => 'primary',
+            self::CHARACTER => 'gray',
             default => 'primary',
+        };
+    }
+
+    // Іконки для відображення у Filament
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::ACTOR => 'heroicon-o-user',
+            self::CHARACTER => 'heroicon-o-face-smile',
+            self::DIRECTOR => 'heroicon-o-video-camera',
+            self::PRODUCER => 'heroicon-o-banknotes',
+            self::WRITER => 'heroicon-o-pencil',
+            self::EDITOR => 'heroicon-o-scissors',
+            self::CINEMATOGRAPHER => 'heroicon-o-camera',
+            self::COMPOSER => 'heroicon-o-musical-note',
+            self::ART_DIRECTOR => 'heroicon-o-paint-brush',
+            self::SOUND_DESIGNER => 'heroicon-o-speaker-wave',
+            self::COSTUME_DESIGNER => 'heroicon-o-paint-brush',
+            self::MAKEUP_ARTIST => 'heroicon-o-sparkles',
+            self::VOICE_ACTOR => 'heroicon-o-microphone',
+            self::STUNT_PERFORMER => 'heroicon-o-fire',
+            self::ASSISTANT_DIRECTOR => 'heroicon-o-clipboard',
+            self::PRODUCER_ASSISTANT => 'heroicon-o-briefcase',
+            self::SCRIPT_SUPERVISOR => 'heroicon-o-document-text',
+            self::PRODUCTION_DESIGNER => 'heroicon-o-building-office',
+            self::VISUAL_EFFECTS_SUPERVISOR => 'heroicon-o-cpu-chip',
         };
     }
 }

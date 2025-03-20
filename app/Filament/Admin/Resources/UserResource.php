@@ -74,35 +74,13 @@ class UserResource extends Resource
 
                 TextColumn::make('role')
                     ->label('Роль')
-                    ->formatStateUsing(fn (Role $state) => Role::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn (User $user): string => match ($user->role) {
-                        Role::USER => 'success',       // Звичайний користувач - зелений
-                        Role::MODERATOR => 'primary',  // Модератор - синій
-                        Role::ADMIN => 'danger',       // Адмін - червоний
-                    })
-                    ->icon(fn (User $user): string => match ($user->role) {
-                        Role::USER => 'heroicon-o-user',
-                        Role::MODERATOR => 'clarity-user-outline-badged',
-                        Role::ADMIN => 'clarity-administrator-line',
-                    })
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('gender')
                     ->label('Стать')
-                    ->formatStateUsing(fn (Gender $state) => Gender::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn (User $user): string => match ($user->gender) {
-                        Gender::MALE => 'info',       // Чоловіки - синій
-                        Gender::FEMALE => 'warning',     // Жінки - рожевий
-                        Gender::OTHER => 'gray',      // Інші - сірий
-                    })
-                    ->icon(fn (User $user): string => match ($user->gender) {
-                        Gender::MALE => 'fas-male',  // Іконка для чоловіків
-                        Gender::FEMALE => 'fas-female',       // Іконка для жінок
-                        Gender::OTHER => 'bx-male-female', // Іконка для інших
-                    })
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
@@ -204,12 +182,11 @@ class UserResource extends Resource
             ])
                 ->filters([
                     SelectFilter::make('role')
-                        ->label('Роль')
-                        ->options(Role::getLabels()),
+                        ->label('Роль'),
 
                     SelectFilter::make('gender')
                         ->label('Стать')
-                        ->options(Gender::getLabels()),
+                        ->options(Gender::class),
                     Filter::make('birthday')
                         ->form([
                             DatePicker::make('birthday_from')->label('Дата народження від')->native(false),
@@ -265,7 +242,7 @@ class UserResource extends Resource
 
                     Select::make('gender')
                         ->label('Стать')
-                        ->options(Gender::getLabels())
+                        ->options(Gender::class)
                         ->prefixIcon('bx-male-female')
                         ->nullable(),
 
@@ -314,7 +291,7 @@ class UserResource extends Resource
 
                     Select::make('role')
                         ->label('Роль')
-                        ->options(Role::getLabels())
+                        ->options(Role::class)
                         ->prefixIcon('bx-user')
                         ->required(),
                 ])

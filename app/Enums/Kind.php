@@ -2,7 +2,11 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum Kind: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum Kind: string implements HasColor, HasIcon, HasLabel
 {
     case MOVIE = 'movie';
     case TV_SERIES = 'tv_series';
@@ -10,62 +14,78 @@ enum Kind: string
     case ANIMATED_SERIES = 'animated_series';
     case ANIME = 'anime';
 
-    public static function getLabels(): array
+    /**
+     * Повертає перекладену назву типу для Filament із файлу локалізації.
+     */
+    public function getLabel(): ?string
     {
-        return [
-            self::MOVIE->value => __('kind.movie'),
-            self::TV_SERIES->value => __('kind.tv_series'),
-            self::ANIMATED_MOVIE->value => __('kind.animated_movie'),
-            self::ANIMATED_SERIES->value => __('kind.animated_series'),
-            self::ANIME->value => __('kind.anime'),
-        ];
+        return __('kind.'.$this->value);
     }
 
-    public function name(): string
+    /**
+     * Повертає колір для відображення у Filament.
+     */
+    public function getColor(): string|array|null
     {
         return match ($this) {
-            self::MOVIE => __('kind.movie_name'),
-            self::TV_SERIES => __('kind.tv_series_name'),
-            self::ANIMATED_MOVIE => __('kind.animated_movie_name'),
-            self::ANIMATED_SERIES => __('kind.animated_series_name'),
-            self::ANIME => __('kind.anime_name'),
+            self::MOVIE => 'info',         // Блакитний для фільмів
+            self::TV_SERIES => 'success',  // Зелений для серіалів
+            self::ANIMATED_MOVIE => 'primary', // Фіолетовий для мультфільмів
+            self::ANIMATED_SERIES => 'warning', // Жовтий для мультсеріалів
+            self::ANIME => 'pink',         // Рожевий для аніме
         };
     }
 
-    public function description(): string
+    /**
+     * Повертає іконку для Filament.
+     */
+    public function getIcon(): ?string
     {
         return match ($this) {
-            self::MOVIE => __('kind.movie_description'),
-            self::TV_SERIES => __('kind.tv_series_description'),
-            self::ANIMATED_MOVIE => __('kind.animated_movie_description'),
-            self::ANIMATED_SERIES => __('kind.animated_series_description'),
-            self::ANIME => __('kind.anime_description'),
+            self::MOVIE => 'heroicon-o-film',
+            self::TV_SERIES => 'heroicon-o-tv',
+            self::ANIMATED_MOVIE => 'heroicon-o-sparkles',
+            self::ANIMATED_SERIES => 'heroicon-o-play-circle',
+            self::ANIME => 'heroicon-o-sun',
         };
     }
 
-    public function metaTitle(): string
+    /**
+     * Повертає перекладену назву типу (альтернативна версія).
+     */
+    public function getName(): string
     {
-        return match ($this) {
-            self::MOVIE => __('kind.movie_meta_title'),
-            self::TV_SERIES => __('kind.tv_series_meta_title'),
-            self::ANIMATED_MOVIE => __('kind.animated_movie_meta_title'),
-            self::ANIMATED_SERIES => __('kind.animated_series_meta_title'),
-            self::ANIME => __('kind.anime_meta_title'),
-        };
+        return __("kind.{$this->value}_name");
     }
 
-    public function metaDescription(): string
+    /**
+     * Повертає опис типу з файлу локалізації.
+     */
+    public function getDescription(): string
     {
-        return match ($this) {
-            self::MOVIE => __('kind.movie_meta_description'),
-            self::TV_SERIES => __('kind.tv_series_meta_description'),
-            self::ANIMATED_MOVIE => __('kind.animated_movie_meta_description'),
-            self::ANIMATED_SERIES => __('kind.animated_series_meta_description'),
-            self::ANIME => __('kind.anime_meta_description'),
-        };
+        return __("kind.{$this->value}_description");
     }
 
-    public function metaImage(): string
+    /**
+     * Повертає мета-заголовок для SEO з файлу локалізації.
+     */
+    public function getMetaTitle(): string
+    {
+        return __("kind.{$this->value}_meta_title");
+    }
+
+    /**
+     * Повертає мета-опис для SEO з файлу локалізації.
+     */
+    public function getMetaDescription(): string
+    {
+        return __("kind.{$this->value}_meta_description");
+    }
+
+    /**
+     * Повертає шлях до мета-зображення для SEO.
+     */
+    public function getMetaImage(): string
     {
         return match ($this) {
             self::MOVIE => '/images/seo/movie.jpg',

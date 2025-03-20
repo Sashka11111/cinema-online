@@ -2,50 +2,72 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum VideoQuality: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum VideoQuality: string implements HasColor, HasIcon, HasLabel
 {
     case SD = 'sd';
     case HD = 'hd';
     case FULL_HD = 'full_hd';
     case UHD = 'uhd';
 
-    public static function getLabels(): array
+    /**
+     * Повертає перекладену мітку для Filament із файлу локалізації.
+     */
+    public function getLabel(): ?string
     {
-        return [
-            self::SD->value => __('video_quality.sd'),
-            self::HD->value => __('video_quality.hd'),
-            self::FULL_HD->value => __('video_quality.full_hd'),
-            self::UHD->value => __('video_quality.uhd'),
-        ];
+        return __('video_quality.'.$this->value);
     }
 
-    public static function getMetaTitles(): array
+    /**
+     * Повертає колір для відображення у Filament.
+     */
+    public function getColor(): string|array|null
     {
-        return [
-            self::SD->value => __('video_quality.meta_title.sd'),
-            self::HD->value => __('video_quality.meta_title.hd'),
-            self::FULL_HD->value => __('video_quality.meta_title.full_hd'),
-            self::UHD->value => __('video_quality.meta_title.uhd'),
-        ];
+        return match ($this) {
+            self::SD => 'gray',      // Сірий для SD
+            self::HD => 'info',      // Блакитний для HD
+            self::FULL_HD => 'success', // Зелений для Full HD
+            self::UHD => 'primary',   // Фіолетовий для UHD
+        };
     }
 
-    public static function getMetaDescriptions(): array
+    /**
+     * Повертає іконку для Filament.
+     */
+    public function getIcon(): ?string
     {
-        return [
-            self::SD->value => __('video_quality.meta_description.sd'),
-            self::HD->value => __('video_quality.meta_description.hd'),
-            self::FULL_HD->value => __('video_quality.meta_description.full_hd'),
-            self::UHD->value => __('video_quality.meta_description.uhd'),
-        ];
+        return match ($this) {
+            self::SD => 'heroicon-o-eye',
+            self::HD => 'heroicon-o-eye',
+            self::FULL_HD => 'heroicon-o-eye',
+            self::UHD => 'heroicon-o-eye',
+        };
     }
 
-    public static function getMetaImages(): array
+    /**
+     * Повертає мета-заголовок для SEO з файлу локалізації.
+     */
+    public function getMetaTitle(): string
     {
-        return [
-            self::SD->value => __('video_quality.meta_image.sd'),
-            self::HD->value => __('video_quality.meta_image.hd'),
-            self::FULL_HD->value => __('video_quality.meta_image.full_hd'),
-            self::UHD->value => __('video_quality.meta_image.uhd'),
-        ];
+        return __("video_quality.meta_title.{$this->value}");
+    }
+
+    /**
+     * Повертає мета-опис для SEO з файлу локалізації.
+     */
+    public function getMetaDescription(): string
+    {
+        return __("video_quality.meta_description.{$this->value}");
+    }
+
+    /**
+     * Повертає шлях до мета-зображення для SEO з файлу локалізації.
+     */
+    public function getMetaImage(): string
+    {
+        return __("video_quality.meta_image.{$this->value}");
     }
 }

@@ -22,9 +22,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Kind;
-use Liamtseva\Cinema\Enums\Period;
-use Liamtseva\Cinema\Enums\RestrictedRating;
-use Liamtseva\Cinema\Enums\Source;
 use Liamtseva\Cinema\Enums\Status;
 use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\Pages;
 use Liamtseva\Cinema\Models\Movie;
@@ -57,13 +54,13 @@ class MovieResource extends Resource
                 ->icon('heroicon-o-information-circle')
                 ->schema([
                     TextInput::make('name')
-                        ->label('назва')
+                        ->label('Назва')
                         ->required()
                         ->maxLength(248)
                         ->prefixIcon('clarity-text-line')
-                        ->reactive()
+                        ->live(onBlur: true)
                         ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
-                            if ($operation == 'edit' || empty($state)) {
+                            if ($operation === 'edit' || empty($state)) {
                                 return;
                             }
                             $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
@@ -71,22 +68,24 @@ class MovieResource extends Resource
                         }),
 
                     TextInput::make('slug')
-                        ->label('url-посилання')
+                        ->label('Slug')
                         ->required()
                         ->maxLength(128)
-                        ->prefixIcon('heroicon-o-link')
-                        ->unique(ignoreRecord: true),
+                        ->unique(Movie::class, 'slug', ignoreRecord: true)
+                        ->helperText('Автоматично генерується з імені')
+                        ->prefixIcon('heroicon-o-link'),
 
                     Select::make('studio_id')
-                        ->label('студія')
+                        ->label('Студія')
                         ->relationship('studio', 'name')
                         ->required()
+                        ->preload()
                         ->prefixIcon('heroicon-o-building-office')
                         ->searchable(),
 
                     Select::make('kind')
-                        ->label('тип')
-                        ->options(Kind::getLabels())
+                        ->label('Тип')
+                        ->options(Kind::class)
                         ->required()
                         ->prefixIcon('heroicon-o-video-camera'),
                 ])
@@ -229,6 +228,12 @@ class MovieResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 ImageColumn::make('image_name')
                     ->label('Зображення')
                     ->disk('public')
@@ -239,6 +244,7 @@ class MovieResource extends Resource
 
                 TextColumn::make('name')
                     ->label('Назва')
+                    ->description(fn (Movie $movie): string => $movie->slug)
                     ->searchable()
                     ->sortable()
                     ->wrap(),
@@ -359,45 +365,32 @@ class MovieResource extends Resource
 
                 TextColumn::make('kind')
                     ->label('Тип')
-                    ->formatStateUsing(fn (Kind $state) => Kind::getLabels()[$state->value])
                     ->badge()
-                    ->color(fn ($state) => match ($state) {
-                        Kind::MOVIE => 'primary',
-                        Kind::TV_SERIES => 'success',
-                        Kind::ANIME => 'warning',
-                        default => 'gray',
-                    })
                     ->toggleable(),
 
                 TextColumn::make('status')
                     ->label('Статус')
-                    ->formatStateUsing(fn (Status $state) => Status::getLabels()[$state->value])
                     ->badge()
                     ->color(fn ($state) => match ($state) {
-                        Status::ONGOING => 'success',
-                        Status::RELEASED => 'info',
-                        Status::ANONS => 'warning',
+
                         default => 'gray',
                     })
                     ->toggleable(),
 
                 TextColumn::make('period')
                     ->label('Період')
-                    ->formatStateUsing(fn (?Period $state) => $state ? Period::getLabels()[$state->value] : '—')
                     ->badge()
                     ->color('info')
                     ->toggleable(),
 
                 TextColumn::make('restricted_rating')
                     ->label('Вікове обмеження')
-                    ->formatStateUsing(fn (RestrictedRating $state) => RestrictedRating::getLabels()[$state->value])
                     ->badge()
                     ->color('warning')
                     ->toggleable(),
 
                 TextColumn::make('source')
                     ->label('Джерело')
-                    ->formatStateUsing(fn (Source $state) => Source::getLabels()[$state->value])
                     ->badge()
                     ->color('gray')
                     ->toggleable(),
@@ -416,11 +409,11 @@ class MovieResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('kind')
-                    ->options(Kind::getLabels())
+                    ->options(Kind::class)
                     ->label('Тип'),
 
                 SelectFilter::make('status')
-                    ->options(Status::getLabels())
+                    ->options(Status::class)
                     ->label('Статус'),
 
                 SelectFilter::make('studio')

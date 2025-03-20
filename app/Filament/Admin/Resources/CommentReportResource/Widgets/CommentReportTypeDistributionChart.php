@@ -27,7 +27,7 @@ class CommentReportTypeDistributionChart extends ChartWidget
         foreach ($types as $index => $type) {
             $count = CommentReport::where('type', $type->value)->count();
             $data[] = $count;
-            $labels[] = CommentReportType::getLabels()[$type->value];
+            $labels[] = $type->getLabel();
         }
 
         return [

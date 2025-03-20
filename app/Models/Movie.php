@@ -114,7 +114,6 @@ class Movie extends Model
             ->withPivot('character_name', 'voice_person_id');
     }
 
-    // TODO: продумати, де зберігати картинки...
     public function userNotifications(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'movie_user_notifications')

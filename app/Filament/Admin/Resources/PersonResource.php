@@ -79,20 +79,6 @@ class PersonResource extends Resource
 
                 TextColumn::make('gender')
                     ->label('Стать')
-                    ->formatStateUsing(fn (Gender $state) => Gender::getLabels()[$state->value])
-                    ->badge()
-                    ->color(fn ($state): ?string => match ($state) {
-                        Gender::MALE => 'info',
-                        Gender::FEMALE => 'warning',
-                        Gender::OTHER => 'gray',
-                        null => null,
-                    })
-                    ->icon(fn ($state): ?string => match ($state) {
-                        Gender::MALE => 'fas-male',
-                        Gender::FEMALE => 'fas-female',
-                        Gender::OTHER => 'bx-male-female',
-                        null => null,
-                    })
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
@@ -137,7 +123,7 @@ class PersonResource extends Resource
 
                 SelectFilter::make('gender')
                     ->label('Стать')
-                    ->options(Gender::getLabels())
+                    ->options(Gender::class)
                     ->multiple(),
 
                 Filter::make('birthday')
@@ -199,9 +185,10 @@ class PersonResource extends Resource
 
                     Select::make('gender')
                         ->label('Стать')
-                        ->options(Gender::getLabels())
+                        ->options(Gender::class)
                         ->nullable()
                         ->native(false),
+
                     DateTimePicker::make('created_at')
                         ->label('Дата створення')
                         ->prefixIcon('heroicon-o-calendar')

@@ -24,10 +24,10 @@ class UserExporter extends Exporter
                 ->label('Email'),
             ExportColumn::make('role')
                 ->label('Роль')
-                ->formatStateUsing(fn ($state) => Role::getLabels()[$state] ?? $state),
+                ->formatStateUsing(fn ($state) => Role::class[$state] ?? $state),
             ExportColumn::make('gender')
                 ->label('Стать')
-                ->formatStateUsing(fn ($state) => Gender::getLabels()[$state] ?? $state),
+                ->formatStateUsing(fn ($state) => Gender::class[$state] ?? $state),
             ExportColumn::make('birthday')
                 ->label('Дата народження')
                 ->formatStateUsing(fn ($state) => $state ? $state->format('d-m-Y') : null),

@@ -2,18 +2,39 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum Role: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum Role: string implements HasColor, HasIcon, HasLabel
 {
     case USER = 'user';
-    case ADMIN = 'admin';
     case MODERATOR = 'moderator';
+    case ADMIN = 'admin';
 
-    public static function getLabels(): array
+    // Локалізовані мітки для Filament
+    public function getLabel(): ?string
     {
-        return [
-            self::USER->value => __('role.user'),
-            self::ADMIN->value => __('role.admin'),
-            self::MODERATOR->value => __('role.moderator'),
-        ];
+        return __('role.'.$this->value);
+    }
+
+    // Кольори для відображення у Filament
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::USER => 'success',      // Сірий для звичайних користувачів
+            self::MODERATOR => 'info', // Блакитний для модераторів
+            self::ADMIN => 'primary',
+        };
+    }
+
+    // Іконки для Filament
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::USER => 'heroicon-o-user',
+            self::MODERATOR => 'heroicon-o-shield-check',
+            self::ADMIN => 'heroicon-o-key',
+        };
     }
 }

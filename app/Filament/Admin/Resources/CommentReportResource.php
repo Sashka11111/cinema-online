@@ -59,7 +59,7 @@ class CommentReportResource extends Resource
 
                         Select::make('type')
                             ->label('Тип скарги')
-                            ->options(CommentReportType::getLabels())
+                            ->options(CommentReportType::class)
                             ->required()
                             ->enum(CommentReportType::class),
 
@@ -136,7 +136,6 @@ class CommentReportResource extends Resource
 
                 TextColumn::make('type')
                     ->label('Тип скарги')
-                    ->formatStateUsing(fn (CommentReportType $state) => CommentReportType::getLabels()[$state->value])
                     ->badge()
                     ->sortable()
                     ->toggleable(),
@@ -168,7 +167,7 @@ class CommentReportResource extends Resource
 
                 SelectFilter::make('type')
                     ->label('Тип скарги')
-                    ->options(CommentReportType::getLabels())
+                    ->options(CommentReportType::class)
                     ->multiple(),
 
                 Filter::make('created_at')

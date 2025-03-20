@@ -3,14 +3,20 @@
 namespace Liamtseva\Cinema\Enums;
 
 use Carbon\Carbon;
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
 
-enum Period: string
+enum Period: string implements HasColor, HasIcon, HasLabel
 {
     case WINTER = 'winter';
     case SPRING = 'spring';
     case SUMMER = 'summer';
     case AUTUMN = 'autumn';
 
+    /**
+     * Визначає період за датою випуску.
+     */
     public static function fromDate(mixed $releaseDate): Period
     {
         $releaseDate = $releaseDate instanceof Carbon ? $releaseDate : Carbon::parse($releaseDate);
@@ -24,63 +30,82 @@ enum Period: string
         };
     }
 
-    public function name(): string
+    /**
+     * Повертає перекладену назву періоду для Filament із файлу локалізації.
+     */
+    public function getLabel(): ?string
+    {
+        return __('period.'.$this->value);
+    }
+
+    /**
+     * Повертає колір для відображення у Filament.
+     */
+    public function getColor(): string|array|null
     {
         return match ($this) {
-            self::SPRING => __('period.spring'),
-            self::SUMMER => __('period.summer'),
-            self::AUTUMN => __('period.autumn'),
-            self::WINTER => __('period.winter'),
+            self::WINTER => 'gray',    // Сірий для зими
+            self::SPRING => 'success', // Зелений для весни
+            self::SUMMER => 'warning', // Жовтий для літа
+            self::AUTUMN => 'orange',  // Помаранчевий для осені
         };
     }
 
-    public function description(): string
+    /**
+     * Повертає іконку для Filament.
+     */
+    public function getIcon(): ?string
     {
         return match ($this) {
-            self::SPRING => __('period.spring_description'),
-            self::SUMMER => __('period.summer_description'),
-            self::AUTUMN => __('period.autumn_description'),
-            self::WINTER => __('period.winter_description'),
+            self::WINTER => 'clarity-snowflake-line',
+            self::SPRING => 'heroicon-o-sun',
+            self::SUMMER => 'heroicon-o-fire',
+            self::AUTUMN => 'bx-cloud-rain',
         };
     }
 
-    public function metaTitle(): string
+    /**
+     * Повертає перекладену назву періоду (альтернатива для зворотної сумісності).
+     */
+    public function getName(): string
     {
-        return match ($this) {
-            self::SPRING => __('period.spring_meta_title'),
-            self::SUMMER => __('period.summer_meta_title'),
-            self::AUTUMN => __('period.autumn_meta_title'),
-            self::WINTER => __('period.winter_meta_title'),
-        };
+        return __('period.'.$this->value);
     }
 
-    public function metaDescription(): string
+    /**
+     * Повертає опис періоду з файлу локалізації.
+     */
+    public function getDescription(): string
     {
-        return match ($this) {
-            self::SPRING => __('period.spring_meta_description'),
-            self::SUMMER => __('period.summer_meta_description'),
-            self::AUTUMN => __('period.autumn_meta_description'),
-            self::WINTER => __('period.winter_meta_description'),
-        };
+        return __("period.{$this->value}_description");
     }
 
-    public function metaImage(): string
+    /**
+     * Повертає мета-заголовок для SEO з файлу локалізації.
+     */
+    public function getMetaTitle(): string
+    {
+        return __("period.{$this->value}_meta_title");
+    }
+
+    /**
+     * Повертає мета-опис для SEO з файлу локалізації.
+     */
+    public function getMetaDescription(): string
+    {
+        return __("period.{$this->value}_meta_description");
+    }
+
+    /**
+     * Повертає шлях до мета-зображення для SEO.
+     */
+    public function getMetaImage(): string
     {
         return match ($this) {
+            self::WINTER => '/images/seo/winter-holidays-movies.jpg',
             self::SPRING => '/images/seo/spring-movies.jpg',
             self::SUMMER => '/images/seo/summer-blockbusters.jpg',
             self::AUTUMN => '/images/seo/autumn-movies.jpg',
-            self::WINTER => '/images/seo/winter-holidays-movies.jpg',
         };
-    }
-
-    public static function getLabels(): array
-    {
-        return [
-            self::WINTER->value => __('period.winter'),
-            self::SPRING->value => __('period.spring'),
-            self::SUMMER->value => __('period.summer'),
-            self::AUTUMN->value => __('period.autumn'),
-        ];
     }
 }

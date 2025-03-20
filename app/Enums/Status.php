@@ -2,7 +2,11 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum Status: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum Status: string implements HasColor, HasIcon, HasLabel
 {
     case ANONS = 'anons';
     case ONGOING = 'ongoing';
@@ -11,55 +15,69 @@ enum Status: string
     case RUMORED = 'rumored';
 
     /**
-     * Повертає масив із перекладеними назвами для використання у фільтрах чи списках.
+     * Повертає перекладену назву статусу для Filament.
      */
-    public static function getLabels(): array
+    public function getLabel(): ?string
     {
-        return [
-            self::ANONS->value => __('status.anons'),
-            self::ONGOING->value => __('status.ongoing'),
-            self::RELEASED->value => __('status.released'),
-            self::CANCELED->value => __('status.canceled'),
-            self::RUMORED->value => __('status.rumored'),
-        ];
+        return __('status.'.$this->value);
     }
 
     /**
-     * Повертає перекладену назву статусу.
+     * Повертає колір для відображення у Filament.
      */
-    public function name(): string
+    public function getColor(): string|array|null
     {
-        return __(sprintf('status.%s', $this->value));
+        return match ($this) {
+            self::ANONS => 'warning',   // Жовтий для анонсів
+            self::ONGOING => 'success', // Зелений для поточних
+            self::RELEASED => 'info',   // Блакитний для випущених
+            self::CANCELED => 'danger', // Червоний для скасованих
+            self::RUMORED => 'gray',    // Сірий для чуток
+        };
+    }
+
+    /**
+     * Повертає іконку для Filament.
+     */
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::ANONS => 'heroicon-o-megaphone',
+            self::ONGOING => 'heroicon-o-play',
+            self::RELEASED => 'heroicon-o-check-circle',
+            self::CANCELED => 'heroicon-o-x-circle',
+            self::RUMORED => 'heroicon-o-question-mark-circle',
+        };
     }
 
     /**
      * Повертає опис статусу.
      */
-    public function description(): string
+    public function getDescription(): string
     {
-        return __(sprintf('status.%s_description', $this->value));
+        return __("status.{$this->value}_description");
     }
 
     /**
      * Повертає мета-заголовок для SEO.
      */
-    public function metaTitle(): string
+    public function getMetaTitle(): string
     {
-        return __(sprintf('status.%s_meta_title', $this->value));
+        return __("status.{$this->value}_meta_title");
     }
 
     /**
      * Повертає мета-опис для SEO.
      */
-    public function metaDescription(): string
+    public function getMetaDescription(): string
     {
-        return __(sprintf('status.%s_meta_description', $this->value));
+        return __("status.{$this->value}_meta_description");
     }
 
     /**
      * Повертає шлях до мета-зображення для SEO.
      */
-    public function metaImage(): string
+    public function getMetaImage(): string
     {
         return match ($this) {
             self::ANONS => '/images/seo/anons-movies.jpg',

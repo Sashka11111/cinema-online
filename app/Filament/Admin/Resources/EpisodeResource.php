@@ -58,6 +58,7 @@ class EpisodeResource extends Resource
                         ->label('Медіа')
                         ->relationship('movie', 'name')
                         ->required()
+                        ->preload()
                         ->prefixIcon('heroicon-o-film')
                         ->searchable(),
 
@@ -65,6 +66,7 @@ class EpisodeResource extends Resource
                         ->label('Номер епізоду')
                         ->required()
                         ->numeric()
+                        ->unique(Episode::class, 'number')
                         ->minValue(1)
                         ->maxValue(65535)
                         ->prefixIcon('heroicon-o-hashtag'),
@@ -74,7 +76,7 @@ class EpisodeResource extends Resource
                         ->required()
                         ->maxLength(128)
                         ->prefixIcon('clarity-text-line')
-                        ->reactive()
+                        ->live(onBlur: true)
                         ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                             if ($operation == 'edit' || empty($state)) {
                                 return;
@@ -84,11 +86,11 @@ class EpisodeResource extends Resource
                         }),
 
                     TextInput::make('slug')
-                        ->label('URL-посилання')
+                        ->label('Slug')
                         ->required()
                         ->maxLength(128)
-                        ->prefixIcon('heroicon-o-link')
-                        ->unique(ignoreRecord: true),
+                        ->unique(Episode::class, 'slug', ignoreRecord: true)
+                        ->helperText('Автоматично генерується з імені'),
 
                     DateTimePicker::make('created_at')
                         ->label('Дата створення')
@@ -151,35 +153,18 @@ class EpisodeResource extends Resource
                     Repeater::make('pictures')
                         ->label('Зображення')
                         ->schema([
-                            TextInput::make('name')
-                                ->label('Назва')
-                                ->maxLength(128)
-                                ->nullable(),
                             TextInput::make('url')
                                 ->label('URL зображення')
                                 ->required()
                                 ->url(),
-                            TextInput::make('file_url')
-                                ->label('URL файлу')
-                                ->url()
-                                ->nullable(),
-                            Select::make('quality')
-                                ->label('Якість')
-                                ->options(VideoQuality::getLabels())
-                                ->nullable(),
-                            TextInput::make('locale_code')
-                                ->label('Код локалі')
-                                ->maxLength(2)
-                                ->nullable(),
-                        ])
-                        ->columns(3),
+                        ]),
 
                     Repeater::make('video_players')
                         ->label('Відеоплеєри')
                         ->schema([
                             Select::make('name')
                                 ->label('Назва')
-                                ->options(VideoPlayerName::getLabels())
+                                ->options(VideoPlayerName::class)
                                 ->required(),
                             TextInput::make('url')
                                 ->label('URL плеєра')
@@ -189,9 +174,13 @@ class EpisodeResource extends Resource
                                 ->label('URL файлу')
                                 ->url()
                                 ->nullable(),
+                            TextInput::make('dubbing')
+                                ->label('Озвучка')
+                                ->maxLength(128)
+                                ->nullable(),
                             Select::make('quality')
                                 ->label('Якість')
-                                ->options(VideoQuality::getLabels())
+                                ->options(VideoQuality::class)
                                 ->nullable(),
                             TextInput::make('locale_code')
                                 ->label('Код локалі')
@@ -276,18 +265,6 @@ class EpisodeResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
-
-                TextColumn::make('pictures')
-                    ->label('Зображення')
-                    ->formatStateUsing(fn ($state) => collect($state)->pluck('url')->implode(', '))
-                    ->limit(50)
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('video_players')
-                    ->label('Відеоплеєри')
-                    ->formatStateUsing(fn ($state) => collect($state)->pluck('url')->implode(', '))
-                    ->limit(50)
-                    ->toggleable(isToggledHiddenByDefault: true),
 
                 IconColumn::make('is_filler')
                     ->label('Філер')

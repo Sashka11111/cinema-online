@@ -2,7 +2,11 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum AttachmentType: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum AttachmentType: string implements HasColor, HasIcon, HasLabel
 {
     case PICTURE = 'picture';
     case TRAILER = 'trailer';
@@ -12,16 +16,42 @@ enum AttachmentType: string
     case BAD_TAKES = 'bad_takes';
     case SHORT_FILMS = 'short_films';
 
-    public static function getLabels(): array
+    /**
+     * Повертає перекладену назву типу вкладення для Filament із файлу локалізації.
+     */
+    public function getLabel(): ?string
     {
-        return [
-            self::PICTURE->value => __('attachment.picture'),
-            self::TRAILER->value => __('attachment.trailer'),
-            self::TEASER->value => __('attachment.teaser'),
-            self::CLIP->value => __('attachment.clip'),
-            self::BEHIND_THE_SCENES->value => __('attachment.behind_the_scenes'),
-            self::BAD_TAKES->value => __('attachment.bad_takes'),
-            self::SHORT_FILMS->value => __('attachment.short_films'),
-        ];
+        return __('attachment.'.$this->value);
+    }
+
+    /**
+     * Повертає колір для відображення у Filament.
+     */
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::PICTURE => 'gray',         // Сірий для зображень
+            self::TRAILER => 'success',      // Зелений для трейлерів
+            self::TEASER => 'info',          // Блакитний для тизерів
+            self::CLIP => 'warning',         // Жовтий для кліпів
+            self::BEHIND_THE_SCENES => 'primary', // Фіолетовий для закулісся
+            self::BAD_TAKES => 'danger',     // Червоний для невдалих дублів
+        };
+    }
+
+    /**
+     * Повертає іконку для Filament.
+     */
+    public function getIcon(): ?string
+    {
+        return match ($this) {
+            self::PICTURE => 'heroicon-o-photo',
+            self::TRAILER => 'heroicon-o-film',
+            self::TEASER => 'heroicon-o-play-circle',
+            self::CLIP => 'heroicon-o-scissors',
+            self::BEHIND_THE_SCENES => 'heroicon-o-video-camera',
+            self::BAD_TAKES => 'heroicon-o-x-circle',
+            self::SHORT_FILMS => 'heroicon-o-clock',
+        };
     }
 }

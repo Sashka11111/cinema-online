@@ -37,6 +37,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'Liamtseva\\Cinema\\Filament\\Admin\\Widgets')
             ->widgets([
+
             ])
             ->middleware([
                 EncryptCookies::class,
