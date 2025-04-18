@@ -63,6 +63,19 @@ class CommentReportResource extends Resource
                             ->required()
                             ->enum(CommentReportType::class),
 
+                        Select::make('user_id')
+                            ->label('Користувач')
+                            ->relationship('user', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->prefixIcon('heroicon-o-user'),
+
+                        Toggle::make('is_viewed')
+                            ->label('Переглянуто')
+                            ->default(false)
+                            ->visible(fn (string $operation): bool => $operation === 'edit'),
+
                         DateTimePicker::make('created_at')
                             ->label('Дата створення')
                             ->prefixIcon('heroicon-o-calendar')
@@ -78,11 +91,6 @@ class CommentReportResource extends Resource
                             ->disabled()
                             ->default(now())
                             ->hiddenOn('create'),
-
-                        Toggle::make('is_viewed')
-                            ->label('Переглянуто')
-                            ->default(false)
-                            ->visible(fn (string $operation): bool => $operation === 'edit'),
 
                         RichEditor::make('body')
                             ->label('Текст скарги')

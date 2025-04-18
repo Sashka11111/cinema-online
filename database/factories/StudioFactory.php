@@ -18,7 +18,7 @@ class StudioFactory extends Factory
             'description' => $this->faker->paragraph(),
             'image' => $this->faker->imageUrl(),
             'meta_title' => $this->faker->sentence(),
-            'meta_description' => $this->faker->sentence(),
+            'meta_description' => $this->faker->optional()->text(376),
             'meta_image' => $this->faker->imageUrl(),
         ];
     }

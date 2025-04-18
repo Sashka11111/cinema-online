@@ -117,6 +117,7 @@ class StudioResource extends Resource
 
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -240,6 +241,7 @@ class StudioResource extends Resource
         return [
             'index' => Pages\ListStudios::route('/'),
             'create' => Pages\CreateStudio::route('/create'),
+            'view' => Pages\ViewStudio::route('/{record}'),
             'edit' => Pages\EditStudio::route('/{record}/edit'),
         ];
     }

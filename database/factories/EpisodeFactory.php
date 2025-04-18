@@ -35,7 +35,7 @@ class EpisodeFactory extends Factory
             'pictures' => json_encode($this->generatePictureUrls(rand(1, 3))),
             'video_players' => $this->generateVideoPlayers(),
             'meta_title' => $this->faker->optional()->sentence(5),
-            'meta_description' => $this->faker->optional()->sentence(10),
+            'meta_description' => $this->faker->optional()->text(376),
             'meta_image' => $this->faker->optional()->imageUrl(),
             'created_at' => now(),
             'updated_at' => now(),

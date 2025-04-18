@@ -136,6 +136,9 @@ class PersonResource extends Resource
                         ->when($data['birthday_to'], fn ($q, $date) => $q->where('birthday', '<=', $date))),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make()
+                    ->icon('heroicon-o-eye')
+                    ->color('info'),
                 Tables\Actions\EditAction::make()
                     ->icon('heroicon-o-pencil')
                     ->color('primary'),
@@ -293,6 +296,7 @@ class PersonResource extends Resource
         return [
             'index' => Pages\ListPeople::route('/'),
             'create' => Pages\CreatePerson::route('/create'),
+            'view' => Pages\ViewPerson::route('/{record}'),
             'edit' => Pages\EditPerson::route('/{record}/edit'),
         ];
     }

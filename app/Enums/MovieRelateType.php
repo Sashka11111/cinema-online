@@ -38,8 +38,8 @@ enum MovieRelateType: string implements HasColor, HasIcon, HasLabel
             self::SIDE_STORY => 'primary', // Фіолетовий для побічної історії
             self::SUMMARY => 'warning',   // Жовтий для підсумку
             self::OTHER => 'gray',        // Сірий для іншого
-            self::ADAPTATION => 'orange', // Помаранчевий для адаптації
-            self::ALTERNATIVE => 'pink',  // Рожевий для альтернативи
+            self::ADAPTATION => 'info',
+            self::ALTERNATIVE => 'danger',
             self::PREQUEL => 'danger',    // Червоний для приквелу
         };
     }

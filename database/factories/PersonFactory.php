@@ -28,7 +28,7 @@ class PersonFactory extends Factory
             'birthday' => $this->faker->optional()->date(),
             'birthplace' => $this->faker->optional()->city(),
             'meta_title' => $this->faker->randomElement(PersonType::cases())->name.' '.$name.' | '.config('app.name'),
-            'meta_description' => $this->faker->sentence(15),
+            'meta_description' => $this->faker->text(376),
             'meta_image' => $this->faker->imageUrl(640, 480, 'people-meta', true),
             'type' => $this->faker->randomElement(PersonType::cases())->value,
         ];

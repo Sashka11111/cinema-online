@@ -30,7 +30,7 @@ enum UserListType: string implements HasColor, HasIcon, HasLabel
     public function getColor(): string|array|null
     {
         return match ($this) {
-            self::FAVORITE => 'pink',     // Рожевий для улюбленого
+            self::FAVORITE => 'warning',     // Жовтий для улюбленого
             self::NOT_WATCHING => 'gray', // Сірий для "не дивлюся"
             self::WATCHING => 'success',  // Зелений для "дивлюся"
             self::PLANNED => 'warning',   // Жовтий для "в планах"

@@ -3,10 +3,9 @@
 namespace Liamtseva\Cinema\Enums;
 
 use Filament\Support\Contracts\HasColor;
-use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
 
-enum RestrictedRating: string implements HasColor, HasIcon, HasLabel
+enum RestrictedRating: string implements HasColor, HasLabel
 {
     case G = 'g';
     case PG = 'pg';
@@ -33,20 +32,6 @@ enum RestrictedRating: string implements HasColor, HasIcon, HasLabel
             self::PG_13 => 'warning', // Жовте — помірні обмеження
             self::R => 'danger',     // Червоне — серйозні обмеження
             self::NC_17 => 'gray',   // Сіре — найвищий рівень
-        };
-    }
-
-    /**
-     * Повертає іконку для Filament (шляхи до кастомних зображень).
-     */
-    public function getIcon(): ?string
-    {
-        return match ($this) {
-            self::G => '/icons/ratings/g.png',
-            self::PG => '/icons/ratings/pg.png',
-            self::PG_13 => '/icons/ratings/pg-13.png',
-            self::R => '/icons/ratings/r.png',
-            self::NC_17 => '/icons/ratings/nc-17.png',
         };
     }
 

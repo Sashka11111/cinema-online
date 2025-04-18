@@ -37,9 +37,9 @@ enum Source: string implements HasColor, HasIcon, HasLabel
             self::GAME => 'warning',      // Жовтий для ігор
             self::NOVEL => 'gray',        // Сірий для новел
             self::COMIC => 'primary',      // Фіолетовий для коміксів
-            self::LIGHT_NOVEL => 'pink',  // Рожевий для легких новел
-            self::WEBTOON => 'cyan',      // Бірюзовий для вебтунів
-            self::TV_SHOW => 'orange',    // Помаранчевий для ТВ-шоу
+            self::LIGHT_NOVEL => 'success',  // Рожевий для легких новел
+            self::WEBTOON => 'gray',      // Бірюзовий для вебтунів
+            self::TV_SHOW => 'warning',    // Помаранчевий для ТВ-шоу
             self::MOVIE => 'primary',     // Синій для фільмів
         };
     }

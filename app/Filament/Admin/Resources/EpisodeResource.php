@@ -66,7 +66,7 @@ class EpisodeResource extends Resource
                         ->label('Номер епізоду')
                         ->required()
                         ->numeric()
-                        ->unique(Episode::class, 'number')
+                        ->unique(Episode::class, 'number',ignoreRecord: true)
                         ->minValue(1)
                         ->maxValue(65535)
                         ->prefixIcon('heroicon-o-hashtag'),

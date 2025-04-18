@@ -35,7 +35,7 @@ return new class extends Migration
             $table->json('similars')->default(DB::raw("'[]'::json")); // JSON для схожих фільмів
             $table->boolean('is_published')->default(false); // Статус публікації
             $table->string('meta_title', 128)->nullable();
-            $table->string('meta_description', 500)->nullable();
+            $table->string('meta_description', 376)->nullable();
             $table->string('meta_image', 2048)->nullable();
             $table->timestamps();
         });

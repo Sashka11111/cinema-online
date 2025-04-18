@@ -48,6 +48,11 @@ class Selection extends Model
         return $this->morphMany(Comment::class, 'commentable');
     }
 
+    public function episodes(): MorphToMany
+    {
+        return $this->morphedByMany(Episode::class, 'selectionable');
+    }
+
     public function scopeSearch(Builder $query, string $search): Builder
     {
         return $query

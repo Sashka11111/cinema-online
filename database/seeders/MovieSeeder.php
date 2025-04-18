@@ -6,6 +6,7 @@ use Database\Factories\MovieFactory;
 use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Liamtseva\Cinema\Enums\Kind;
 use Liamtseva\Cinema\Enums\Period;
 use Liamtseva\Cinema\Enums\RestrictedRating;
@@ -26,19 +27,16 @@ class MovieSeeder extends Seeder
         // Отримуємо топ 100 фільмів/серіалів з TheMovieDB
         $moviesData = $this->getTopMoviesFromTMDB();
 
-        $releaseDate = $movieData['release_date'] ?? $movieData['first_air_date'] ?? null;
-        $period = $releaseDate ? Period::fromDate($releaseDate) : null;
-
-        $firstAirDate = $movieFactory->parseValidDate($releaseDate)
-            ?? $movieFactory->parseValidDate($releaseDate)
-            ?? $faker->date();
-
-        $lastAirDate = $movieFactory->parseValidDate($releaseDate)
-            ?? $movieFactory->parseValidDate($releaseDate)
-            ?? $faker->date();
-
         // Прив'язуємо фільми до користувачів
-        $movies = collect($moviesData)->map(function ($movieData) use ($period, $movieFactory, $faker, $firstAirDate, $lastAirDate) {
+        $movies = collect($moviesData)->map(function ($movieData) use ($movieFactory, $faker) {
+            $releaseDate = $movieData['release_date'] ?? $movieData['first_air_date'] ?? null;
+            $period = $releaseDate ? Period::fromDate($releaseDate) : null;
+
+            $firstAirDate = $movieFactory->parseValidDate($releaseDate)
+                ?? $faker->date();
+
+            $lastAirDate = $movieFactory->parseValidDate($releaseDate)
+                ?? $faker->date();
 
             // Створюємо фільм
             return Movie::create([
@@ -66,7 +64,7 @@ class MovieSeeder extends Seeder
                 'similars' => [],
                 'is_published' => $faker->boolean(),
                 'meta_title' => 'Дивитись онлайн '.$movieData['title'].' | '.config('app.name'),
-                'meta_description' => $movieFactory->getDescription($movieData),
+                'meta_description' => Str::limit($movieFactory->getDescription($movieData), 370, '...'),
                 'meta_image' => $movieFactory->getBackdrop($movieData),
             ]);
         });

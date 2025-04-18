@@ -144,6 +144,7 @@ class CommentResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -188,6 +189,14 @@ class CommentResource extends Resource
                             ->searchable()
                             ->required()
                             ->prefixIcon('heroicon-o-identification'),
+
+                        Select::make('user_id')
+                            ->label('Користувач')
+                            ->relationship('user', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->prefixIcon('heroicon-o-user'),
 
                         DateTimePicker::make('created_at')
                             ->label('Дата створення')
@@ -246,6 +255,7 @@ class CommentResource extends Resource
         return [
             'index' => Pages\ListComments::route('/'),
             'create' => Pages\CreateComment::route('/create'),
+            'view' => Pages\ViewComment::route('/{record}'),
             'edit' => Pages\EditComment::route('/{record}/edit'),
         ];
     }

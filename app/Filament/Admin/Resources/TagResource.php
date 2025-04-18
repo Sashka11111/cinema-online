@@ -134,6 +134,7 @@ class TagResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -263,6 +264,7 @@ class TagResource extends Resource
         return [
             'index' => Pages\ListTags::route('/'),
             'create' => Pages\CreateTag::route('/create'),
+            'view' => Pages\ViewTag::route('/{record}'),
             'edit' => Pages\EditTag::route('/{record}/edit'),
         ];
     }

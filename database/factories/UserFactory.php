@@ -14,7 +14,7 @@ use Liamtseva\Cinema\Models\User;
  */
 class UserFactory extends Factory
 {
-    protected static ?string $password = 'Qwerty123$';
+    protected static ?string $password = 'Password123$';
 
     public function definition(): array
     {

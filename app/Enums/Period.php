@@ -47,7 +47,7 @@ enum Period: string implements HasColor, HasIcon, HasLabel
             self::WINTER => 'gray',    // Сірий для зими
             self::SPRING => 'success', // Зелений для весни
             self::SUMMER => 'warning', // Жовтий для літа
-            self::AUTUMN => 'orange',  // Помаранчевий для осені
+            self::AUTUMN => 'info',
         };
     }
 

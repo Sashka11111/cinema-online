@@ -145,6 +145,14 @@ class RatingResource extends Resource
                             ->required()
                             ->prefixIcon('heroicon-o-film'),
 
+                        Select::make('user_id')
+                            ->label('Користувач')
+                            ->relationship('user', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->prefixIcon('heroicon-o-user'),
+
                         Select::make('number')
                             ->label('Оцінка')
                             ->options(range(1, 10))

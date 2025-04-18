@@ -7,6 +7,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,6 +22,13 @@ class AppServiceProvider extends ServiceProvider
         Select::configureUsing(fn ($component) => $component->prefixIconColor('primary'));
         DateTimePicker::configureUsing(fn ($component) => $component->prefixIconColor('primary')->prefixIcon('clarity-date-line'));
         Section::configureUsing(fn ($component) => $component->iconColor('primary'));
+        Toggle::configureUsing(function (Toggle $component): void {
+            $component
+                ->onIcon('heroicon-o-check-circle')  // Іконка для стану "увімкнено" (true)
+                ->offIcon('heroicon-o-x-circle')     // Іконка для стану "вимкнено" (false)
+                ->onColor('primary')                 // Колір для стану "увімкнено"
+                ->offColor('gray');                // Колір для стану "вимкнено"
+        });
         Model::unguard();
         Model::shouldBeStrict();
     }

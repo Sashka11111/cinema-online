@@ -40,10 +40,11 @@ class MovieFactory extends Factory
         $lastAirDate = $this->parseValidDate($releaseDate)
             ?? $this->parseValidDate($releaseDate)
             ?? $this->faker->date();
+        $slug = Str::slug($title).'-'.Str::random(6);
 
         return [
             'api_sources' => $this->getApiSources($movieData),
-            'slug' => $title,
+            'slug' => $slug,
             'name' => $title,
             'description' => $this->getDescription($movieData),
             'image_name' => $this->faker->imageUrl(200, 100, 'movies'),
@@ -103,7 +104,7 @@ class MovieFactory extends Factory
 
     public function getDescription(array $movieData): string
     {
-        return data_get($movieData, 'overview', $this->faker->sentence(15));
+        return Str::limit(data_get($movieData, 'overview', $this->faker->sentence(15)), 450, '...');
     }
 
     public function determineStatus(array $movieData): Status

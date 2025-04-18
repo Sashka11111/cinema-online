@@ -32,7 +32,7 @@ enum Kind: string implements HasColor, HasIcon, HasLabel
             self::TV_SERIES => 'success',  // Зелений для серіалів
             self::ANIMATED_MOVIE => 'primary', // Фіолетовий для мультфільмів
             self::ANIMATED_SERIES => 'warning', // Жовтий для мультсеріалів
-            self::ANIME => 'pink',         // Рожевий для аніме
+            self::ANIME => 'danger',         // Рожевий для аніме
         };
     }
 

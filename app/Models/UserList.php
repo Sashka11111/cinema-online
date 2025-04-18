@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Liamtseva\Cinema\Enums\UserListType;
 
@@ -21,6 +22,11 @@ class UserList extends Model
     protected $casts = [
         'type' => UserListType::class,
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function listable(): MorphTo
     {
@@ -44,5 +50,17 @@ class UserList extends Model
             ->when($userListType, function ($query) use ($userListType) {
                 $query->where('type', $userListType->value);
             });
+    }
+
+    public function getTranslatedTypeAttribute(): string
+    {
+        return match ($this->listable_type) {
+            Movie::class => 'Фільм',
+            Episode::class => 'Епізод',
+            Selection::class => 'Підбірка',
+            Person::class => 'Персона',
+            Tag::class => 'Тег',
+            default => 'Невідомий контент',
+        };
     }
 }
