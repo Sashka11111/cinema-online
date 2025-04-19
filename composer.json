@@ -15,6 +15,7 @@
         "livewire/livewire": "^3.4",
         "livewire/volt": "^1.0",
         "mallardduck/blade-boxicons": "^2.4",
+        "nuxtifyts/dash-stack-theme": "^1.2",
         "owenvoke/blade-fontawesome": "^2.8"
     },
     "require-dev": {

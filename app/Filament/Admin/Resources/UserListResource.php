@@ -53,6 +53,12 @@ class UserListResource extends Resource
                             ->required()
                             ->prefixIcon('heroicon-o-list-bullet'),
 
+                        Select::make('listable_type')
+                            ->label('Тип елемента')
+                            ->required()
+                            ->default(Movie::class)
+                            ->prefixIcon('heroicon-o-identification'),
+
                         Select::make('listable_id')
                             ->label('Елемент списку')
                             ->options(function () {
@@ -64,13 +70,6 @@ class UserListResource extends Resource
                             ->afterStateUpdated(function ($state, callable $set) {
                                 $set('listable_type', Movie::class);
                             }),
-
-                        Select::make('listable_type')
-                            ->label('Тип елемента')
-                            ->required()
-                            ->disabled()
-                            ->default(Movie::class)
-                            ->prefixIcon('heroicon-o-identification'),
 
                         DateTimePicker::make('created_at')
                             ->label('Дата створення')

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b3cb837e1436b119b91b302c5461aaa4",
+    "content-hash": "8006ea4ec8d8cd11ac439bdadc725e2d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5718,6 +5718,75 @@
                 }
             ],
             "time": "2024-11-21T10:39:51+00:00"
+        },
+        {
+            "name": "nuxtifyts/dash-stack-theme",
+            "version": "v1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Fa-BRAIK/dash-stack-theme.git",
+                "reference": "a6c054d4bb328dd23465a4a9f3f9479cabf71d90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Fa-BRAIK/dash-stack-theme/zipball/a6c054d4bb328dd23465a4a9f3f9479cabf71d90",
+                "reference": "a6c054d4bb328dd23465a4a9f3f9479cabf71d90",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^3.0",
+                "illuminate/contracts": "^11.0|^12.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.19"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.20",
+                "phpunit/phpunit": "^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Nuxtifyts\\DashStackTheme\\DashStackThemeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nuxtifyts\\DashStackTheme\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Farouk Braik",
+                    "email": "faroukbraik17@gmail.com"
+                }
+            ],
+            "description": "DashStack theme for filament php",
+            "keywords": [
+                "dashStack",
+                "dashboard-theme",
+                "filament",
+                "filamentphp",
+                "filamentphp-theme",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/Fa-BRAIK/dash-stack-theme/issues",
+                "source": "https://github.com/Fa-BRAIK/dash-stack-theme/tree/v1.2.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/Fa-BRAIK",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-03-16T13:54:33+00:00"
         },
         {
             "name": "openspout/openspout",
