@@ -16,7 +16,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 use Liamtseva\Cinema\Filament\Admin\Resources\StudioResource\Pages;
 use Liamtseva\Cinema\Models\Studio;
 
@@ -39,24 +39,16 @@ class StudioResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(function ($query) {
-                $search = request()->input('tableSearch');
-                if ($search) {
-                    $query
-                        ->select('*')
-                        ->addSelect(DB::raw("ts_rank(searchable, websearch_to_tsquery('ukrainian', ?)) AS rank"))
-                        ->addSelect(DB::raw("ts_headline('ukrainian', name, websearch_to_tsquery('ukrainian', ?), 'HighlightAll=true') AS name_highlight"))
-                        ->addSelect(DB::raw("ts_headline('ukrainian', description, websearch_to_tsquery('ukrainian', ?), 'HighlightAll=true') AS description_highlight"))
-                        ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
-                        ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search])
-                        ->orWhereRaw('name % ?', [$search])
-                        ->orderByDesc('rank')
-                        ->orderByDesc('similarity');
-                }
-
-                return $query;
+            ->modifyQueryUsing(function (Builder $query) {
+                return $query->withCount('movies');
             })
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 ImageColumn::make('image')
                     ->label('Зображення')
                     ->disk('public')
@@ -66,7 +58,7 @@ class StudioResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('name')
-                    ->label('Назва')
+                    ->label('Назва та slug')
                     ->description(fn (Studio $studio): string => $studio->slug)
                     ->searchable()
                     ->sortable()
@@ -74,8 +66,14 @@ class StudioResource extends Resource
 
                 TextColumn::make('description')
                     ->label('Опис')
-                    ->limit(50)
                     ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('movies_count')
+                    ->label('Кількість фільмів')
+                    ->sortable()
+                    ->alignCenter()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
@@ -91,15 +89,29 @@ class StudioResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Filter::make('name')
+                Filter::make('movies_count')
                     ->form([
-                        TextInput::make('name')->label('Пошук за назвою'),
+                        TextInput::make('min')
+                            ->label('Мінімальна кількість')
+                            ->numeric()
+                            ->minValue(0),
+                        TextInput::make('max')
+                            ->label('Максимальна кількість')
+                            ->numeric()
+                            ->minValue(0),
                     ])
-                    ->query(fn ($query, $data) => $query->when(
-                        $data['name'],
-                        fn ($query) => $query->where('name', 'ilike', '%'.$data['name'].'%')
-                    )),
-
+                    ->query(function ($query, array $data) {
+                        return $query
+                            ->when(
+                                $data['min'],
+                                fn ($query, $min) => $query->has('movies', '>=', $min)
+                            )
+                            ->when(
+                                $data['max'],
+                                fn ($query, $max) => $query->has('movies', '<=', $max)
+                            );
+                    })
+                    ->label('Кількість фільмів'),
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')
@@ -114,7 +126,6 @@ class StudioResource extends Resource
                             ->when($data['created_from'], fn ($query) => $query->whereDate('created_at', '>=', $data['created_from']))
                             ->when($data['created_until'], fn ($query) => $query->whereDate('created_at', '<=', $data['created_until']));
                     }),
-
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

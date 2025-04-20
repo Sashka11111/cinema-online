@@ -3,6 +3,7 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
@@ -13,7 +14,11 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\UserListType;
 use Liamtseva\Cinema\Filament\Admin\Resources\UserListResource\Pages;
+use Liamtseva\Cinema\Models\Episode;
 use Liamtseva\Cinema\Models\Movie;
+use Liamtseva\Cinema\Models\Person;
+use Liamtseva\Cinema\Models\Selection;
+use Liamtseva\Cinema\Models\Tag;
 use Liamtseva\Cinema\Models\UserList;
 
 class UserListResource extends Resource
@@ -34,6 +39,8 @@ class UserListResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $dummyModel = new UserList;
+
         return $form
             ->schema([
                 Section::make('Основна інформація')
@@ -52,25 +59,20 @@ class UserListResource extends Resource
                             ->options(UserListType::class)
                             ->required()
                             ->prefixIcon('heroicon-o-list-bullet'),
-
-                        Select::make('listable_type')
-                            ->label('Тип елемента')
-                            ->required()
-                            ->default(Movie::class)
-                            ->prefixIcon('heroicon-o-identification'),
-
-                        Select::make('listable_id')
-                            ->label('Елемент списку')
-                            ->options(function () {
-                                return Movie::pluck('name', 'id')->toArray();
-                            })
-                            ->required()
-                            ->searchable()
-                            ->prefixIcon('heroicon-o-film')
-                            ->afterStateUpdated(function ($state, callable $set) {
-                                $set('listable_type', Movie::class);
-                            }),
-
+                        MorphToSelect::make('listable')
+                            ->types([
+                                MorphToSelect\Type::make(Movie::class)
+                                    ->titleAttribute('name')
+                                    ->label('Фільм'),
+                                MorphToSelect\Type::make(Episode::class)
+                                    ->titleAttribute('name'),
+                                MorphToSelect\Type::make(Selection::class)
+                                    ->titleAttribute('name'),
+                                MorphToSelect\Type::make(Person::class)
+                                    ->titleAttribute('name'),
+                                MorphToSelect\Type::make(Tag::class)
+                                    ->titleAttribute('name'),
+                            ]),
                         DateTimePicker::make('created_at')
                             ->label('Дата створення')
                             ->prefixIcon('heroicon-o-calendar')
@@ -151,6 +153,7 @@ class UserListResource extends Resource
                     ->options(UserListType::class),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -173,6 +176,7 @@ class UserListResource extends Resource
         return [
             'index' => Pages\ListUserLists::route('/'),
             'create' => Pages\CreateUserList::route('/create'),
+            'view' => Pages\ViewUserList::route('/{record}'),
             'edit' => Pages\EditUserList::route('/{record}/edit'),
         ];
     }

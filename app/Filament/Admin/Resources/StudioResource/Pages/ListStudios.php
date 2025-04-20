@@ -20,22 +20,24 @@ class ListStudios extends ListRecords
             Tab::make('all')
                 ->label('Усі студії')
                 ->icon('heroicon-o-list-bullet')
-                ->query(fn($query) => $query),
+                ->query(fn ($query) => $query),
 
             Tab::make('recent')
                 ->label('Недавно створені')
                 ->icon('heroicon-o-clock')
-                ->query(fn($query) => $query->where('created_at', '>=', now()->subDays(7))),
+                ->query(fn ($query) => $query->where('created_at', '>=', now()->subDays(7))),
 
-            Tab::make('with-image')
-                ->label('З зображенням')
-                ->icon('heroicon-o-photo')
-                ->query(fn($query) => $query->whereNotNull('image')),
+            Tab::make('with_movies')
+                ->label('З фільмами')
+                ->icon('heroicon-o-film')
+                ->query(fn ($query) => $query->has('movies'))
+                ->badge(fn () => $this->getModel()::has('movies')->count()),
 
-            Tab::make('without-image')
-                ->label('Без зображення')
-                ->icon('heroicon-o-no-symbol')
-                ->query(fn($query) => $query->whereNull('image')),
+            Tab::make('without_movies')
+                ->label('Без фільмів')
+                ->icon('heroicon-o-x-circle')
+                ->query(fn ($query) => $query->doesntHave('movies'))
+                ->badge(fn () => $this->getModel()::doesntHave('movies')->count()),
         ];
     }
 
@@ -51,7 +53,7 @@ class ListStudios extends ListRecords
         return [
             StudioActivityChart::class,
             RecentStudios::class,
-            StudioStats::class
+            StudioStats::class,
         ];
     }
 }

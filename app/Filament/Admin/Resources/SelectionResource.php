@@ -115,6 +115,7 @@ class SelectionResource extends Resource
                         TextInput::make('meta_title')
                             ->label('Meta назва')
                             ->maxLength(128)
+                            ->disabled()
                             ->prefixIcon('heroicon-o-tag'),
 
                         FileUpload::make('meta_image')

@@ -58,7 +58,7 @@ class TagResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('name')
-                    ->label('Назва')
+                    ->label('Назва та slug')
                     ->description(fn (Tag $tag): string => $tag->slug)
                     ->searchable()
                     ->sortable()
@@ -109,14 +109,6 @@ class TagResource extends Resource
                         '1' => 'Так',
                         '0' => 'Ні',
                     ]),
-                Filter::make('name')
-                    ->form([
-                        TextInput::make('name')->label('Пошук за назвою'),
-                    ])
-                    ->query(fn ($query, $data) => $query->when(
-                        $data['name'],
-                        fn ($query) => $query->where('name', 'ilike', '%'.$data['name'].'%')
-                    )),
 
                 Filter::make('created_at')
                     ->form([
@@ -204,8 +196,8 @@ class TagResource extends Resource
 
                         RichEditor::make('description')
                             ->label('Опис')
-                            ->required()
                             ->maxLength(512)
+                            ->required()
                             ->columnSpanFull()
                             ->disableToolbarButtons(['attachFiles'])
                             ->live(onBlur: true)
@@ -235,8 +227,6 @@ class TagResource extends Resource
                         TextInput::make('meta_title')
                             ->label('Мета-заголовок')
                             ->maxLength(128)
-                            ->nullable()
-                            ->disabled()
                             ->prefixIcon('heroicon-o-document-text'),
 
                         FileUpload::make('meta_image')

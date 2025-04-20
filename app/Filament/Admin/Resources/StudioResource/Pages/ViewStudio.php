@@ -65,7 +65,13 @@ class ViewStudio extends ViewRecord
                         ImageEntry::make('image')
                             ->label('Зображення')
                             ->disk('public'),
-                    ]),
+
+                        TextEntry::make('movies_count')
+                            ->label('Кількість фільмів')
+                            ->icon('heroicon-o-film')
+                            ->state(fn ($record) => $record->movies()->count()),
+                    ])
+                    ->columns(2),
 
                 Section::make('SEO налаштування')
                     ->icon('heroicon-o-globe-alt')

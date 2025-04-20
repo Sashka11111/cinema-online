@@ -3,6 +3,7 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources\TagResource\Pages;
 
 use Filament\Actions;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -38,10 +39,15 @@ class ViewTag extends ViewRecord
                             ->label('Slug')
                             ->icon('heroicon-o-link'),
 
-                        TextEntry::make('is_genre')
+                        IconEntry::make('is_genre')
                             ->label('Жанр')
                             ->boolean()
-                            ->icon('heroicon-o-tag'),
+                            ->trueIcon('heroicon-o-check-circle')
+                            ->falseIcon('heroicon-o-x-circle'),
+
+                        TextEntry::make('aliases')
+                            ->label('Аліаси')
+                            ->formatStateUsing(fn ($state) => is_array($state) ? implode(', ', $state) : $state),
 
                         TextEntry::make('created_at')
                             ->label('Дата створення')
@@ -72,15 +78,6 @@ class ViewTag extends ViewRecord
                             ->disk('public'),
                     ]),
 
-                Section::make('Додаткова інформація')
-                    ->icon('heroicon-o-information-circle')
-                    ->schema([
-                        TextEntry::make('aliases')
-                            ->label('Аліаси')
-                            ->bulleted(),
-                    ])
-                    ->collapsed(),
-
                 Section::make('SEO налаштування')
                     ->icon('heroicon-o-globe-alt')
                     ->schema([
@@ -96,6 +93,7 @@ class ViewTag extends ViewRecord
                             ->label('Meta опис')
                             ->html()
                             ->columnSpanFull(),
+
                     ])
                     ->collapsed()
                     ->columns(2),

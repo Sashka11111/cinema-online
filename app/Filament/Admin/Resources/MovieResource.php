@@ -37,11 +37,11 @@ class MovieResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-film';
 
-    protected static ?string $navigationLabel = 'Медіа';
+    protected static ?string $navigationLabel = 'Фільми';
 
-    protected static ?string $modelLabel = 'медіа';
+    protected static ?string $modelLabel = 'фільм';
 
-    protected static ?string $pluralModelLabel = 'Медіа';
+    protected static ?string $pluralModelLabel = 'Фільми';
 
     protected static ?string $navigationGroup = 'Контент';
 
