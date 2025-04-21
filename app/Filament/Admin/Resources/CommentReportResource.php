@@ -11,14 +11,15 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\CommentReportType;
 use Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource\RelationManagers\CommentRelationManager;
 use Liamtseva\Cinema\Models\CommentReport;
 
 class CommentReportResource extends Resource
@@ -39,7 +40,7 @@ class CommentReportResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) CommentReport::count();
+        return (string) CommentReport::where('is_viewed', false)->count();
     }
 
     public static function form(Form $form): Form
@@ -126,13 +127,11 @@ class CommentReportResource extends Resource
                     ->sortable()
                     ->toggleable(),
 
-                IconColumn::make('is_viewed')
+                ToggleColumn::make('is_viewed')
                     ->label('Переглянуто')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->tooltip('Натисніть щоб змінити статус'),
 
                 TextColumn::make('body')
                     ->label('Текст скарги')
@@ -192,6 +191,7 @@ class CommentReportResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -214,7 +214,7 @@ class CommentReportResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // Можна додати RelationManager для коментарів чи користувачів, якщо потрібно
+            CommentRelationManager::class,
         ];
     }
 
