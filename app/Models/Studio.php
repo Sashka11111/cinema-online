@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
 /**
@@ -25,7 +26,6 @@ class Studio extends Model
         return $this->hasMany(Movie::class);
     }
 
-    // TODO: fulltext search
     public function scopeByName(Builder $query, string $name): Builder
     {
         return $query->where('name', 'like', '%'.$name.'%');
@@ -35,7 +35,10 @@ class Studio extends Model
     {
         return $query
             ->select('*')
-            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search])
-            ->orWhereRaw('name % ?', [$search]);
+            ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
+            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search])
+            ->orWhereRaw('name % ?', [$search])
+            ->orderByDesc('rank')
+            ->orderByDesc('similarity');
     }
 }

@@ -19,7 +19,6 @@ use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\CommentReportType;
 use Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource\Pages;
-use Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource\RelationManagers\CommentRelationManager;
 use Liamtseva\Cinema\Models\CommentReport;
 
 class CommentReportResource extends Resource
@@ -34,73 +33,13 @@ class CommentReportResource extends Resource
 
     protected static ?string $pluralModelLabel = 'Скарги на коментарі';
 
-    protected static ?string $navigationGroup = 'Користувацька активність';
+    protected static ?string $navigationGroup = 'Коментарі';
 
-    protected static ?int $navigationSort = 3;
+    protected static ?int $navigationSort = 2;
 
     public static function getNavigationBadge(): ?string
     {
         return (string) CommentReport::where('is_viewed', false)->count();
-    }
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Section::make('Інформація про скаргу')
-                    ->icon('heroicon-o-information-circle')
-                    ->schema([
-                        Select::make('comment_id')
-                            ->label('Коментар')
-                            ->relationship('comment', 'body')
-                            ->required()
-                            ->searchable()
-                            ->preload()
-                            ->disabled(fn (string $operation): bool => $operation === 'edit'),
-
-                        Select::make('type')
-                            ->label('Тип скарги')
-                            ->options(CommentReportType::class)
-                            ->required()
-                            ->enum(CommentReportType::class),
-
-                        Select::make('user_id')
-                            ->label('Користувач')
-                            ->relationship('user', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->required()
-                            ->prefixIcon('heroicon-o-user'),
-
-                        Toggle::make('is_viewed')
-                            ->label('Переглянуто')
-                            ->default(false)
-                            ->visible(fn (string $operation): bool => $operation === 'edit'),
-
-                        DateTimePicker::make('created_at')
-                            ->label('Дата створення')
-                            ->prefixIcon('heroicon-o-calendar')
-                            ->displayFormat('d.m.Y H:i')
-                            ->disabled()
-                            ->default(now())
-                            ->hiddenOn('create'),
-
-                        DateTimePicker::make('updated_at')
-                            ->label('Дата оновлення')
-                            ->prefixIcon('heroicon-o-clock')
-                            ->displayFormat('d.m.Y H:i')
-                            ->disabled()
-                            ->default(now())
-                            ->hiddenOn('create'),
-
-                        RichEditor::make('body')
-                            ->label('Текст скарги')
-                            ->nullable()
-                            ->disableToolbarButtons(['attachFiles'])
-                            ->columnSpanFull(),
-                    ])
-                    ->columns(2),
-            ]);
     }
 
     public static function table(Table $table): Table
@@ -199,29 +138,74 @@ class CommentReportResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 
-    public static function getRelations(): array
+    public static function form(Form $form): Form
     {
-        return [
-            CommentRelationManager::class,
-        ];
+        return $form
+            ->schema([
+                Section::make('Інформація про скаргу')
+                    ->icon('heroicon-o-information-circle')
+                    ->schema([
+                        Select::make('comment_id')
+                            ->label('Коментар')
+                            ->relationship('comment', 'body')
+                            ->required()
+                            ->searchable()
+                            ->preload()
+                            ->disabled(fn (string $operation): bool => $operation === 'edit'),
+
+                        Select::make('type')
+                            ->label('Тип скарги')
+                            ->options(CommentReportType::class)
+                            ->required()
+                            ->enum(CommentReportType::class),
+
+                        Select::make('user_id')
+                            ->label('Користувач')
+                            ->relationship('user', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->required()
+                            ->prefixIcon('heroicon-o-user'),
+
+                        Toggle::make('is_viewed')
+                            ->label('Переглянуто')
+                            ->default(false)
+                            ->visible(fn (string $operation): bool => $operation === 'edit'),
+
+                        DateTimePicker::make('created_at')
+                            ->label('Дата створення')
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        DateTimePicker::make('updated_at')
+                            ->label('Дата оновлення')
+                            ->prefixIcon('heroicon-o-clock')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        RichEditor::make('body')
+                            ->label('Текст скарги')
+                            ->nullable()
+                            ->disableToolbarButtons(['attachFiles'])
+                            ->columnSpanFull(),
+                    ])
+                    ->columns(2),
+            ]);
     }
 
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListCommentReports::route('/'),
+            'view' => Pages\ViewCommentReport::route('/{record}'),
             'create' => Pages\CreateCommentReport::route('/create'),
             'edit' => Pages\EditCommentReport::route('/{record}/edit'),
         ];

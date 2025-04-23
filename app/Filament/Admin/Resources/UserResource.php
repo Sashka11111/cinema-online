@@ -43,11 +43,6 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
-    public static function getNavigationBadge(): ?string
-    {
-        return (string) User::count();
-    }
-
     public static function table(Table $table): Table
     {
         return
@@ -236,7 +231,6 @@ class UserResource extends Resource
 
                     DatePicker::make('birthday')
                         ->label('Дата народження')
-
                         ->native(false)
                         ->before(now())
                         ->nullable(),

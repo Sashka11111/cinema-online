@@ -154,8 +154,8 @@ class TagResource extends Resource
                                 if ($operation == 'edit' || empty($state)) {
                                     return;
                                 }
-                                $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
-                                $set('meta_title', $state.' | Cinema');
+                                $set('slug', Tag::generateSlug($state));
+                                $set('meta_title', Tag::makeMetaTitle($state));
                             }),
 
                         TextInput::make('slug')

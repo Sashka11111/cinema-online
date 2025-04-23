@@ -8,6 +8,16 @@ use Illuminate\Support\Str;
 
 trait HasSeo
 {
+    public static function generateSlug(string $value): string
+    {
+        return str($value)->slug().'-'.str(str()->random(6))->lower();
+    }
+
+    public static function makeMetaTitle(string $title): string
+    {
+        return $title.' | '.config('app.name');
+    }
+
     public function scopeBySlug(Builder $query, string $slug): Builder
     {
         return $query->where('slug', $slug);

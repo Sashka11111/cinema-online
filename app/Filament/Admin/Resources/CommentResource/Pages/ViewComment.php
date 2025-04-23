@@ -65,32 +65,20 @@ class ViewComment extends ViewRecord
                     ->icon('heroicon-o-chat-bubble-left-ellipsis')
                     ->schema([
                         TextEntry::make('body')
-                            ->label('Текст')
                             ->html()
                             ->columnSpanFull(),
                     ]),
 
-                Section::make('Батьківський коментар')
-                    ->icon('heroicon-o-arrow-up-on-square')
-                    ->schema([
-                        TextEntry::make('parent.body')
-                            ->label('Текст батьківського коментаря')
-                            ->html()
-                            ->columnSpanFull()
-                            ->visible(fn ($record) => $record->parent_id !== null),
-
-                        TextEntry::make('parent.user.name')
-                            ->label('Автор батьківського коментаря')
-                            ->icon('heroicon-o-user')
-                            ->visible(fn ($record) => $record->parent_id !== null),
-                    ])
-                    ->visible(fn ($record) => $record->parent_id !== null),
-
                 Section::make('Статистика')
                     ->icon('heroicon-o-chart-bar')
                     ->schema([
+                        TextEntry::make('replies_count')
+                            ->label('Кількість відповідей')
+                            ->getStateUsing(fn ($record) => $record->children()->count())
+                            ->icon('heroicon-o-chat-bubble-left-right'),
+
                         TextEntry::make('likes_count')
-                            ->label('Кількість лайків')
+                            ->label('Кількість реакцій')
                             ->getStateUsing(fn ($record) => $record->likes()->count())
                             ->icon('heroicon-o-heart'),
 
@@ -99,7 +87,7 @@ class ViewComment extends ViewRecord
                             ->getStateUsing(fn ($record) => $record->reports()->count())
                             ->icon('heroicon-o-flag'),
                     ])
-                    ->columns(2),
+                    ->columns(3),
             ]);
     }
 }

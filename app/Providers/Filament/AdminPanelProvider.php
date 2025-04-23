@@ -38,6 +38,12 @@ class AdminPanelProvider extends PanelProvider
             ->pages([])
             ->discoverWidgets(in: app_path('Filament/Admin/Widgets'), for: 'Liamtseva\\Cinema\\Filament\\Admin\\Widgets')
             ->widgets([])
+            ->navigationGroups([
+                'Контент',
+                'Персони та студії',
+                'Користувацька активність',
+                'Коментарі',
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

@@ -83,9 +83,6 @@ class Movie extends Model
         return $query
             ->select('*')
             ->addSelect(DB::raw("ts_rank(searchable, websearch_to_tsquery('ukrainian', ?)) AS rank"))
-            ->addSelect(DB::raw("ts_headline('ukrainian', name, websearch_to_tsquery('ukrainian', ?), 'HighlightAll=true') AS name_highlight"))
-            ->addSelect(DB::raw("ts_headline('ukrainian', aliases, websearch_to_tsquery('ukrainian', ?), 'HighlightAll=true') AS aliases_highlight"))
-            ->addSelect(DB::raw("ts_headline('ukrainian', description, websearch_to_tsquery('ukrainian', ?), 'HighlightAll=true') AS description_highlight"))
             ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
             ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search, $search])
             ->orWhereRaw('name % ?', [$search])
@@ -112,13 +109,6 @@ class Movie extends Model
     {
         return $this->belongsToMany(Person::class)
             ->withPivot('character_name', 'voice_person_id');
-    }
-
-    public function userNotifications(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'movie_user_notifications')
-            ->as('notification')
-            ->withTimestamps();
     }
 
     public function episodes(): HasMany

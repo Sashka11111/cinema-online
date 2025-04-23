@@ -54,13 +54,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->hasMany(Rating::class)->chaperone();
     }
 
-    public function movieNotifications()
-    {
-        return $this->belongsToMany(Movie::class, 'movie_user_notifications')
-            ->as('notification')
-            ->withTimestamps();
-    }
-
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class)->chaperone();
@@ -188,7 +181,7 @@ class User extends Authenticatable implements FilamentUser
     protected function avatar(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ? asset("storage/$value") : null
+            get: fn ($value) => $value ? asset("storage/$value") : null
         );
     }
 }

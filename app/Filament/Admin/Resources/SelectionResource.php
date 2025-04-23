@@ -37,6 +37,75 @@ class SelectionResource extends Resource
 
     protected static ?int $navigationSort = 4;
 
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('name')
+                    ->label('Назва')
+                    ->searchable()
+                    ->sortable()
+                    ->wrap()
+                    ->toggleable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug')
+                    ->searchable()
+                    ->sortable()
+                    ->limit(50)
+                    ->tooltip(fn ($record) => $record->slug)
+                    ->toggleable(isToggledHiddenByDefault: true),
+
+                TextColumn::make('description')
+                    ->label('Опис')
+                    ->limit(50)
+                    ->tooltip(fn ($record) => $record->description)
+                    ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('user.name')
+                    ->label('Автор')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('created_at')
+                    ->label('Дата створення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('updated_at')
+                    ->label('Дата оновлення')
+                    ->dateTime('d-m-Y H:i')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                SelectFilter::make('user')
+                    ->relationship('user', 'name')
+                    ->label('Автор')
+                    ->searchable()
+                    ->preload(),
+            ])
+            ->actions([
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -53,8 +122,8 @@ class SelectionResource extends Resource
                                 if ($operation == 'edit' || empty($state)) {
                                     return;
                                 }
-                                $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
-                                $set('meta_title', $state.' | Cinema');
+                                $set('slug', Selection::generateSlug($state));
+                                $set('meta_title', Selection::makeMetaTitle($state));
                             }),
 
                         TextInput::make('slug')
@@ -131,75 +200,6 @@ class SelectionResource extends Resource
                     ])
                     ->collapsed()
                     ->columns(2),
-            ]);
-    }
-
-    public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                TextColumn::make('id')
-                    ->label('ID')
-                    ->sortable()
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('name')
-                    ->label('Назва')
-                    ->searchable()
-                    ->sortable()
-                    ->wrap()
-                    ->toggleable(),
-
-                TextColumn::make('slug')
-                    ->label('Slug')
-                    ->searchable()
-                    ->sortable()
-                    ->limit(50)
-                    ->tooltip(fn ($record) => $record->slug)
-                    ->toggleable(isToggledHiddenByDefault: true),
-
-                TextColumn::make('description')
-                    ->label('Опис')
-                    ->limit(50)
-                    ->tooltip(fn ($record) => $record->description)
-                    ->searchable()
-                    ->toggleable(),
-
-                TextColumn::make('user.name')
-                    ->label('Автор')
-                    ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-
-                TextColumn::make('created_at')
-                    ->label('Дата створення')
-                    ->dateTime('d-m-Y H:i')
-                    ->sortable()
-                    ->toggleable(),
-
-                TextColumn::make('updated_at')
-                    ->label('Дата оновлення')
-                    ->dateTime('d-m-Y H:i')
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                SelectFilter::make('user')
-                    ->relationship('user', 'name')
-                    ->label('Автор')
-                    ->searchable()
-                    ->preload(),
-            ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
             ]);
     }
 

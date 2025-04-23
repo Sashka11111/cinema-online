@@ -155,8 +155,8 @@ class StudioResource extends Resource
                             if ($operation == 'edit' || empty($state)) {
                                 return;
                             }
-                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
-                            $set('meta_title', $state.' | Cinema');
+                            $set('slug', Studio::generateSlug($state));
+                            $set('meta_title', Studio::makeMetaTitle($state));
                         }),
 
                     TextInput::make('slug')

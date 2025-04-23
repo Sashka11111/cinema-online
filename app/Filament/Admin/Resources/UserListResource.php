@@ -37,62 +37,6 @@ class UserListResource extends Resource
 
     protected static ?int $navigationSort = 5;
 
-    public static function form(Form $form): Form
-    {
-        $dummyModel = new UserList;
-
-        return $form
-            ->schema([
-                Section::make('Основна інформація')
-                    ->icon('heroicon-o-information-circle')
-                    ->schema([
-                        Select::make('user_id')
-                            ->label('Користувач')
-                            ->relationship('user', 'name')
-                            ->required()
-                            ->preload()
-                            ->searchable()
-                            ->prefixIcon('heroicon-o-user'),
-
-                        Select::make('type')
-                            ->label('Тип списку')
-                            ->options(UserListType::class)
-                            ->required()
-                            ->prefixIcon('heroicon-o-list-bullet'),
-                        MorphToSelect::make('listable')
-                            ->types([
-                                MorphToSelect\Type::make(Movie::class)
-                                    ->titleAttribute('name')
-                                    ->label('Фільм'),
-                                MorphToSelect\Type::make(Episode::class)
-                                    ->titleAttribute('name'),
-                                MorphToSelect\Type::make(Selection::class)
-                                    ->titleAttribute('name'),
-                                MorphToSelect\Type::make(Person::class)
-                                    ->titleAttribute('name'),
-                                MorphToSelect\Type::make(Tag::class)
-                                    ->titleAttribute('name'),
-                            ]),
-                        DateTimePicker::make('created_at')
-                            ->label('Дата створення')
-                            ->prefixIcon('heroicon-o-calendar')
-                            ->displayFormat('d.m.Y H:i')
-                            ->disabled()
-                            ->default(now())
-                            ->hiddenOn('create'),
-
-                        DateTimePicker::make('updated_at')
-                            ->label('Дата оновлення')
-                            ->prefixIcon('heroicon-o-clock')
-                            ->displayFormat('d.m.Y H:i')
-                            ->disabled()
-                            ->default(now())
-                            ->hiddenOn('create'),
-                    ])
-                    ->columns(2),
-            ]);
-    }
-
     public static function table(Table $table): Table
     {
         return $table
@@ -161,6 +105,68 @@ class UserListResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ]);
+    }
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Section::make('Основна інформація')
+                    ->icon('heroicon-o-information-circle')
+                    ->schema([
+                        Select::make('user_id')
+                            ->label('Користувач')
+                            ->relationship('user', 'name')
+                            ->required()
+                            ->preload()
+                            ->searchable()
+                            ->prefixIcon('heroicon-o-user'),
+
+                        Select::make('type')
+                            ->label('Тип списку')
+                            ->options(UserListType::class)
+                            ->required()
+                            ->prefixIcon('heroicon-o-list-bullet'),
+
+                        MorphToSelect::make('listable')
+                            ->label('Елемент списку')
+                            ->required()
+                            ->types([
+                                MorphToSelect\Type::make(Movie::class)
+                                    ->titleAttribute('name')
+                                    ->label('Фільм'),
+                                MorphToSelect\Type::make(Episode::class)
+                                    ->titleAttribute('name')
+                                    ->label('Епізод'),
+                                MorphToSelect\Type::make(Selection::class)
+                                    ->titleAttribute('name')
+                                    ->label('Підбірка'),
+                                MorphToSelect\Type::make(Person::class)
+                                    ->titleAttribute('name')
+                                    ->label('Персона'),
+                                MorphToSelect\Type::make(Tag::class)
+                                    ->titleAttribute('name')
+                                    ->label('Тег'),
+                            ]),
+
+                        DateTimePicker::make('created_at')
+                            ->label('Дата створення')
+                            ->prefixIcon('heroicon-o-calendar')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+
+                        DateTimePicker::make('updated_at')
+                            ->label('Дата оновлення')
+                            ->prefixIcon('heroicon-o-clock')
+                            ->displayFormat('d.m.Y H:i')
+                            ->disabled()
+                            ->default(now())
+                            ->hiddenOn('create'),
+                    ])
+                    ->columns(2),
             ]);
     }
 

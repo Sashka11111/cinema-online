@@ -51,7 +51,7 @@ class PersonResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 ImageColumn::make('image')
-                    ->label('Фото')
+                    ->label('Зображення')
                     ->disk('public')
                     ->width(50)
                     ->height(50)
@@ -169,8 +169,8 @@ class PersonResource extends Resource
                             if ($operation == 'edit' || empty($state)) {
                                 return;
                             }
-                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
-                            $set('meta_title', $state.' | Cinema');
+                            $set('slug', Person::generateSlug($state));
+                            $set('meta_title', Person::makeMetaTitle($state));
                         }),
 
                     TextInput::make('slug')

@@ -62,19 +62,6 @@ class ListSelections extends ListRecords
                     ->whereDoesntHave('movies')
                     ->whereDoesntHave('persons')
                     ->count()),
-
-            'empty' => Tab::make('empty')
-                ->label('Порожні')
-                ->icon('heroicon-o-archive-box')
-                ->query(function ($query) {
-                    return $query->whereDoesntHave('movies')
-                        ->whereDoesntHave('persons')
-                        ->whereDoesntHave('episodes');
-                })
-                ->badge(fn () => $this->getModel()::doesntHave('movies')
-                    ->doesntHave('persons')
-                    ->doesntHave('episodes')
-                    ->count()),
         ];
     }
 

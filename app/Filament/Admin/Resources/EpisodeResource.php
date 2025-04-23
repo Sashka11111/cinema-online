@@ -45,176 +45,9 @@ class EpisodeResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) Episode::count();
-    }
-
-    public static function form(Form $form): Form
-    {
-        return $form->schema([
-            Section::make('Основна інформація')
-                ->icon('heroicon-o-information-circle')
-                ->schema([
-                    Select::make('movie_id')
-                        ->label('Медіа')
-                        ->relationship('movie', 'name')
-                        ->required()
-                        ->preload()
-                        ->prefixIcon('heroicon-o-film')
-                        ->searchable(),
-
-                    TextInput::make('number')
-                        ->label('Номер епізоду')
-                        ->required()
-                        ->numeric()
-                        ->unique(Episode::class, 'number',ignoreRecord: true)
-                        ->minValue(1)
-                        ->maxValue(65535)
-                        ->prefixIcon('heroicon-o-hashtag'),
-
-                    TextInput::make('name')
-                        ->label('Назва')
-                        ->required()
-                        ->maxLength(128)
-                        ->prefixIcon('clarity-text-line')
-                        ->live(onBlur: true)
-                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
-                            if ($operation == 'edit' || empty($state)) {
-                                return;
-                            }
-                            $set('slug', str($state)->slug().'-'.str(str()->random(6))->lower());
-                            $set('meta_title', $state.' | Cinema');
-                        }),
-
-                    TextInput::make('slug')
-                        ->label('Slug')
-                        ->required()
-                        ->maxLength(128)
-                        ->unique(Episode::class, 'slug', ignoreRecord: true)
-                        ->helperText('Автоматично генерується з імені'),
-
-                    DateTimePicker::make('created_at')
-                        ->label('Дата створення')
-                        ->prefixIcon('heroicon-o-calendar')
-                        ->displayFormat('d.m.Y H:i')
-                        ->disabled()
-                        ->default(now())
-                        ->hiddenOn('create'),
-
-                    DateTimePicker::make('updated_at')
-                        ->label('Дата оновлення')
-                        ->prefixIcon('heroicon-o-clock')
-                        ->displayFormat('d.m.Y H:i')
-                        ->disabled()
-                        ->default(now())
-                        ->hiddenOn('create'),
-                ])
-                ->columns(2),
-
-            Section::make('Деталі епізоду')
-                ->icon('heroicon-o-document-text')
-                ->schema([
-                    RichEditor::make('description')
-                        ->label('Опис')
-                        ->required()
-                        ->maxLength(512)
-                        ->columnSpanFull()
-                        ->disableToolbarButtons(['attachFiles'])
-                        ->live(onBlur: true)
-                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
-                            if ($operation == 'edit' || empty($state)) {
-                                return;
-                            }
-                            $plainText = strip_tags($state);
-                            $set('meta_description', Episode::makeMetaDescription($plainText));
-                        }),
-
-                    TextInput::make('duration')
-                        ->label('Тривалість (хв)')
-                        ->numeric()
-                        ->minValue(1)
-                        ->maxValue(65535)
-                        ->nullable()
-                        ->suffix('хв'),
-
-                    DatePicker::make('air_date')
-                        ->label('Дата виходу')
-                        ->native(false)
-                        ->nullable(),
-
-                    Toggle::make('is_filler')
-                        ->label('Філер')
-                        ->default(false),
-                ])
-                ->columns(2),
-
-            Section::make('Медіа')
-                ->icon('heroicon-o-photo')
-                ->schema([
-                    Repeater::make('pictures')
-                        ->label('Зображення')
-                        ->schema([
-                            TextInput::make('url')
-                                ->label('URL зображення')
-                                ->required()
-                                ->url(),
-                        ]),
-
-                    Repeater::make('video_players')
-                        ->label('Відеоплеєри')
-                        ->schema([
-                            Select::make('name')
-                                ->label('Назва')
-                                ->options(VideoPlayerName::class)
-                                ->required(),
-                            TextInput::make('url')
-                                ->label('URL плеєра')
-                                ->required()
-                                ->url(),
-                            TextInput::make('file_url')
-                                ->label('URL файлу')
-                                ->url()
-                                ->nullable(),
-                            TextInput::make('dubbing')
-                                ->label('Озвучка')
-                                ->maxLength(128)
-                                ->nullable(),
-                            Select::make('quality')
-                                ->label('Якість')
-                                ->options(VideoQuality::class)
-                                ->nullable(),
-                            TextInput::make('locale_code')
-                                ->label('Код локалі')
-                                ->maxLength(2)
-                                ->nullable(),
-                        ])
-                        ->columns(3),
-                ])
-                ->columns(2),
-
-            Section::make('SEO налаштування')
-                ->icon('heroicon-o-globe-alt')
-                ->collapsed()
-                ->schema([
-                    TextInput::make('meta_title')
-                        ->label('Meta назва')
-                        ->maxLength(128)
-                        ->nullable(),
-
-                    FileUpload::make('meta_image')
-                        ->label('Meta зображення')
-                        ->image()
-                        ->maxSize(2048)
-                        ->directory('people/meta')
-                        ->nullable(),
-
-                    Textarea::make('meta_description')
-                        ->label('Meta опис')
-                        ->maxLength(376)
-                        ->rows(3)
-                        ->nullable(),
-                ])
-                ->columns(2),
-        ]);
+        return (string) Episode::whereHas('movie', function ($query) {
+            $query->where('is_published', false);
+        })->count();
     }
 
     public static function table(Table $table): Table
@@ -343,6 +176,174 @@ class EpisodeResource extends Resource
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function form(Form $form): Form
+    {
+        return $form->schema([
+            Section::make('Основна інформація')
+                ->icon('heroicon-o-information-circle')
+                ->schema([
+                    Select::make('movie_id')
+                        ->label('Медіа')
+                        ->relationship('movie', 'name')
+                        ->required()
+                        ->preload()
+                        ->prefixIcon('heroicon-o-film')
+                        ->searchable(),
+
+                    TextInput::make('number')
+                        ->label('Номер епізоду')
+                        ->required()
+                        ->numeric()
+                        ->unique(Episode::class, 'number', ignoreRecord: true)
+                        ->minValue(1)
+                        ->maxValue(65535)
+                        ->prefixIcon('heroicon-o-hashtag'),
+
+                    TextInput::make('name')
+                        ->label('Назва')
+                        ->required()
+                        ->maxLength(128)
+                        ->prefixIcon('clarity-text-line')
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $set('slug', Episode::generateSlug($state));
+                            $set('meta_title', Episode::makeMetaTitle($state));
+                        }),
+
+                    TextInput::make('slug')
+                        ->label('Slug')
+                        ->required()
+                        ->maxLength(128)
+                        ->unique(Episode::class, 'slug', ignoreRecord: true)
+                        ->helperText('Автоматично генерується з імені'),
+
+                    DateTimePicker::make('created_at')
+                        ->label('Дата створення')
+                        ->prefixIcon('heroicon-o-calendar')
+                        ->displayFormat('d.m.Y H:i')
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
+
+                    DateTimePicker::make('updated_at')
+                        ->label('Дата оновлення')
+                        ->prefixIcon('heroicon-o-clock')
+                        ->displayFormat('d.m.Y H:i')
+                        ->disabled()
+                        ->default(now())
+                        ->hiddenOn('create'),
+                ])
+                ->columns(2),
+
+            Section::make('Деталі епізоду')
+                ->icon('heroicon-o-document-text')
+                ->schema([
+                    RichEditor::make('description')
+                        ->label('Опис')
+                        ->required()
+                        ->maxLength(512)
+                        ->columnSpanFull()
+                        ->disableToolbarButtons(['attachFiles'])
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
+                            if ($operation == 'edit' || empty($state)) {
+                                return;
+                            }
+                            $plainText = strip_tags($state);
+                            $set('meta_description', Episode::makeMetaDescription($plainText));
+                        }),
+
+                    TextInput::make('duration')
+                        ->label('Тривалість (хв)')
+                        ->numeric()
+                        ->minValue(1)
+                        ->maxValue(65535)
+                        ->nullable()
+                        ->suffix('хв'),
+
+                    DatePicker::make('air_date')
+                        ->label('Дата виходу')
+                        ->native(false)
+                        ->nullable(),
+
+                    Toggle::make('is_filler')
+                        ->label('Філер')
+                        ->default(false),
+                ])
+                ->columns(2),
+
+            Section::make('Медіа')
+                ->icon('heroicon-o-photo')
+                ->schema([
+                    Repeater::make('pictures')
+                        ->label('Зображення')
+                        ->schema([
+                            TextInput::make('url')
+                                ->label('URL зображення')
+                                ->required()
+                                ->url(),
+                        ]),
+
+                    Repeater::make('video_players')
+                        ->label('Відеоплеєри')
+                        ->schema([
+                            Select::make('name')
+                                ->label('Назва')
+                                ->options(VideoPlayerName::class)
+                                ->required(),
+                            TextInput::make('url')
+                                ->label('URL плеєра')
+                                ->required()
+                                ->url(),
+                            TextInput::make('file_url')
+                                ->label('URL файлу')
+                                ->url()
+                                ->nullable(),
+                            TextInput::make('dubbing')
+                                ->label('Озвучка')
+                                ->maxLength(128)
+                                ->nullable(),
+                            Select::make('quality')
+                                ->label('Якість')
+                                ->options(VideoQuality::class)
+                                ->nullable(),
+                            TextInput::make('locale_code')
+                                ->label('Код локалі')
+                                ->maxLength(2)
+                                ->nullable(),
+                        ])
+                        ->columns(3),
+                ]),
+
+            Section::make('SEO налаштування')
+                ->icon('heroicon-o-globe-alt')
+                ->collapsed()
+                ->schema([
+                    TextInput::make('meta_title')
+                        ->label('Meta назва')
+                        ->maxLength(128)
+                        ->nullable(),
+
+                    FileUpload::make('meta_image')
+                        ->label('Meta зображення')
+                        ->image()
+                        ->maxSize(2048)
+                        ->directory('people/meta')
+                        ->nullable(),
+
+                    Textarea::make('meta_description')
+                        ->label('Meta опис')
+                        ->maxLength(376)
+                        ->rows(3)
+                        ->nullable(),
+                ])
+                ->columns(2),
+        ]);
     }
 
     public static function getPages(): array

@@ -7,14 +7,23 @@ use Liamtseva\Cinema\Models\User;
 
 class CommentLikePolicy
 {
+    public function before(User $user, $ability): ?bool
+    {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        return null;
+    }
+
     public function viewAny(User $user): bool
     {
-        return $user->exists; // Усі авторизовані користувачі можуть переглядати
+        return true; // Усі авторизовані користувачі можуть переглядати
     }
 
     public function view(User $user, CommentLike $commentLike): bool
     {
-        return $user->id === $commentLike->user_id; // Тільки власник лайка може переглядати
+        return true;
     }
 
     public function create(User $user): bool
@@ -24,21 +33,21 @@ class CommentLikePolicy
 
     public function update(User $user, CommentLike $commentLike): bool
     {
-        return $user->id === $commentLike->user_id; // Тільки власник може змінювати лайк
+        return $user->isAdmin() || $user->id === $commentLike->user_id;
     }
 
     public function delete(User $user, CommentLike $commentLike): bool
     {
-        return $user->role === 'admin' || $user->id === $commentLike->user_id;
+        return $user->isAdmin() || $user->id === $commentLike->user_id;
     }
 
     public function restore(User $user, CommentLike $commentLike): bool
     {
-        return $user->role === 'admin'; // Тільки адміністратор може відновити
+        return $user->isAdmin();
     }
 
     public function forceDelete(User $user, CommentLike $commentLike): bool
     {
-        return $user->role === 'admin'; // Тільки адміністратор може остаточно видалити
+        return $user->isAdmin();
     }
 }

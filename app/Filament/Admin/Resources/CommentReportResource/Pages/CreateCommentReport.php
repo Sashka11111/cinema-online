@@ -2,11 +2,12 @@
 
 namespace Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource\Pages;
 
-use Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource;
-use Filament\Actions;
 use Filament\Resources\Pages\CreateRecord;
+use Liamtseva\Cinema\Filament\Admin\Resources\CommentReportResource;
 
 class CreateCommentReport extends CreateRecord
 {
     protected static string $resource = CommentReportResource::class;
+
+    protected static ?string $title = 'Додати реакцію на коментар';
 }

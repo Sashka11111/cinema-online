@@ -4,6 +4,7 @@ namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
@@ -17,6 +18,9 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\RelationManagers\LikesRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\RelationManagers\RepliesRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\RelationManagers\ReportsRelationManager;
 use Liamtseva\Cinema\Models\Comment;
 use Liamtseva\Cinema\Models\Episode;
 use Liamtseva\Cinema\Models\Movie;
@@ -34,9 +38,9 @@ class CommentResource extends Resource
 
     protected static ?string $modelLabel = 'коментарі';
 
-    protected static ?string $navigationGroup = 'Користувацька активність';
+    protected static ?string $navigationGroup = 'Коментарі';
 
-    protected static ?int $navigationSort = 2;
+    protected static ?int $navigationSort = 1;
 
     public static function table(Table $table): Table
     {
@@ -162,6 +166,21 @@ class CommentResource extends Resource
                 Section::make('Основна інформація')
                     ->icon('heroicon-o-information-circle')
                     ->schema([
+                        MorphToSelect::make('commentable')
+                            ->label('Елемент списку')
+                            ->required()
+                            ->types([
+                                MorphToSelect\Type::make(Movie::class)
+                                    ->titleAttribute('name')
+                                    ->label('Фільм'),
+                                MorphToSelect\Type::make(Episode::class)
+                                    ->titleAttribute('name')
+                                    ->label('Епізод'),
+                                MorphToSelect\Type::make(Selection::class)
+                                    ->titleAttribute('name')
+                                    ->label('Підбірка'),
+                            ]),
+
                         Select::make('commentable_type')
                             ->label('Тип контенту')
                             ->options([
@@ -171,6 +190,7 @@ class CommentResource extends Resource
                             ])
                             ->required()
                             ->prefixIcon('heroicon-o-film'),
+
                         Select::make('commentable_id')
                             ->label('Контент')
                             ->options(function (callable $get) {
@@ -226,7 +246,7 @@ class CommentResource extends Resource
                     ->schema([
                         Select::make('parent_id')
                             ->label('Батьківський коментар')
-                            ->relationship('parent', 'body', fn ($query) => $query->limit(50))
+                            ->relationship('parent', 'body')
                             ->searchable()
                             ->nullable()
                             ->preload()
@@ -246,7 +266,9 @@ class CommentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // додати зв'язки, якщо є
+            RepliesRelationManager::class,
+            LikesRelationManager::class,
+            ReportsRelationManager::class,
         ];
     }
 

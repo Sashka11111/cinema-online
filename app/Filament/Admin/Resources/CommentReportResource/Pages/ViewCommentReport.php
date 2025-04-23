@@ -33,12 +33,16 @@ class ViewCommentReport extends ViewRecord
                     ->schema([
                         TextEntry::make('comment.body')
                             ->label('Коментар')
-                            ->markdown()
-                            ->columnSpanFull(),
+                            ->markdown(),
 
                         TextEntry::make('user.name')
                             ->label('Користувач')
                             ->icon('heroicon-o-user'),
+
+                        TextEntry::make('body')
+                            ->label('Текст скарги')
+                            ->markdown()
+                            ->columnSpanFull(),
 
                         TextEntry::make('type')
                             ->label('Тип скарги')
@@ -55,11 +59,6 @@ class ViewCommentReport extends ViewRecord
                         TextEntry::make('updated_at')
                             ->label('Оновлено')
                             ->dateTime('d.m.Y H:i'),
-
-                        TextEntry::make('body')
-                            ->label('Текст скарги')
-                            ->markdown()
-                            ->columnSpanFull(),
                     ])
                     ->columns(2),
             ]);
