@@ -32,11 +32,11 @@ class CommentResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-ellipsis';
 
-    protected static ?string $pluralModelLabel = 'Коментарі';
-
     protected static ?string $navigationLabel = 'Коментарі';
 
-    protected static ?string $modelLabel = 'коментарі';
+    protected static ?string $modelLabel = 'коментар';
+
+    protected static ?string $pluralModelLabel = 'Коментарі';
 
     protected static ?string $navigationGroup = 'Коментарі';
 
@@ -181,35 +181,6 @@ class CommentResource extends Resource
                                     ->label('Підбірка'),
                             ]),
 
-                        Select::make('commentable_type')
-                            ->label('Тип контенту')
-                            ->options([
-                                Movie::class => (new Comment)->setAttribute('commentable_type', Movie::class)->translated_type,
-                                Episode::class => (new Comment)->setAttribute('commentable_type', Episode::class)->translated_type,
-                                Selection::class => (new Comment)->setAttribute('commentable_type', Selection::class)->translated_type,
-                            ])
-                            ->required()
-                            ->prefixIcon('heroicon-o-film'),
-
-                        Select::make('commentable_id')
-                            ->label('Контент')
-                            ->options(function (callable $get) {
-                                $type = $get('commentable_type');
-                                if (! $type) {
-                                    return [];
-                                }
-
-                                return match ($type) {
-                                    Movie::class => Movie::pluck('name', 'id')->all(),
-                                    Episode::class => Episode::pluck('name', 'id')->all(),
-                                    Selection::class => Selection::pluck('name', 'id')->all(),
-                                    default => [],
-                                };
-                            })
-                            ->searchable()
-                            ->required()
-                            ->prefixIcon('heroicon-o-identification'),
-
                         Select::make('user_id')
                             ->label('Користувач')
                             ->relationship('user', 'name')
@@ -255,7 +226,8 @@ class CommentResource extends Resource
 
                         Toggle::make('is_spoiler')
                             ->label('Позначити як спойлер')
-                            ->default(false)
+                            ->offIcon('heroicon-o-eye-slash')
+                            ->onIcon('heroicon-o-eye')
                             ->helperText('Увімкніть, якщо коментар містить спойлери'),
                     ])
                     ->columns(2),

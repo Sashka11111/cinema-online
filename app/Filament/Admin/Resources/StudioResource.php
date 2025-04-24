@@ -18,6 +18,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Liamtseva\Cinema\Filament\Admin\Resources\StudioResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\StudioResource\RelationManagers\MoviesRelationManager;
 use Liamtseva\Cinema\Models\Studio;
 
 class StudioResource extends Resource
@@ -242,8 +243,7 @@ class StudioResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // Додайте зв'язки якщо потрібно, наприклад:
-            // RelationManagers\MoviesRelationManager::class,
+            MoviesRelationManager::class,
         ];
     }
 

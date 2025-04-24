@@ -14,7 +14,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Actions\ExportAction;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -24,7 +23,9 @@ use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\Role;
 use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\Pages;
-use Liamtseva\Cinema\Filament\Exports\UserExporter;
+use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\RelationManagers\CommentsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\RelationManagers\RatingsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\UserResource\RelationManagers\UserListsRelationManager;
 use Liamtseva\Cinema\Models\User;
 
 class UserResource extends Resource
@@ -191,11 +192,6 @@ class UserResource extends Resource
                             ->when($data['birthday_from'], fn ($query, $date) => $query->where('birthday', '>=', $date))
                             ->when($data['birthday_to'], fn ($query, $date) => $query->where('birthday', '<=', $date))),
                 ])
-                ->headerActions([
-                    ExportAction::make()
-                        ->exporter(UserExporter::class)
-                        ->label('Експортувати користувачів'),
-                ])
                 ->actions([
                     Tables\Actions\ViewAction::make(),
                     Tables\Actions\EditAction::make(),
@@ -346,6 +342,15 @@ class UserResource extends Resource
                 ])
                 ->columns(2),
         ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            RatingsRelationManager::class,
+            CommentsRelationManager::class,
+            UserListsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

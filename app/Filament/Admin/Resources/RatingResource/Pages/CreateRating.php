@@ -11,11 +11,12 @@ class CreateRating extends CreateRecord
 {
     protected static string $resource = RatingResource::class;
 
+    protected static ?string $title = 'Створити рейтинг';
+
     protected function beforeCreate(): void
     {
         $data = $this->form->getState();
 
-        // Переконайся, що user_id встановлено
         $userId = $data['user_id'] ?? auth()->id();
 
         $existingRating = Rating::where('user_id', $userId)
@@ -29,7 +30,7 @@ class CreateRating extends CreateRecord
                 ->danger()
                 ->send();
 
-            $this->halt(); // Зупиняємо створення
+            $this->halt();
         }
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,6 +53,12 @@ class User extends Authenticatable implements FilamentUser
     public function ratings(): HasMany
     {
         return $this->hasMany(Rating::class)->chaperone();
+    }
+
+    public function movieNotifications(): BelongsToMany
+    {
+        return $this->belongsToMany(Movie::class, 'movie_user_notifications')
+            ->withTimestamps();
     }
 
     public function comments(): HasMany

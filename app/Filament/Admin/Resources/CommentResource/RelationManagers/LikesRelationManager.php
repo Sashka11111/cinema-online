@@ -38,7 +38,7 @@ class LikesRelationManager extends RelationManager
                         return $rule->where('comment_id', $this->getOwnerRecord()->id);
                     })
                     ->validationMessages([
-                        'unique' => __('Цей користувач вже поставив реакцію цьому коментарю.'),
+                        'unique' => 'Цей користувач вже поставив реакцію цьому коментарю.',
                     ]),
 
                 Toggle::make('is_liked')

@@ -2,33 +2,29 @@
 
 namespace Liamtseva\Cinema\Filament\Admin\Resources\CommentResource\RelationManagers;
 
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\CreateAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 
 class RepliesRelationManager extends RelationManager
 {
     protected static string $relationship = 'children';
 
-    protected static ?string $recordTitleAttribute = 'body';
+    protected static ?string $modelLabel = 'відповідь';
 
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
-    {
-        return 'Відповіді';
-    }
+    protected static ?string $pluralModelLabel = 'відповіді';
+
+    protected static ?string $title = 'Відповіді';
 
     public function form(Form $form): Form
     {
@@ -41,31 +37,27 @@ class RepliesRelationManager extends RelationManager
                     ->preload()
                     ->required(),
 
-                Textarea::make('body')
-                    ->label('Текст коментаря')
-                    ->required()
-                    ->rows(4)
-                    ->columnSpanFull(),
-
                 Toggle::make('is_spoiler')
                     ->label('Містить спойлер')
-                    ->helperText('Позначте, якщо коментар містить спойлери')
-                    ->onIcon('heroicon-o-exclamation-triangle')
-                    ->offIcon('heroicon-o-check-circle')
-                    ->onColor('danger')
-                    ->offColor('success')
-                    ->required(),
+                    ->offIcon('heroicon-o-eye-slash')
+                    ->onIcon('heroicon-o-eye')
+                    ->helperText('Позначте, якщо коментар містить спойлери'),
+
+                RichEditor::make('body')
+                    ->label('Текст коментаря')
+                    ->required()
+                    ->columnSpanFull()
+                    ->disableToolbarButtons(['attachFiles']),
             ]);
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('body')
             ->columns([
                 TextColumn::make('user.name')
                     ->label('Користувач')
-                    ->description(fn ($record) => '@'.($record->user->username ?? 'unknown'))
+                    ->description(fn ($record) => ($record->user->email ?? 'Не відомо'))
                     ->searchable()
                     ->sortable(),
 
@@ -77,10 +69,8 @@ class RepliesRelationManager extends RelationManager
 
                 ToggleColumn::make('is_spoiler')
                     ->label('Спойлер')
-                    ->onIcon('heroicon-s-exclamation-triangle')
-                    ->offIcon('heroicon-s-check-circle')
-                    ->onColor('danger')
-                    ->offColor('success')
+                    ->offIcon('heroicon-o-eye-slash')
+                    ->onIcon('heroicon-o-eye')
                     ->sortable(),
 
                 TextColumn::make('created_at')
@@ -106,16 +96,17 @@ class RepliesRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->mutateFormDataUsing(function (array $data): array {
-                        $data['commentable_type'] = $this->getOwnerRecord()->commentable_type;
-                        $data['commentable_id'] = $this->getOwnerRecord()->commentable_id;
-                        $data['parent_id'] = $this->getOwnerRecord()->id;
+                        // Отримуємо батьківський коментар
+                        $parentComment = $this->getOwnerRecord();
 
-                        return $data;
+                        // Додаємо дані про commentable з батьківського коментаря
+                        return array_merge($data, [
+                            'commentable_type' => $parentComment->commentable_type,
+                            'commentable_id' => $parentComment->commentable_id,
+                        ]);
                     }),
             ])
             ->actions([
-                ViewAction::make(),
-                EditAction::make(),
                 DeleteAction::make(),
             ])
             ->bulkActions([
