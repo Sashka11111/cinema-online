@@ -2,8 +2,8 @@
 
 namespace Liamtseva\Cinema\Filament\Admin\Resources\UserResource\RelationManagers;
 
+use Filament\Forms\Components\MorphToSelect;
 use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -16,6 +16,10 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Liamtseva\Cinema\Models\Comment;
+use Liamtseva\Cinema\Models\Episode;
+use Liamtseva\Cinema\Models\Movie;
+use Liamtseva\Cinema\Models\Selection;
 
 class CommentsRelationManager extends RelationManager
 {
@@ -31,20 +35,20 @@ class CommentsRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Select::make('commentable_type')
-                    ->label('Тип контенту')
-                    ->options([
-                        'Liamtseva\Cinema\Models\Movie' => 'Фільм',
-                        'Liamtseva\Cinema\Models\Episode' => 'Епізод',
-                        'Liamtseva\Cinema\Models\Selection' => 'Підбірка',
-                    ])
-                    ->required(),
-
-                Select::make('commentable_id')
-                    ->label('Контент')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
+                MorphToSelect::make('commentable')
+                    ->label('Елемент списку')
+                    ->required()
+                    ->types([
+                        MorphToSelect\Type::make(Movie::class)
+                            ->titleAttribute('name')
+                            ->label('Фільм'),
+                        MorphToSelect\Type::make(Episode::class)
+                            ->titleAttribute('name')
+                            ->label('Епізод'),
+                        MorphToSelect\Type::make(Selection::class)
+                            ->titleAttribute('name')
+                            ->label('Підбірка'),
+                    ]),
 
                 Toggle::make('is_spoiler')
                     ->label('Містить спойлер')
@@ -64,14 +68,16 @@ class CommentsRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('commentable_type')
-                    ->label('Тип')
-                    ->formatStateUsing(fn ($state) => match ($state) {
-                        'Liamtseva\Cinema\Models\Movie' => 'Фільм',
-                        'Liamtseva\Cinema\Models\Episode' => 'Епізод',
-                        'Liamtseva\Cinema\Models\Selection' => 'Підбірка',
-                        default => 'Невідомий контент',
-                    })
-                    ->sortable(),
+                    ->label('Тип контенту')
+                    ->getStateUsing(fn (Comment $comment) => $comment->translated_type)
+                    ->sortable()
+                    ->toggleable(),
+
+                TextColumn::make('commentable.name')
+                    ->label('Контент')
+                    ->sortable()
+                    ->formatStateUsing(fn (Comment $comment) => $comment->commentable?->name ?? 'Немає даних')
+                    ->toggleable(),
 
                 TextColumn::make('body')
                     ->label('Текст')
@@ -91,11 +97,14 @@ class CommentsRelationManager extends RelationManager
             ->filters([
                 SelectFilter::make('commentable_type')
                     ->label('Тип контенту')
-                    ->options([
-                        'Liamtseva\Cinema\Models\Movie' => 'Фільм',
-                        'Liamtseva\Cinema\Models\Episode' => 'Епізод',
-                        'Liamtseva\Cinema\Models\Selection' => 'Підбірка',
-                    ]),
+                    ->options(function () {
+                        return [
+                            Movie::class => (new Comment)->setAttribute('commentable_type', Movie::class)->translated_type,
+                            Episode::class => (new Comment)->setAttribute('commentable_type', Episode::class)->translated_type,
+                            Selection::class => (new Comment)->setAttribute('commentable_type', Selection::class)->translated_type,
+                        ];
+                    })
+                    ->placeholder('Усі'),
 
                 TernaryFilter::make('is_spoiler')
                     ->label('Спойлер'),

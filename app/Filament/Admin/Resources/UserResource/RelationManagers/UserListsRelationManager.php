@@ -13,7 +13,6 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Validation\Rules\Unique;
 use Liamtseva\Cinema\Enums\UserListType;
 use Liamtseva\Cinema\Models\Episode;
 use Liamtseva\Cinema\Models\Movie;
@@ -44,18 +43,6 @@ class UserListsRelationManager extends RelationManager
                 MorphToSelect::make('listable')
                     ->label('Елемент списку')
                     ->required()
-                    ->unique(
-                        table: 'user_lists',
-                        column: 'listable_id',
-                        modifyRuleUsing: function (Unique $rule) {
-                            return $rule
-                                ->where('user_id', $this->getOwnerRecord()->id)
-                                ->where('listable_type', fn () => $this->getListableType());
-                        }
-                    )
-                    ->validationMessages([
-                        'unique' => 'Цей елемент вже додано до списку користувача',
-                    ])
                     ->types([
                         MorphToSelect\Type::make(Movie::class)
                             ->titleAttribute('name')

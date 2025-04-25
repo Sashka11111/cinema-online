@@ -178,7 +178,6 @@ class RatingResource extends Resource
 
                         RichEditor::make('review')
                             ->label('Відгук')
-                            ->columnSpanFull()
                             ->disableToolbarButtons(['attachFiles'])
                             ->columnSpanFull()
                             ->maxLength(65535),

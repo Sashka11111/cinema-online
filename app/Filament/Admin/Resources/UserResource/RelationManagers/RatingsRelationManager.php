@@ -4,7 +4,6 @@ namespace Liamtseva\Cinema\Filament\Admin\Resources\UserResource\RelationManager
 
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\CreateAction;
@@ -30,17 +29,18 @@ class RatingsRelationManager extends RelationManager
         return $form
             ->schema([
                 Select::make('movie_id')
-                    ->relationship('movie', 'title')
+                    ->label('Фільм')
+                    ->relationship('movie', 'name')
                     ->searchable()
                     ->preload()
-                    ->required(),
+                    ->required()
+                    ->prefixIcon('heroicon-o-film'),
 
-                TextInput::make('score')
+                Select::make('number')
                     ->label('Оцінка')
-                    ->numeric()
-                    ->minValue(1)
-                    ->maxValue(10)
-                    ->required(),
+                    ->options(range(1, 10))
+                    ->required()
+                    ->prefixIcon('heroicon-o-star'),
 
                 RichEditor::make('review')
                     ->label('Відгук')
@@ -58,7 +58,7 @@ class RatingsRelationManager extends RelationManager
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('score')
+                TextColumn::make('number')
                     ->label('Оцінка')
                     ->sortable(),
 
@@ -75,6 +75,7 @@ class RatingsRelationManager extends RelationManager
             ])
             ->filters([
                 SelectFilter::make('movie')
+                    ->label('Фільм')
                     ->relationship('movie', 'name')
                     ->searchable()
                     ->preload(),
