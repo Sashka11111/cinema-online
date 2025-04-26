@@ -3,7 +3,6 @@
 namespace Liamtseva\Cinema\Models;
 
 use Database\Factories\PersonFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,9 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\DB;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\PersonType;
+use Liamtseva\Cinema\Models\Builders\PersonQueryBuilder;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
 /**
@@ -24,33 +23,15 @@ class Person extends Model
     /** @use HasFactory<PersonFactory> */
     use HasFactory, HasSeo, HasUlids;
 
-    public function scopeByType(Builder $query, PersonType $type): Builder
-    {
-        return $query->where('type', $type->value);
-    }
+    protected $casts = [
+        'type' => PersonType::class,
+        'gender' => Gender::class,
+        'birthday' => 'date',
+    ];
 
-    public function scopeByName(Builder $query, string $name): Builder
+    public function newEloquentBuilder($query): PersonQueryBuilder
     {
-        return $query->where('name', 'like', '%'.$name.'%');
-    }
-
-    public function scopeByGender(Builder $query, string $gender): Builder
-    {
-        return $query->where('gender', $gender);
-    }
-
-    public function scopeSearch(Builder $query, string $search): Builder
-    {
-        return $query
-            ->select('people.*')
-            ->addSelect(DB::raw("ts_rank(people.searchable, websearch_to_tsquery('ukrainian', ?)) AS rank"))
-            ->addSelect(DB::raw('similarity(people.name, ?) AS similarity'))
-            ->leftJoin('movie_person', 'people.id', '=', 'movie_person.person_id')
-            ->whereRaw("people.searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search, $search, $search])
-            ->orWhereRaw('people.name % ?', [$search])
-            ->orWhereRaw('movie_person.character_name % ?', [$search])
-            ->orderByDesc('rank')
-            ->orderByDesc('similarity');
+        return new PersonQueryBuilder($query);
     }
 
     public function movies(): BelongsToMany
@@ -67,15 +48,6 @@ class Person extends Model
     public function selections(): MorphToMany
     {
         return $this->morphToMany(Selection::class, 'selectionable');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'type' => PersonType::class,
-            'gender' => Gender::class,
-            'birthday' => 'date',
-        ];
     }
 
     protected function fullName(): Attribute

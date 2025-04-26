@@ -3,7 +3,6 @@
 namespace Liamtseva\Cinema\Models;
 
 use Database\Factories\TagFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Facades\DB;
+use Liamtseva\Cinema\Models\Builders\TagQueryBuilder;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
 /**
@@ -22,20 +21,13 @@ class Tag extends Model
     /** @use HasFactory<TagFactory> */
     use HasFactory, HasSeo, HasUlids;
 
-    public function scopeGenres($query)
-    {
-        return $query->where('is_genre', true);
-    }
+    protected $casts = [
+        'aliases' => AsCollection::class,
+    ];
 
-    public function scopeSearch(Builder $query, string $search): Builder
+    public function newEloquentBuilder($query): TagQueryBuilder
     {
-        return $query
-            ->select('*')
-            ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
-            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search])
-            ->orWhereRaw('name % ?', [$search])
-            ->orderByDesc('rank')
-            ->orderByDesc('similarity');
+        return new TagQueryBuilder($query);
     }
 
     public function movies(): BelongsToMany
@@ -46,13 +38,6 @@ class Tag extends Model
     public function userLists(): MorphMany
     {
         return $this->morphMany(UserList::class, 'listable');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'aliases' => AsCollection::class,
-        ];
     }
 
     protected function image(): Attribute

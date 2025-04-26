@@ -4,7 +4,6 @@ namespace Liamtseva\Cinema\Models;
 
 use Database\Factories\MovieFactory;
 use Illuminate\Database\Eloquent\Attributes\ScopedBy;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -15,14 +14,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\DB;
-use Liamtseva\Cinema\Enums\Country;
 use Liamtseva\Cinema\Enums\Kind;
 use Liamtseva\Cinema\Enums\Period;
 use Liamtseva\Cinema\Enums\RestrictedRating;
 use Liamtseva\Cinema\Enums\Source;
 use Liamtseva\Cinema\Enums\Status;
-use Liamtseva\Cinema\Enums\VideoQuality;
+use Liamtseva\Cinema\Models\Builders\MovieQueryBuilder;
 use Liamtseva\Cinema\Models\Scopes\PublishedScope;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
@@ -37,57 +34,26 @@ class Movie extends Model
 
     protected $hidden = ['searchable'];
 
-    // Фільтрує за типом (Kind)
-    public function scopeOfKind(Builder $query, Kind $kind): Builder
-    {
-        return $query->where('kind', $kind->value);
-    }
+    protected $casts = [
+        'aliases' => AsCollection::class,
+        'countries' => AsCollection::class,
+        'attachments' => AsCollection::class,
+        'related' => AsCollection::class,
+        'similars' => AsCollection::class,
+        'imdb_score' => 'float',
+        'first_air_date' => 'date',
+        'last_air_date' => 'date',
+        'api_sources' => AsCollection::class,
+        'kind' => Kind::class,
+        'status' => Status::class,
+        'period' => Period::class,
+        'restricted_rating' => RestrictedRating::class,
+        'source' => Source::class,
+    ];
 
-    public function scopeWithStatus(Builder $query, Status $status): Builder
+    public function newEloquentBuilder($query): MovieQueryBuilder
     {
-        return $query->where('status', $status->value);
-    }
-
-    public function scopeOfPeriod(Builder $query, Period $period): Builder
-    {
-        return $query->where('period', $period->value);
-    }
-
-    public function scopeWithRestrictedRating(Builder $query, RestrictedRating $restrictedRating): Builder
-    {
-        return $query->where('restricted_rating', $restrictedRating->value);
-    }
-
-    public function scopeFromSource(Builder $query, Source $source): Builder
-    {
-        return $query->where('source', $source->value);
-    }
-
-    public function scopeWithVideoQuality(Builder $query, VideoQuality $videoQuality): Builder
-    {
-        return $query->where('video_quality', $videoQuality->value);
-    }
-
-    public function scopeWithImdbScoreGreaterThan(Builder $query, float $score): Builder
-    {
-        return $query->where('imdb_score', '>=', $score);
-    }
-
-    public function scopeFromCountry(Builder $query, Country $country): Builder
-    {
-        return $query->whereJsonContains('countries', $country->value);
-    }
-
-    public function scopeSearch(Builder $query, string $search): Builder
-    {
-        return $query
-            ->select('*')
-            ->addSelect(DB::raw("ts_rank(searchable, websearch_to_tsquery('ukrainian', ?)) AS rank"))
-            ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
-            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search, $search])
-            ->orWhereRaw('name % ?', [$search])
-            ->orderByDesc('rank')
-            ->orderByDesc('similarity');
+        return new MovieQueryBuilder($query);
     }
 
     public function studio(): BelongsTo
@@ -136,25 +102,5 @@ class Movie extends Model
         return Attribute::make(
             get: fn ($value) => $this->poster ? asset("storage/$this->poster") : null
         );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'aliases' => AsCollection::class,
-            'countries' => 'array',
-            'attachments' => 'array',
-            'related' => 'array',
-            'similars' => AsCollection::class,
-            'imdb_score' => 'float',
-            'first_air_date' => 'date',
-            'last_air_date' => 'date',
-            'api_sources' => 'array',
-            'kind' => Kind::class,
-            'status' => Status::class,
-            'period' => Period::class,
-            'restricted_rating' => RestrictedRating::class,
-            'source' => Source::class,
-        ];
     }
 }

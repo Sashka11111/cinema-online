@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Support\Carbon;
+use Liamtseva\Cinema\Models\Builders\EpisodeQueryBuilder;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
 /**
@@ -22,14 +22,15 @@ class Episode extends Model
     /** @use HasFactory<EpisodeFactory> */
     use HasFactory, HasSeo, HasUlids;
 
-    public function scopeForMovie(Builder $query, string $movieId): Builder
-    {
-        return $query->where('movie_id', $movieId);
-    }
+    protected $casts = [
+        'pictures' => AsCollection::class,
+        'video_players' => AsCollection::class,
+        'air_date' => 'date',
+    ];
 
-    public function scopeAiredAfter(Builder $query, Carbon $date): Builder
+    public function newEloquentBuilder($query): EpisodeQueryBuilder
     {
-        return $query->where('air_date', '>=', $date);
+        return new EpisodeQueryBuilder($query);
     }
 
     public function movie(): BelongsTo
@@ -45,15 +46,6 @@ class Episode extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'pictures' => AsCollection::class,
-            'video_players' => 'array',
-            'air_date' => 'date',
-        ];
     }
 
     protected function pictureUrl(): Attribute

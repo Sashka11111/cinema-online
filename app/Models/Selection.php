@@ -3,14 +3,13 @@
 namespace Liamtseva\Cinema\Models;
 
 use Database\Factories\SelectionFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
-use Illuminate\Support\Facades\DB;
+use Liamtseva\Cinema\Models\Builders\SelectionQueryBuilder;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
 /**
@@ -22,6 +21,11 @@ class Selection extends Model
     use HasFactory, HasSeo, HasUlids;
 
     protected $hidden = ['searchable'];
+
+    public function newEloquentBuilder($query): SelectionQueryBuilder
+    {
+        return new SelectionQueryBuilder($query);
+    }
 
     public function user(): BelongsTo
     {
@@ -51,16 +55,5 @@ class Selection extends Model
     public function episodes(): MorphToMany
     {
         return $this->morphedByMany(Episode::class, 'selectionable');
-    }
-
-    public function scopeSearch(Builder $query, string $search): Builder
-    {
-        return $query
-            ->select('*')
-            ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
-            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search])
-            ->orWhereRaw('name % ?', [$search])
-            ->orderByDesc('rank')
-            ->orderByDesc('similarity');
     }
 }

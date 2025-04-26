@@ -16,6 +16,7 @@ use Illuminate\Notifications\Notifiable;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\Role;
 use Liamtseva\Cinema\Enums\UserListType;
+use Liamtseva\Cinema\Models\Builders\UserQueryBuilder;
 
 /**
  * @mixin IdeHelperUser
@@ -30,24 +31,17 @@ class User extends Authenticatable implements FilamentUser
         'remember_token',
     ];
 
-    public function scopeAllowedAdults(Builder $query): Builder
-    {
-        return $query->where('allow_adult', true);
-    }
+    protected $casts = [
+        'role' => Role::class,
+        'gender' => Gender::class,
+        'email_verified_at' => 'datetime',
+        'birthday' => 'date',
+        'password' => 'hashed',
+    ];
 
-    public function scopeByRole(Builder $query, Role $role): Builder
+    public function newEloquentBuilder($query): UserQueryBuilder
     {
-        return $query->where('role', $role->value);
-    }
-
-    public function scopeIsAdmin(Builder $query): Builder
-    {
-        return $query->where('role', Role::ADMIN->value);
-    }
-
-    public function scopeVipCustomer(Builder $query): Builder
-    {
-        return $query->where('vip', true);
+        return new UserQueryBuilder($query);
     }
 
     public function ratings(): HasMany
@@ -101,6 +95,50 @@ class User extends Authenticatable implements FilamentUser
     public function userLists(): HasMany
     {
         return $this->hasMany(UserList::class);
+    }
+
+    /**
+     * Get all subscriptions for the user.
+     *
+     * @return HasMany
+     */
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(UserSubscription::class)->chaperone();
+    }
+
+    /**
+     * Get all payments made by the user.
+     *
+     * @return HasMany
+     */
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class)->chaperone();
+    }
+
+    /**
+     * Get the active subscription for the user.
+     *
+     * @return UserSubscription|null
+     */
+    public function activeSubscription()
+    {
+        return $this->subscriptions()
+            ->where('is_active', true)
+            ->where('end_date', '>', now())
+            ->latest('end_date')
+            ->first();
+    }
+
+    /**
+     * Check if the user has an active subscription.
+     *
+     * @return bool
+     */
+    public function hasActiveSubscription(): bool
+    {
+        return $this->activeSubscription() !== null;
     }
 
     public function favoritePeople(): HasMany
@@ -172,17 +210,6 @@ class User extends Authenticatable implements FilamentUser
     public function isAdmin(): bool
     {
         return $this->role == Role::ADMIN;
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'role' => Role::class,
-            'gender' => Gender::class,
-            'email_verified_at' => 'datetime',
-            'birthday' => 'date',
-            'password' => 'hashed',
-        ];
     }
 
     protected function avatar(): Attribute

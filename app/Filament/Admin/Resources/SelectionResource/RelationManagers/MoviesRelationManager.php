@@ -18,7 +18,7 @@ class MoviesRelationManager extends RelationManager
 
     protected static ?string $modelLabel = 'фільм';
 
-    protected static ?string $title = 'Фільми в підбірці';
+    protected static ?string $title = 'Фільми';
 
     public function table(Table $table): Table
     {

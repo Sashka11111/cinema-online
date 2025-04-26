@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Liamtseva\Cinema\Models\Builders\CommentQueryBuilder;
 
 /**
  * @mixin IdeHelperComment
@@ -19,6 +20,11 @@ class Comment extends Model
 {
     /** @use HasFactory<CommentFactory> */
     use HasFactory, HasUlids;
+
+    public function newEloquentBuilder($query): CommentQueryBuilder
+    {
+        return new CommentQueryBuilder($query);
+    }
 
     public function commentable(): MorphTo
     {
@@ -53,16 +59,6 @@ class Comment extends Model
     public function reports(): HasMany
     {
         return $this->hasMany(CommentReport::class)->chaperone();
-    }
-
-    public function scopeReplies(Builder $query): Builder
-    {
-        return $query->whereNotNull('parent_id');
-    }
-
-    public function scopeRoots(Builder $query): Builder
-    {
-        return $query->whereNull('parent_id');
     }
 
     public function isRoot(): bool

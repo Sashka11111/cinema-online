@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Liamtseva\Cinema\Models\Builders\WatchHistoryQueryBuilder;
 
 /**
  * @mixin IdeHelperWatchHistory
@@ -15,6 +16,11 @@ class WatchHistory extends Model
 {
     /** @use HasFactory<WatchHistoryFactory> */
     use HasFactory, HasUlids;
+
+    public function newEloquentBuilder($query): WatchHistoryQueryBuilder
+    {
+        return new WatchHistoryQueryBuilder($query);
+    }
 
     public static function cleanOldHistory(int $userId, int $days = 30)
     {
@@ -32,15 +38,5 @@ class WatchHistory extends Model
     public function episode(): BelongsTo
     {
         return $this->belongsTo(Episode::class);
-    }
-
-    public function scopeForUser($query, $userId)
-    {
-        return $query->where('user_id', $userId);
-    }
-
-    public function scopeForEpisode($query, $episodeId)
-    {
-        return $query->where('episode_id', $episodeId);
     }
 }

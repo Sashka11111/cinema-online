@@ -18,7 +18,7 @@ class EpisodesRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'епізоди';
 
-    protected static ?string $title = 'Епізоди в підбірці';
+    protected static ?string $title = 'Епізоди';
 
     public function table(Table $table): Table
     {

@@ -21,6 +21,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Filament\Admin\Resources\TagResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\TagResource\RelationManagers\MoviesRelationManager;
 use Liamtseva\Cinema\Models\Tag;
 
 class TagResource extends Resource
@@ -247,6 +248,13 @@ class TagResource extends Resource
                     ])
                     ->columns(2),
             ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            MoviesRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

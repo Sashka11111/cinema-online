@@ -22,6 +22,7 @@ use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\PersonType;
 use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\RelationManagers\MoviesRelationManager;
 use Liamtseva\Cinema\Models\Person;
 
 class PersonResource extends Resource
@@ -136,15 +137,9 @@ class PersonResource extends Resource
                         ->when($data['birthday_to'], fn ($q, $date) => $q->where('birthday', '<=', $date))),
             ])
             ->actions([
-                Tables\Actions\ViewAction::make()
-                    ->icon('heroicon-o-eye')
-                    ->color('info'),
-                Tables\Actions\EditAction::make()
-                    ->icon('heroicon-o-pencil')
-                    ->color('primary'),
-                Tables\Actions\DeleteAction::make()
-                    ->icon('heroicon-o-trash')
-                    ->color('danger'),
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -161,8 +156,9 @@ class PersonResource extends Resource
                 ->icon('heroicon-o-information-circle')
                 ->schema([
                     TextInput::make('name')
-                        ->label('Ім’я')
+                        ->label("Ім'я")
                         ->required()
+                        ->minLength(2)
                         ->maxLength(128)
                         ->live(onBlur: true)
                         ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
@@ -172,25 +168,29 @@ class PersonResource extends Resource
                             $set('slug', Person::generateSlug($state));
                             $set('meta_title', Person::makeMetaTitle($state));
                         }),
-
                     TextInput::make('slug')
                         ->label('Slug')
                         ->required()
+                        ->minLength(2)
                         ->maxLength(128)
                         ->unique(Person::class, 'slug', ignoreRecord: true)
-                        ->helperText('Автоматично генерується з імені'),
+                        ->helperText('Автоматично генерується з імені.'),
 
                     Select::make('type')
                         ->label('Тип')
                         ->options(PersonType::class)
                         ->required()
-                        ->native(false),
+                        ->native(false)
+                        ->searchable()
+                        ->preload(),
 
                     Select::make('gender')
                         ->label('Стать')
                         ->options(Gender::class)
                         ->nullable()
-                        ->native(false),
+                        ->native(false)
+                        ->searchable()
+                        ->preload(),
 
                     DateTimePicker::make('created_at')
                         ->label('Дата створення')
@@ -214,7 +214,8 @@ class PersonResource extends Resource
                 ->icon('heroicon-o-calendar')
                 ->schema([
                     TextInput::make('original_name')
-                        ->label('Оригінальне ім’я')
+                        ->label("Оригінальне ім'я")
+                        ->minLength(2)
                         ->maxLength(128)
                         ->nullable(),
 
@@ -222,10 +223,12 @@ class PersonResource extends Resource
                         ->label('Дата народження')
                         ->displayFormat('d/m/Y')
                         ->maxDate(now())
+                        ->minDate(now()->subYears(150))
                         ->nullable(),
 
                     TextInput::make('birthplace')
                         ->label('Місце народження')
+                        ->minLength(2)
                         ->maxLength(248)
                         ->nullable(),
 
@@ -233,6 +236,8 @@ class PersonResource extends Resource
                         ->label('Опис')
                         ->columnSpanFull()
                         ->disableToolbarButtons(['attachFiles'])
+                        ->minLength(10)
+                        ->maxLength(5000)
                         ->live(onBlur: true)
                         ->afterStateUpdated(function (string $operation, ?string $state, Set $set) {
                             if ($operation === 'edit' || empty($state)) {
@@ -252,6 +257,7 @@ class PersonResource extends Resource
                         ->image()
                         ->imageEditor()
                         ->maxSize(2048)
+                        ->minSize(10)
                         ->directory('people')
                         ->previewable()
                         ->nullable(),
@@ -263,22 +269,26 @@ class PersonResource extends Resource
                 ->schema([
                     TextInput::make('meta_title')
                         ->label('Meta назва')
+                        ->minLength(10)
                         ->maxLength(128)
-                        ->helperText('Автоматично генерується з імені')
+                        ->helperText('Автоматично генерується з імені.')
                         ->nullable(),
 
                     FileUpload::make('meta_image')
                         ->label('Meta зображення')
                         ->image()
                         ->maxSize(2048)
+                        ->minSize(10)
                         ->directory('people/meta')
                         ->nullable(),
 
                     Textarea::make('meta_description')
                         ->label('Meta опис')
+                        ->minLength(50)
                         ->maxLength(376)
                         ->rows(3)
-                        ->nullable(),
+                        ->nullable()
+                        ->helperText('Мінімум 50 символів, максимум 376'),
                 ])
                 ->columns(2),
         ]);
@@ -287,7 +297,7 @@ class PersonResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // Наприклад: RelationManagers\MoviesRelationManager::class,
+            MoviesRelationManager::class,
         ];
     }
 

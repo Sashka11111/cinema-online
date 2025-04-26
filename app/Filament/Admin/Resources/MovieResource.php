@@ -3,13 +3,13 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -23,7 +23,9 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use Liamtseva\Cinema\Enums\Country;
 use Liamtseva\Cinema\Enums\Kind;
+use Liamtseva\Cinema\Enums\MovieRelateType;
 use Liamtseva\Cinema\Enums\Period;
 use Liamtseva\Cinema\Enums\RestrictedRating;
 use Liamtseva\Cinema\Enums\Source;
@@ -218,13 +220,13 @@ class MovieResource extends Resource
                     ->toggleable(),
 
                 TextColumn::make('created_at')
-                    ->label('Створено')
+                    ->label('Дата створення')
                     ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Оновлено')
+                    ->label('Дата оновлення')
                     ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -269,6 +271,7 @@ class MovieResource extends Resource
                     TextInput::make('name')
                         ->label('Назва')
                         ->required()
+                        ->minLength(2)
                         ->maxLength(248)
                         ->prefixIcon('clarity-text-line')
                         ->live(onBlur: true)
@@ -283,9 +286,9 @@ class MovieResource extends Resource
                     TextInput::make('slug')
                         ->label('Slug')
                         ->required()
+                        ->minLength(2)
                         ->maxLength(128)
                         ->unique(Movie::class, 'slug', ignoreRecord: true)
-                        ->helperText('Автоматично генерується з імені')
                         ->prefixIcon('heroicon-o-link'),
 
                     Repeater::make('api_sources')
@@ -294,12 +297,15 @@ class MovieResource extends Resource
                             TextInput::make('name')
                                 ->label('Назва джерела')
                                 ->required()
+                                ->minLength(2)
                                 ->maxLength(255),
                             TextInput::make('id')
                                 ->label('ID')
                                 ->required()
+                                ->minLength(1)
                                 ->maxLength(255),
                         ])
+                        ->maxItems(5)
                         ->defaultItems(0)
                         ->collapsible()
                         ->columnSpanFull(),
@@ -313,37 +319,48 @@ class MovieResource extends Resource
                         ->relationship('studio', 'name')
                         ->required()
                         ->preload()
-                        ->prefixIcon('heroicon-o-building-office')
-                        ->searchable(),
+                        ->searchable()
+                        ->prefixIcon('heroicon-o-building-office'),
 
                     Select::make('kind')
                         ->label('Тип')
                         ->options(Kind::class)
                         ->required()
-                        ->prefixIcon('heroicon-o-video-camera'),
+                        ->prefixIcon('heroicon-o-video-camera')
+                        ->native(false)
+                        ->searchable(),
+
                     Select::make('status')
                         ->label('Статус')
                         ->options(Status::class)
                         ->required()
-                        ->prefixIcon('clarity-shield-check-line'),
+                        ->prefixIcon('clarity-shield-check-line')
+                        ->native(false)
+                        ->searchable(),
 
                     Select::make('period')
                         ->label('Період')
                         ->options(Period::class)
                         ->nullable()
-                        ->prefixIcon('heroicon-o-calendar-days'),
+                        ->prefixIcon('heroicon-o-calendar-days')
+                        ->native(false)
+                        ->searchable(),
 
                     Select::make('restricted_rating')
                         ->label('Вікове обмеження')
                         ->options(RestrictedRating::class)
                         ->required()
-                        ->prefixIcon('heroicon-o-shield-exclamation'),
+                        ->prefixIcon('heroicon-o-shield-exclamation')
+                        ->native(false)
+                        ->searchable(),
 
                     Select::make('source')
                         ->label('Джерело')
                         ->options(Source::class)
                         ->required()
-                        ->prefixIcon('heroicon-o-cloud'),
+                        ->prefixIcon('heroicon-o-cloud')
+                        ->native(false)
+                        ->searchable(),
                 ])
                 ->columns(2),
 
@@ -352,6 +369,8 @@ class MovieResource extends Resource
                 ->schema([
                     RichEditor::make('description')
                         ->required()
+                        ->minLength(50)
+                        ->maxLength(5000)
                         ->columnSpanFull()
                         ->label('Опис')
                         ->disableToolbarButtons(['attachFiles'])
@@ -368,6 +387,7 @@ class MovieResource extends Resource
                         ->label('Тривалість (хв)')
                         ->numeric()
                         ->minValue(1)
+                        ->maxValue(1000)
                         ->nullable()
                         ->suffix('хв'),
 
@@ -375,33 +395,24 @@ class MovieResource extends Resource
                         ->label('Кількість епізодів')
                         ->numeric()
                         ->minValue(1)
+                        ->maxValue(10000)
                         ->nullable(),
 
                     DatePicker::make('first_air_date')
                         ->label('Дата початку ефіру')
                         ->native(false)
-                        ->nullable(),
+                        ->nullable()
+                        ->before('last_air_date')
+                        ->afterOrEqual('1895-12-28')
+                        ->beforeOrEqual(now()->addYears(10))
+                        ->helperText('Не раніше 28.12.1895 (перший кінопоказ)'),
 
                     DatePicker::make('last_air_date')
                         ->label('Дата завершення ефіру')
                         ->native(false)
-                        ->nullable(),
-
-                    DateTimePicker::make('created_at')
-                        ->label('Дата створення')
-                        ->prefixIcon('heroicon-o-calendar')
-                        ->displayFormat('d.m.Y H:i')
-                        ->disabled()
-                        ->default(now())
-                        ->hiddenOn('create'),
-
-                    DateTimePicker::make('updated_at')
-                        ->label('Дата оновлення')
-                        ->prefixIcon('heroicon-o-clock')
-                        ->displayFormat('d.m.Y H:i')
-                        ->disabled()
-                        ->default(now())
-                        ->hiddenOn('create'),
+                        ->nullable()
+                        ->after('first_air_date')
+                        ->beforeOrEqual(now()->addYears(10)),
 
                     TextInput::make('imdb_score')
                         ->label('Оцінка IMDb')
@@ -413,7 +424,8 @@ class MovieResource extends Resource
 
                     Toggle::make('is_published')
                         ->label('Опубліковано')
-                        ->default(false),
+                        ->default(false)
+                        ->helperText('Увімкніть для публікації'),
                 ])
                 ->columns(2),
 
@@ -424,51 +436,66 @@ class MovieResource extends Resource
                         ->label('Зображення назви фільму')
                         ->image()
                         ->maxSize(2048)
-                        ->directory('movie-images')
+                        ->minSize(50)
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                        ->directory('movies/images')
                         ->required(),
 
                     FileUpload::make('poster')
                         ->label('Постер')
                         ->image()
                         ->maxSize(2048)
+                        ->minSize(50)
                         ->directory('movie-posters')
                         ->nullable(),
 
-                    TagsInput::make('countries')
+                    Select::make('countries')
                         ->label('Країни')
-                        ->placeholder('Додайте країни'),
+                        ->multiple()
+                        ->options(
+                            collect(Country::cases())->mapWithKeys(function ($case) {
+                                return [$case->value => $case->getLabel()];
+                            })->toArray()
+                        )
+                        ->native(false)
+                        ->searchable()
+                        ->preload(),
                 ])
                 ->columns(2),
 
-            Section::make('Пов’язаний контент')
+            Section::make('Пов\'язаний контент')
                 ->icon('heroicon-o-link')
                 ->schema([
                     TagsInput::make('attachments')
                         ->label('Прикріплення')
                         ->placeholder('Додайте прикріплення'),
 
-                    Repeater::make('related')
-                        ->label('Пов’язані')
-                        ->schema([
-                            TextInput::make('title')
-                                ->label('Назва')
-                                ->required()
-                                ->maxLength(255),
-                            Select::make('movie_id')
-                                ->label('Медіа')
-                                ->relationship('relatedMovies', 'name')
-                                ->searchable()
-                                ->preload()
-                                ->nullable(),
-                        ])
-                        ->defaultItems(0)
-                        ->collapsible()
-                        ->columns(2)
-                        ->columnSpanFull(),
-
                     TagsInput::make('similars')
                         ->label('Схожі')
                         ->placeholder('Додайте схожі'),
+                    Repeater::make('related')
+                        ->label('Пов\'язані фільми')
+                        ->columns(2)
+                        ->schema([
+                            Select::make('movie_id')
+                                ->label('Фільм')
+                                ->options(Movie::pluck('name', 'id'))
+                                ->searchable()
+                                ->preload()
+                                ->required(),
+
+                            Select::make('type')
+                                ->label('Тип зв\'язку')
+                                ->native(false)
+                                ->searchable()
+                                ->preload()
+                                ->options(MovieRelateType::class)
+                                ->required(),
+                        ])
+                        ->defaultItems(0)
+                        ->collapsible()
+                        ->addActionLabel('Додати зв\'язок')
+                        ->columnSpanFull(),
                 ])
                 ->columns(2),
 
@@ -477,6 +504,7 @@ class MovieResource extends Resource
                 ->schema([
                     TextInput::make('meta_title')
                         ->label('Meta назва')
+                        ->minLength(10)
                         ->maxLength(128)
                         ->nullable()
                         ->prefixIcon('heroicon-o-tag'),
@@ -484,15 +512,17 @@ class MovieResource extends Resource
                     FileUpload::make('meta_image')
                         ->label('Meta зображення')
                         ->image()
-                        ->imagePreviewHeight('100')
                         ->maxSize(2048)
-                        ->directory('studios/meta')
+                        ->minSize(50)
+                        ->directory('movies/meta')
                         ->nullable(),
 
-                    RichEditor::make('meta_description')
+                    Textarea::make('meta_description')
                         ->label('Meta опис')
-                        ->maxLength(500)
-                        ->columnSpanFull(),
+                        ->minLength(50)
+                        ->maxLength(376)
+                        ->rows(3)
+                        ->nullable(),
                 ])
                 ->collapsed()
                 ->columns(2),

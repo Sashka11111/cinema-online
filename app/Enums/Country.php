@@ -2,7 +2,11 @@
 
 namespace Liamtseva\Cinema\Enums;
 
-enum Country: string
+use Filament\Support\Contracts\HasColor;
+use Filament\Support\Contracts\HasIcon;
+use Filament\Support\Contracts\HasLabel;
+
+enum Country: string implements HasColor, HasIcon, HasLabel
 {
     case UKRAINE = 'ua';
     case USA = 'us';
@@ -24,22 +28,47 @@ enum Country: string
     case SWEDEN = 'se';
     case BELGIUM = 'be';
 
-    public function name(): string
+    /**
+     * Повертає перекладену назву країни для Filament із файлу локалізації.
+     */
+    public function getLabel(): ?string
     {
         return __("countries.{$this->value}.name");
     }
 
-    public function description(): string
+    /**
+     * Повертає колір для відображення у Filament.
+     */
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::UKRAINE => 'warning', // Жовтий
+            self::USA => 'danger',      // Червоний
+            self::JAPAN => 'info',      // Блакитний
+            default => 'gray',          // Сірий для інших
+        };
+    }
+
+    /**
+     * Повертає іконку для Filament.
+     */
+    public function getIcon(): ?string
+    {
+        return "flag-{$this->value}";
+    }
+
+    /**
+     * Повертає опис країни.
+     */
+    public function getDescription(): string
     {
         return __("countries.{$this->value}.description");
     }
 
-    public function icon(): string
-    {
-        return asset("icons/countries/{$this->value}.png");
-    }
-
-    public function metaTitle(): string
+    /**
+     * Повертає мета-заголовок для SEO.
+     */
+    public function getMetaTitle(): string
     {
         return __("countries.{$this->value}.meta_title");
     }

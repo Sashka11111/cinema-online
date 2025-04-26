@@ -67,6 +67,8 @@ class StudioResource extends Resource
 
                 TextColumn::make('description')
                     ->label('Опис')
+                    ->limit(50)
+                    ->tooltip(fn (Studio $record): ?string => $record->description)
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -90,29 +92,6 @@ class StudioResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                Filter::make('movies_count')
-                    ->form([
-                        TextInput::make('min')
-                            ->label('Мінімальна кількість')
-                            ->numeric()
-                            ->minValue(0),
-                        TextInput::make('max')
-                            ->label('Максимальна кількість')
-                            ->numeric()
-                            ->minValue(0),
-                    ])
-                    ->query(function ($query, array $data) {
-                        return $query
-                            ->when(
-                                $data['min'],
-                                fn ($query, $min) => $query->has('movies', '>=', $min)
-                            )
-                            ->when(
-                                $data['max'],
-                                fn ($query, $max) => $query->has('movies', '<=', $max)
-                            );
-                    })
-                    ->label('Кількість фільмів'),
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')

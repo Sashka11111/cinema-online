@@ -18,7 +18,7 @@ class PersonsRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'особи';
 
-    protected static ?string $title = 'Особи в підбірці';
+    protected static ?string $title = 'Особи';
 
     public function table(Table $table): Table
     {

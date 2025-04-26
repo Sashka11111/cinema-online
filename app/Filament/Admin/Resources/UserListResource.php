@@ -173,7 +173,7 @@ class UserListResource extends Resource
     public static function getRelations(): array
     {
         return [
-            // Можна додати RelationManager для listable, якщо потрібно
+            // Можна додати RelationManagers для listable, якщо потрібно
         ];
     }
 
