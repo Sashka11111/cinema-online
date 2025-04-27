@@ -22,7 +22,10 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Liamtseva\Cinema\Enums\ApiSourceName;
+use Liamtseva\Cinema\Enums\AttachmentType;
 use Liamtseva\Cinema\Enums\Country;
 use Liamtseva\Cinema\Enums\Kind;
 use Liamtseva\Cinema\Enums\MovieRelateType;
@@ -32,6 +35,7 @@ use Liamtseva\Cinema\Enums\Source;
 use Liamtseva\Cinema\Enums\Status;
 use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\Pages;
 use Liamtseva\Cinema\Models\Movie;
+use Liamtseva\Cinema\Models\Scopes\PublishedScope;
 
 class MovieResource extends Resource
 {
@@ -85,6 +89,18 @@ class MovieResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         return (string) Movie::whereIn('status', [Status::ANONS, Status::ONGOING])->count();
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([PublishedScope::class]);
+    }
+
+    public static function getGlobalSearchEloquentQuery(): Builder
+    {
+        return parent::getGlobalSearchEloquentQuery()
+            ->withoutGlobalScopes([PublishedScope::class]);
     }
 
     public static function table(Table $table): Table
@@ -294,11 +310,13 @@ class MovieResource extends Resource
                     Repeater::make('api_sources')
                         ->label('Джерела API')
                         ->schema([
-                            TextInput::make('name')
+                            Select::make('name')
                                 ->label('Назва джерела')
                                 ->required()
-                                ->minLength(2)
-                                ->maxLength(255),
+                                ->options(ApiSourceName::class)
+                                ->native(false)
+                                ->searchable(),
+
                             TextInput::make('id')
                                 ->label('ID')
                                 ->required()
@@ -426,6 +444,28 @@ class MovieResource extends Resource
                         ->label('Опубліковано')
                         ->default(false)
                         ->helperText('Увімкніть для публікації'),
+
+                    Select::make('countries')
+                        ->label('Країни')
+                        ->multiple()
+                        ->native(false)
+                        ->searchable()
+                        ->preload()
+                        ->options(Country::class),
+                    Select::make('similars')
+                        ->label('Схожі фільми')
+                        ->options(function (?Movie $record) {
+                            if (! $record) {
+                                return Movie::all()->pluck('name', 'id');
+                            }
+
+                            return Movie::where('id', '!=', $record->id)
+                                ->get()
+                                ->pluck('name', 'id');
+                        })
+                        ->multiple()
+                        ->preload()
+                        ->searchable(),
                 ])
                 ->columns(2),
 
@@ -448,38 +488,44 @@ class MovieResource extends Resource
                         ->minSize(50)
                         ->directory('movie-posters')
                         ->nullable(),
-
-                    Select::make('countries')
-                        ->label('Країни')
-                        ->multiple()
-                        ->options(
-                            collect(Country::cases())->mapWithKeys(function ($case) {
-                                return [$case->value => $case->getLabel()];
-                            })->toArray()
-                        )
-                        ->native(false)
-                        ->searchable()
-                        ->preload(),
                 ])
                 ->columns(2),
 
             Section::make('Пов\'язаний контент')
                 ->icon('heroicon-o-link')
                 ->schema([
-                    TagsInput::make('attachments')
-                        ->label('Прикріплення')
-                        ->placeholder('Додайте прикріплення'),
+                    Repeater::make('attachments')
+                        ->label('Вкладення')
+                        ->schema([
+                            Select::make('type')
+                                ->label('Тип')
+                                ->options(AttachmentType::class)
+                                ->required()
+                                ->reactive(),
+                            TextInput::make('src')
+                                ->label('Джерело')
+                                ->required()
+                                ->url(),
+                        ])
+                        ->columns(2)
+                        ->default([])
+                        ->collapsible(),
 
-                    TagsInput::make('similars')
-                        ->label('Схожі')
-                        ->placeholder('Додайте схожі'),
                     Repeater::make('related')
                         ->label('Пов\'язані фільми')
                         ->columns(2)
                         ->schema([
                             Select::make('movie_id')
                                 ->label('Фільм')
-                                ->options(Movie::pluck('name', 'id'))
+                                ->options(function (?Movie $record) {
+                                    if (! $record) {
+                                        return Movie::all()->pluck('name', 'id');
+                                    }
+
+                                    return Movie::where('id', '!=', $record->id)
+                                        ->get()
+                                        ->pluck('name', 'id');
+                                })
                                 ->searchable()
                                 ->preload()
                                 ->required(),
@@ -497,7 +543,7 @@ class MovieResource extends Resource
                         ->addActionLabel('Додати зв\'язок')
                         ->columnSpanFull(),
                 ])
-                ->columns(2),
+                ->columns(1),
 
             Section::make('SEO налаштування')
                 ->icon('heroicon-o-globe-alt')

@@ -168,6 +168,7 @@ class EpisodeResource extends Resource
                     }),
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
@@ -351,6 +352,7 @@ class EpisodeResource extends Resource
         return [
             'index' => Pages\ListEpisodes::route('/'),
             'create' => Pages\CreateEpisode::route('/create'),
+            'view' => Pages\ViewEpisode::route('/{record}'),
             'edit' => Pages\EditEpisode::route('/{record}/edit'),
         ];
     }

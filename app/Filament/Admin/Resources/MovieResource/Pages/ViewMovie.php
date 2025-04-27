@@ -3,6 +3,7 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\Pages;
 
 use Filament\Actions;
+use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
@@ -46,9 +47,25 @@ class ViewMovie extends ViewRecord
                             ->label('Статус')
                             ->badge(),
 
+                        TextEntry::make('period')
+                            ->label('Період')
+                            ->badge(),
+
+                        TextEntry::make('source')
+                            ->label('Джерело')
+                            ->badge(),
+
                         TextEntry::make('studio.name')
                             ->label('Студія')
                             ->icon('heroicon-o-building-office'),
+
+                        IconEntry::make('is_published')
+                            ->label('Опубліковано')
+                            ->boolean()
+                            ->trueIcon('heroicon-o-check-circle')
+                            ->falseIcon('heroicon-o-x-circle')
+                            ->trueColor('success')
+                            ->falseColor('danger'),
 
                         TextEntry::make('created_at')
                             ->label('Дата створення')
@@ -75,7 +92,7 @@ class ViewMovie extends ViewRecord
                     ->icon('heroicon-o-photo')
                     ->schema([
                         ImageEntry::make('image_name')
-                            ->label('Головне зображення')
+                            ->label('Зображення назви фільму')
                             ->disk('public'),
 
                         ImageEntry::make('poster')
@@ -89,11 +106,32 @@ class ViewMovie extends ViewRecord
                     ->schema([
                         TextEntry::make('countries')
                             ->label('Країни')
-                            ->bulleted(),
+                            ->formatStateUsing(function ($state) {
+                                if (! is_array($state)) {
+                                    return $state;
+                                }
+
+                                return collect($state)->join(', ');
+                            }),
 
                         TextEntry::make('aliases')
                             ->label('Аліаси')
                             ->bulleted(),
+
+                        TextEntry::make('duration')
+                            ->label('Тривалість')
+                            ->suffix(' хв.'),
+
+                        TextEntry::make('episodes_count')
+                            ->label('Кількість епізодів'),
+
+                        TextEntry::make('first_air_date')
+                            ->label('Дата першого показу')
+                            ->date(),
+
+                        TextEntry::make('last_air_date')
+                            ->label('Дата останнього показу')
+                            ->date(),
 
                         TextEntry::make('imdb_score')
                             ->label('IMDb рейтинг')

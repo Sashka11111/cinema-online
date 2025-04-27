@@ -15,6 +15,7 @@ use Liamtseva\Cinema\Enums\Period;
 use Liamtseva\Cinema\Enums\RestrictedRating;
 use Liamtseva\Cinema\Enums\Source;
 use Liamtseva\Cinema\Enums\Status;
+use Liamtseva\Cinema\Models\Scopes\PublishedScope;
 
 class MoviesRelationManager extends RelationManager
 {
@@ -85,6 +86,7 @@ class MoviesRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(),
             ])
+            ->modifyQueryUsing(fn ($query) => $query->withoutGlobalScope(PublishedScope::class))
             ->filters([
                 TernaryFilter::make('is_published')
                     ->label('Опубліковано'),
