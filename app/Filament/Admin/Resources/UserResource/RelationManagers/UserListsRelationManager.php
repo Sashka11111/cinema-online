@@ -31,38 +31,6 @@ class UserListsRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'списки';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('type')
-                    ->label('Тип списку')
-                    ->options(UserListType::class)
-                    ->required(),
-
-                MorphToSelect::make('listable')
-                    ->label('Елемент списку')
-                    ->required()
-                    ->types([
-                        MorphToSelect\Type::make(Movie::class)
-                            ->titleAttribute('name')
-                            ->label('Фільм'),
-                        MorphToSelect\Type::make(Episode::class)
-                            ->titleAttribute('name')
-                            ->label('Епізод'),
-                        MorphToSelect\Type::make(Selection::class)
-                            ->titleAttribute('name')
-                            ->label('Підбірка'),
-                        MorphToSelect\Type::make(Person::class)
-                            ->titleAttribute('name')
-                            ->label('Персона'),
-                        MorphToSelect\Type::make(Tag::class)
-                            ->titleAttribute('name')
-                            ->label('Тег'),
-                    ]),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -105,6 +73,38 @@ class UserListsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+            ]);
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('type')
+                    ->label('Тип списку')
+                    ->options(UserListType::class)
+                    ->required(),
+
+                MorphToSelect::make('listable')
+                    ->label('Елемент списку')
+                    ->required()
+                    ->types([
+                        MorphToSelect\Type::make(Movie::class)
+                            ->titleAttribute('name')
+                            ->label('Фільм'),
+                        MorphToSelect\Type::make(Episode::class)
+                            ->titleAttribute('name')
+                            ->label('Епізод'),
+                        MorphToSelect\Type::make(Selection::class)
+                            ->titleAttribute('name')
+                            ->label('Підбірка'),
+                        MorphToSelect\Type::make(Person::class)
+                            ->titleAttribute('name')
+                            ->label('Персона'),
+                        MorphToSelect\Type::make(Tag::class)
+                            ->titleAttribute('name')
+                            ->label('Тег'),
+                    ]),
             ]);
     }
 }

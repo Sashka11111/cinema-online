@@ -62,20 +62,6 @@ class EpisodesRelationManager extends RelationManager
             ->filters([])
             ->headerActions([
                 Tables\Actions\AttachAction::make()
-                    ->label('Додати епізод')
-                    ->recordSelect(
-                        fn (Select $select) => $select
-                            ->label('Епізод')
-                            ->options(
-                                Episode::query()
-                                    ->join('movies', 'episodes.movie_id', '=', 'movies.id')
-                                    ->where('movies.is_published', true)
-                                    ->selectRaw("episodes.id, CONCAT(movies.name, ' - Епізод ', episodes.number, ': ', episodes.name) as full_name")
-                                    ->pluck('full_name', 'episodes.id')
-                            )
-                            ->searchable()
-                            ->preload()
-                    )
                     ->form(fn () => [
                         Select::make('episode_id')
                             ->label('Епізод')
@@ -105,13 +91,11 @@ class EpisodesRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make()
-                    ->label('Видалити'),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make()
-                        ->label('Видалити вибрані'),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }

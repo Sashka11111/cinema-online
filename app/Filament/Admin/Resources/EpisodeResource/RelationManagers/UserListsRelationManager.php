@@ -1,10 +1,8 @@
 <?php
 
-namespace Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers;
+namespace Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\RelationManagers;
 
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Actions\CreateAction;
@@ -12,20 +10,19 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Liamtseva\Cinema\Enums\UserListType;
 
-class CommentsRelationManager extends RelationManager
+class UserListsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'comments';
+    protected static string $relationship = 'userLists';
 
-    protected static ?string $title = 'Коментарі';
+    protected static ?string $title = 'Списки користувачів';
 
-    protected static ?string $modelLabel = 'коментар';
+    protected static ?string $modelLabel = 'список';
 
-    protected static ?string $pluralModelLabel = 'коментарі';
+    protected static ?string $pluralModelLabel = 'списки';
 
     public function table(Table $table): Table
     {
@@ -43,41 +40,34 @@ class CommentsRelationManager extends RelationManager
                     ->sortable()
                     ->toggleable(),
 
-                TextColumn::make('body')
-                    ->label('Текст')
-                    ->limit(50)
-                    ->tooltip(fn ($record) => $record->body)
-                    ->html()
+                TextColumn::make('type')
+                    ->label('Тип списку')
+                    ->sortable()
                     ->searchable()
-                    ->sortable()
-                    ->toggleable(),
-
-                ToggleColumn::make('is_spoiler')
-                    ->label('Спойлер')
-                    ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->label('Дата створення')
-                    ->dateTime('d.m.Y H:i')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('updated_at')
                     ->label('Дата оновлення')
-                    ->dateTime('d.m.Y H:i')
+                    ->dateTime('d-m-Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
+                SelectFilter::make('type')
+                    ->label('Тип списку')
+                    ->options(UserListType::class),
+
                 SelectFilter::make('user_id')
                     ->label('Користувач')
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
-
-                TernaryFilter::make('is_spoiler')
-                    ->label('Спойлер'),
             ])
             ->headerActions([
                 CreateAction::make(),
@@ -98,20 +88,16 @@ class CommentsRelationManager extends RelationManager
                 Select::make('user_id')
                     ->label('Користувач')
                     ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
-                Toggle::make('is_spoiler')
-                    ->label('Містить спойлер')
-                    ->offIcon('heroicon-o-eye-slash')
-                    ->onIcon('heroicon-o-eye'),
-
-                RichEditor::make('body')
-                    ->label('Текст коментаря')
                     ->required()
-                    ->columnSpanFull()
-                    ->disableToolbarButtons(['attachFiles']),
+                    ->preload()
+                    ->searchable()
+                    ->prefixIcon('heroicon-o-user'),
+
+                Select::make('type')
+                    ->label('Тип списку')
+                    ->options(UserListType::class)
+                    ->required()
+                    ->prefixIcon('heroicon-o-list-bullet'),
             ]);
     }
 }

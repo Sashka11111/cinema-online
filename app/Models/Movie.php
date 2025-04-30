@@ -61,11 +61,6 @@ class Movie extends Model
         return $this->belongsTo(Studio::class);
     }
 
-    public function ratings(): HasMany
-    {
-        return $this->hasMany(Rating::class)->chaperone();
-    }
-
     public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
@@ -74,7 +69,7 @@ class Movie extends Model
     public function persons(): BelongsToMany
     {
         return $this->belongsToMany(Person::class)
-            ->withPivot('character_name', 'voice_person_id');
+            ->withPivot('character_name');
     }
 
     public function episodes(): HasMany

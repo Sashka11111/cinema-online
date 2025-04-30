@@ -118,16 +118,6 @@ class MoviesRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->label('Додати фільм')
-                    ->recordSelect(
-                        fn (Select $select) => $select
-                            ->label('Фільм')
-                            ->options(
-                                Movie::where('is_published', true)
-                                    ->pluck('name', 'id')
-                            )
-                            ->searchable()
-                            ->preload()
-                    )
                     ->form(fn () => [
                         Select::make('movie_id')
                             ->label('Фільм')
@@ -155,13 +145,11 @@ class MoviesRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make()
-                    ->label('Видалити'),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make()
-                        ->label('Видалити вибрані'),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }

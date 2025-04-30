@@ -16,6 +16,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Liamtseva\Cinema\Filament\Admin\Resources\SelectionResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\SelectionResource\RelationManagers\CommentsRelationManager;
 use Liamtseva\Cinema\Filament\Admin\Resources\SelectionResource\RelationManagers\EpisodesRelationManager;
 use Liamtseva\Cinema\Filament\Admin\Resources\SelectionResource\RelationManagers\MoviesRelationManager;
 use Liamtseva\Cinema\Filament\Admin\Resources\SelectionResource\RelationManagers\PersonsRelationManager;
@@ -31,7 +32,7 @@ class SelectionResource extends Resource
 
     protected static ?string $modelLabel = 'підбірку';
 
-    protected static ?string $pluralModelLabel = 'Підбірки';
+    protected static ?string $pluralModelLabel = 'підбірки';
 
     protected static ?string $navigationGroup = 'Контент';
 
@@ -103,7 +104,8 @@ class SelectionResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function form(Form $form): Form
@@ -209,6 +211,7 @@ class SelectionResource extends Resource
             MoviesRelationManager::class,
             EpisodesRelationManager::class,
             PersonsRelationManager::class,
+            CommentsRelationManager::class,
         ];
     }
 

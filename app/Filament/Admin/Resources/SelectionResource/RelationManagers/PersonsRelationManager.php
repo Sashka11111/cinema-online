@@ -51,16 +51,6 @@ class PersonsRelationManager extends RelationManager
             ->headerActions([
                 Tables\Actions\AttachAction::make()
                     ->label('Додати особу')
-                    ->recordSelect(
-                        fn (Select $select) => $select
-                            ->label('Особа')
-                            ->options(
-                                Person::query()
-                                    ->pluck('name', 'id')
-                            )
-                            ->searchable()
-                            ->preload()
-                    )
                     ->form(fn () => [
                         Select::make('person_id')
                             ->label('Особа')
@@ -88,13 +78,11 @@ class PersonsRelationManager extends RelationManager
                     }),
             ])
             ->actions([
-                Tables\Actions\DetachAction::make()
-                    ->label('Видалити'),
+                Tables\Actions\DetachAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DetachBulkAction::make()
-                        ->label('Видалити вибрані'),
+                    Tables\Actions\DetachBulkAction::make(),
                 ]),
             ]);
     }

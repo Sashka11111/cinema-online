@@ -3,7 +3,6 @@
 namespace Liamtseva\Cinema\Models;
 
 use Database\Factories\EpisodeFactory;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -11,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Liamtseva\Cinema\Models\Builders\EpisodeQueryBuilder;
 use Liamtseva\Cinema\Models\Traits\HasSeo;
 
@@ -46,6 +46,11 @@ class Episode extends Model
     public function comments(): MorphMany
     {
         return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function selections(): MorphToMany
+    {
+        return $this->morphToMany(Selection::class, 'selectionable');
     }
 
     protected function pictureUrl(): Attribute

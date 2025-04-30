@@ -31,38 +31,6 @@ class CommentsRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'коментарі';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                MorphToSelect::make('commentable')
-                    ->label('Елемент списку')
-                    ->required()
-                    ->types([
-                        MorphToSelect\Type::make(Movie::class)
-                            ->titleAttribute('name')
-                            ->label('Фільм'),
-                        MorphToSelect\Type::make(Episode::class)
-                            ->titleAttribute('name')
-                            ->label('Епізод'),
-                        MorphToSelect\Type::make(Selection::class)
-                            ->titleAttribute('name')
-                            ->label('Підбірка'),
-                    ]),
-
-                Toggle::make('is_spoiler')
-                    ->label('Містить спойлер')
-                    ->offIcon('heroicon-o-eye-slash')
-                    ->onIcon('heroicon-o-eye'),
-
-                RichEditor::make('body')
-                    ->label('Текст коментаря')
-                    ->required()
-                    ->columnSpanFull()
-                    ->disableToolbarButtons(['attachFiles']),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -118,6 +86,38 @@ class CommentsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+            ]);
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                MorphToSelect::make('commentable')
+                    ->label('Елемент списку')
+                    ->required()
+                    ->types([
+                        MorphToSelect\Type::make(Movie::class)
+                            ->titleAttribute('name')
+                            ->label('Фільм'),
+                        MorphToSelect\Type::make(Episode::class)
+                            ->titleAttribute('name')
+                            ->label('Епізод'),
+                        MorphToSelect\Type::make(Selection::class)
+                            ->titleAttribute('name')
+                            ->label('Підбірка'),
+                    ]),
+
+                Toggle::make('is_spoiler')
+                    ->label('Містить спойлер')
+                    ->offIcon('heroicon-o-eye-slash')
+                    ->onIcon('heroicon-o-eye'),
+
+                RichEditor::make('body')
+                    ->label('Текст коментаря')
+                    ->required()
+                    ->columnSpanFull()
+                    ->disableToolbarButtons(['attachFiles']),
             ]);
     }
 }

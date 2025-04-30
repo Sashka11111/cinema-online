@@ -24,7 +24,7 @@ class CommentLikeResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-heart';
 
-    protected static ?string $pluralModelLabel = 'Реакції на коментарі';
+    protected static ?string $pluralModelLabel = 'реакції на коментарі';
 
     protected static ?string $navigationLabel = 'Реакції на коментарі';
 
@@ -124,7 +124,8 @@ class CommentLikeResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function form(Form $form): Form

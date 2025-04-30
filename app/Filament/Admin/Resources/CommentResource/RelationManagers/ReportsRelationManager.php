@@ -24,31 +24,6 @@ class ReportsRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'скарги';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->required()
-                    ->searchable()
-                    ->preload()
-                    ->label('Користувач'),
-
-                Select::make('type')
-                    ->label('Тип скарги')
-                    ->options(CommentReportType::class)
-                    ->required()
-                    ->enum(CommentReportType::class),
-
-                RichEditor::make('body')
-                    ->label('Текст скарги')
-                    ->nullable()
-                    ->disableToolbarButtons(['attachFiles'])
-                    ->columnSpanFull(),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -92,6 +67,31 @@ class ReportsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+            ]);
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload()
+                    ->label('Користувач'),
+
+                Select::make('type')
+                    ->label('Тип скарги')
+                    ->options(CommentReportType::class)
+                    ->required()
+                    ->enum(CommentReportType::class),
+
+                RichEditor::make('body')
+                    ->label('Текст скарги')
+                    ->nullable()
+                    ->disableToolbarButtons(['attachFiles'])
+                    ->columnSpanFull(),
             ]);
     }
 }

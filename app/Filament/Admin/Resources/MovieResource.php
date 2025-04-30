@@ -23,7 +23,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Liamtseva\Cinema\Enums\ApiSourceName;
 use Liamtseva\Cinema\Enums\AttachmentType;
 use Liamtseva\Cinema\Enums\Country;
@@ -34,6 +33,13 @@ use Liamtseva\Cinema\Enums\RestrictedRating;
 use Liamtseva\Cinema\Enums\Source;
 use Liamtseva\Cinema\Enums\Status;
 use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\CommentsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\EpisodesRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\PersonsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\RatingsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\SelectionsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\TagsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers\UserListsRelationManager;
 use Liamtseva\Cinema\Models\Movie;
 use Liamtseva\Cinema\Models\Scopes\PublishedScope;
 
@@ -47,44 +53,11 @@ class MovieResource extends Resource
 
     protected static ?string $modelLabel = 'фільм';
 
-    protected static ?string $pluralModelLabel = 'Фільми';
+    protected static ?string $pluralModelLabel = 'фільми';
 
     protected static ?string $navigationGroup = 'Контент';
 
     protected static ?int $navigationSort = 1;
-
-    protected static ?string $recordTitleAttribute = 'name';
-
-    public static function getGloballySearchableAttributes(): array
-    {
-        return [
-            'name',
-            'slug',
-            'description',
-            'aliases',
-            'countries',
-            'studio.name',
-        ];
-    }
-
-    public static function getGlobalSearchResultTitle(Model $record): string
-    {
-        return $record->name;
-    }
-
-    public static function getGlobalSearchResultDetails(Model $record): array
-    {
-        return [
-            'Студія' => $record->studio?->name,
-            'Тип' => $record->kind,
-            'Статус' => $record->status,
-        ];
-    }
-
-    public static function getGlobalSearchResultUrl(Model $record): string
-    {
-        return static::getUrl('edit', ['record' => $record]);
-    }
 
     public static function getNavigationBadge(): ?string
     {
@@ -486,7 +459,7 @@ class MovieResource extends Resource
                         ->image()
                         ->maxSize(2048)
                         ->minSize(50)
-                        ->directory('movie-posters')
+                        ->directory('movie/posters')
                         ->nullable(),
                 ])
                 ->columns(2),
@@ -573,6 +546,19 @@ class MovieResource extends Resource
                 ->collapsed()
                 ->columns(2),
         ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            EpisodesRelationManager::class,
+            CommentsRelationManager::class,
+            RatingsRelationManager::class,
+            PersonsRelationManager::class,
+            SelectionsRelationManager::class,
+            UserListsRelationManager::class,
+            TagsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

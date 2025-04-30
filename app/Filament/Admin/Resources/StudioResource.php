@@ -31,7 +31,7 @@ class StudioResource extends Resource
 
     protected static ?string $modelLabel = 'студію';
 
-    protected static ?string $pluralModelLabel = 'Студії';
+    protected static ?string $pluralModelLabel = 'студії';
 
     protected static ?string $navigationGroup = 'Персони та студії';
 

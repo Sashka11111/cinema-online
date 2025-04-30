@@ -31,7 +31,7 @@ class CommentReportResource extends Resource
 
     protected static ?string $modelLabel = 'скаргу на коментар';
 
-    protected static ?string $pluralModelLabel = 'Скарги на коментарі';
+    protected static ?string $pluralModelLabel = 'скарги на коментарі';
 
     protected static ?string $navigationGroup = 'Коментарі';
 
@@ -138,7 +138,8 @@ class CommentReportResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function form(Form $form): Form

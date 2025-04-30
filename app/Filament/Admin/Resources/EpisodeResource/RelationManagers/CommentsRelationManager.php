@@ -1,20 +1,16 @@
 <?php
 
-namespace Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers;
+namespace Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\RelationManagers;
 
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Tables\Actions\CreateAction;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Actions\EditAction;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
-use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class CommentsRelationManager extends RelationManager
@@ -45,9 +41,9 @@ class CommentsRelationManager extends RelationManager
 
                 TextColumn::make('body')
                     ->label('Текст')
-                    ->limit(50)
-                    ->tooltip(fn ($record) => $record->body)
                     ->html()
+                    ->limit(50)
+                    ->tooltip(fn ($record) => strip_tags($record->body))
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
@@ -70,24 +66,23 @@ class CommentsRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('user_id')
+                SelectFilter::make('user')
                     ->label('Користувач')
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
-
-                TernaryFilter::make('is_spoiler')
-                    ->label('Спойлер'),
             ])
             ->headerActions([
-                CreateAction::make(),
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                EditAction::make(),
-                DeleteAction::make(),
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
-                DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 

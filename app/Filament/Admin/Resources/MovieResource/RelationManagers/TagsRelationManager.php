@@ -3,26 +3,25 @@
 namespace Liamtseva\Cinema\Filament\Admin\Resources\MovieResource\RelationManagers;
 
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Liamtseva\Cinema\Models\Rating;
+use Liamtseva\Cinema\Models\Tag;
 
-class RatingsRelationManager extends RelationManager
+class TagsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'ratings';
+    protected static string $relationship = 'tags';
 
-    protected static ?string $title = 'Рейтинги';
+    protected static ?string $title = 'Теги';
 
-    protected static ?string $modelLabel = 'рейтинг';
+    protected static ?string $modelLabel = 'тег';
 
-    protected static ?string $pluralModelLabel = 'рейтинги';
+    protected static ?string $pluralModelLabel = 'теги';
 
     public function table(Table $table): Table
     {
@@ -34,31 +33,42 @@ class RatingsRelationManager extends RelationManager
                     ->searchable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-                TextColumn::make('user.name')
-                    ->label('Користувач')
-                    ->description(fn (Rating $rating): string => $rating->user->email)
+                ImageColumn::make('image')
+                    ->label('Зображення')
+                    ->disk('public')
+                    ->width(50)
+                    ->height(50)
+                    ->circular()
+                    ->toggleable(),
+
+                TextColumn::make('name')
+                    ->label('Назва та slug')
+                    ->description(fn (Tag $tag): string => $tag->slug)
                     ->searchable()
                     ->sortable()
                     ->toggleable(),
 
-                TextColumn::make('number')
-                    ->label('Оцінка')
-                    ->badge()
-                    ->color(fn (Rating $rating): string => match (true) {
-                        $rating->number >= 8 => 'success',
-                        $rating->number >= 5 => 'warning',
-                        default => 'danger',
-                    })
-                    ->sortable()
-                    ->searchable()
-                    ->toggleable(),
-
-                TextColumn::make('review')
-                    ->label('Відгук')
+                TextColumn::make('description')
+                    ->label('Опис')
                     ->limit(50)
-                    ->tooltip(fn (Rating $rating): ?string => $rating->review)
-                    ->sortable()
+                    ->tooltip(fn (Tag $record): ?string => $record->description)
                     ->searchable()
+                    ->toggleable(),
+
+                TextColumn::make('aliases')
+                    ->label('Аліаси')
+                    ->formatStateUsing(function ($state) {
+                        $decoded = json_decode($state, true);
+
+                        return is_array($decoded) ? implode(', ', $decoded) : $state;
+                    })
+                    ->searchable()
+                    ->toggleable()
+                    ->wrap(),
+
+                ToggleColumn::make('is_genre')
+                    ->label('Жанр')
+                    ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('created_at')
@@ -74,15 +84,13 @@ class RatingsRelationManager extends RelationManager
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                SelectFilter::make('number')
-                    ->label('Оцінка')
-                    ->options(array_combine(range(1, 10), range(1, 10))),
+                SelectFilter::make('is_genre')
+                    ->label('Жанр')
+                    ->options([
+                        '1' => 'Так',
+                        '0' => 'Ні',
+                    ]),
 
-                SelectFilter::make('user')
-                    ->label('Користувач')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload(),
                 Filter::make('created_at')
                     ->form([
                         DatePicker::make('created_from')
@@ -99,42 +107,14 @@ class RatingsRelationManager extends RelationManager
                     }),
             ])
             ->headerActions([
-                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
-    }
-
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('user_id')
-                    ->label('Користувач')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->prefixIcon('heroicon-o-user'),
-
-                Select::make('number')
-                    ->label('Оцінка')
-                    ->options(range(1, 10))
-                    ->required()
-                    ->prefixIcon('heroicon-o-star'),
-
-                RichEditor::make('review')
-                    ->label('Відгук')
-                    ->disableToolbarButtons(['attachFiles'])
-                    ->columnSpanFull()
-                    ->maxLength(65535),
             ]);
     }
 }

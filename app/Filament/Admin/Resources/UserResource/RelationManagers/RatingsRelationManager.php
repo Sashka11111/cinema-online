@@ -24,31 +24,6 @@ class RatingsRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'оцінки';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('movie_id')
-                    ->label('Фільм')
-                    ->relationship('movie', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->prefixIcon('heroicon-o-film'),
-
-                Select::make('number')
-                    ->label('Оцінка')
-                    ->options(range(1, 10))
-                    ->required()
-                    ->prefixIcon('heroicon-o-star'),
-
-                RichEditor::make('review')
-                    ->label('Відгук')
-                    ->columnSpanFull()
-                    ->disableToolbarButtons(['attachFiles']),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -89,6 +64,31 @@ class RatingsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+            ]);
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('movie_id')
+                    ->label('Фільм')
+                    ->relationship('movie', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->prefixIcon('heroicon-o-film'),
+
+                Select::make('number')
+                    ->label('Оцінка')
+                    ->options(range(1, 10))
+                    ->required()
+                    ->prefixIcon('heroicon-o-star'),
+
+                RichEditor::make('review')
+                    ->label('Відгук')
+                    ->columnSpanFull()
+                    ->disableToolbarButtons(['attachFiles']),
             ]);
     }
 }

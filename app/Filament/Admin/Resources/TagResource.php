@@ -14,9 +14,9 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -34,7 +34,7 @@ class TagResource extends Resource
 
     protected static ?string $modelLabel = 'тег';
 
-    protected static ?string $pluralModelLabel = 'Теги';
+    protected static ?string $pluralModelLabel = 'теги';
 
     protected static ?string $navigationGroup = 'Контент';
 
@@ -83,11 +83,8 @@ class TagResource extends Resource
                     ->toggleable()
                     ->wrap(),
 
-                IconColumn::make('is_genre')
+                ToggleColumn::make('is_genre')
                     ->label('Жанр')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
                     ->sortable()
                     ->toggleable(),
 
@@ -235,7 +232,7 @@ class TagResource extends Resource
                             ->image()
                             ->imagePreviewHeight('100')
                             ->maxSize(2048)
-                            ->directory('meta-tags')
+                            ->directory('meta/tags')
                             ->nullable(),
 
                         RichEditor::make('meta_description')

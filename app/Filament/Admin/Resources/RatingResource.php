@@ -27,7 +27,7 @@ class RatingResource extends Resource
 
     protected static ?string $modelLabel = 'рейтинг';
 
-    protected static ?string $pluralModelLabel = 'Рейтинг';
+    protected static ?string $pluralModelLabel = 'рейтинги';
 
     protected static ?string $navigationGroup = 'Користувацька активність';
 
@@ -128,7 +128,8 @@ class RatingResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function form(Form $form): Form

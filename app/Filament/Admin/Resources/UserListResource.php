@@ -31,7 +31,7 @@ class UserListResource extends Resource
 
     protected static ?string $modelLabel = 'список користувача';
 
-    protected static ?string $pluralModelLabel = 'Списки користувача';
+    protected static ?string $pluralModelLabel = 'списки користувача';
 
     protected static ?string $navigationGroup = 'Контент';
 
@@ -105,7 +105,8 @@ class UserListResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->defaultSort('created_at', 'desc');
     }
 
     public static function form(Form $form): Form

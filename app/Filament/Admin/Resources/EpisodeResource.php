@@ -16,8 +16,8 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -25,6 +25,9 @@ use Filament\Tables\Table;
 use Liamtseva\Cinema\Enums\VideoPlayerName;
 use Liamtseva\Cinema\Enums\VideoQuality;
 use Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\Pages;
+use Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\RelationManagers\CommentsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\RelationManagers\SelectionsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\EpisodeResource\RelationManagers\UserListsRelationManager;
 use Liamtseva\Cinema\Models\Episode;
 
 class EpisodeResource extends Resource
@@ -37,7 +40,7 @@ class EpisodeResource extends Resource
 
     protected static ?string $modelLabel = 'епізод';
 
-    protected static ?string $pluralModelLabel = 'Епізоди';
+    protected static ?string $pluralModelLabel = 'епізоди';
 
     protected static ?string $navigationGroup = 'Контент';
 
@@ -99,11 +102,8 @@ class EpisodeResource extends Resource
                     ->searchable()
                     ->toggleable(),
 
-                IconColumn::make('is_filler')
+                ToggleColumn::make('is_filler')
                     ->label('Філер')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
                     ->sortable()
                     ->toggleable(),
 
@@ -345,6 +345,15 @@ class EpisodeResource extends Resource
                 ])
                 ->columns(2),
         ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            CommentsRelationManager::class,
+            SelectionsRelationManager::class,
+            UserListsRelationManager::class,
+        ];
     }
 
     public static function getPages(): array

@@ -23,7 +23,7 @@ class WatchHistoryResource extends Resource
 
     protected static ?string $modelLabel = 'історію перегляду';
 
-    protected static ?string $pluralModelLabel = 'Історія переглядів';
+    protected static ?string $pluralModelLabel = 'історії переглядів';
 
     protected static ?string $navigationGroup = 'Історія';
 

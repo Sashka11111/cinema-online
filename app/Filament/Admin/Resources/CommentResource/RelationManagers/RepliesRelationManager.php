@@ -26,31 +26,6 @@ class RepliesRelationManager extends RelationManager
 
     protected static ?string $title = 'Відповіді';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('user_id')
-                    ->label('Користувач')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required(),
-
-                Toggle::make('is_spoiler')
-                    ->label('Містить спойлер')
-                    ->offIcon('heroicon-o-eye-slash')
-                    ->onIcon('heroicon-o-eye')
-                    ->helperText('Позначте, якщо коментар містить спойлери'),
-
-                RichEditor::make('body')
-                    ->label('Текст коментаря')
-                    ->required()
-                    ->columnSpanFull()
-                    ->disableToolbarButtons(['attachFiles']),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -111,6 +86,31 @@ class RepliesRelationManager extends RelationManager
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+            ]);
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('user_id')
+                    ->label('Користувач')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required(),
+
+                Toggle::make('is_spoiler')
+                    ->label('Містить спойлер')
+                    ->offIcon('heroicon-o-eye-slash')
+                    ->onIcon('heroicon-o-eye')
+                    ->helperText('Позначте, якщо коментар містить спойлери'),
+
+                RichEditor::make('body')
+                    ->label('Текст коментаря')
+                    ->required()
+                    ->columnSpanFull()
+                    ->disableToolbarButtons(['attachFiles']),
             ]);
     }
 }

@@ -23,6 +23,8 @@ use Liamtseva\Cinema\Enums\Gender;
 use Liamtseva\Cinema\Enums\PersonType;
 use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\Pages;
 use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\RelationManagers\MoviesRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\RelationManagers\SelectionsRelationManager;
+use Liamtseva\Cinema\Filament\Admin\Resources\PersonResource\RelationManagers\UserListsRelationManager;
 use Liamtseva\Cinema\Models\Person;
 
 class PersonResource extends Resource
@@ -35,7 +37,7 @@ class PersonResource extends Resource
 
     protected static ?string $modelLabel = 'персону';
 
-    protected static ?string $pluralModelLabel = 'Персони';
+    protected static ?string $pluralModelLabel = 'персони';
 
     protected static ?string $navigationGroup = 'Персони та студії';
 
@@ -298,6 +300,8 @@ class PersonResource extends Resource
     {
         return [
             MoviesRelationManager::class,
+            SelectionsRelationManager::class,
+            UserListsRelationManager::class,
         ];
     }
 

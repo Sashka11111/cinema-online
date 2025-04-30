@@ -23,7 +23,7 @@ class SearchHistoryResource extends Resource
 
     protected static ?string $modelLabel = 'історію пошуку';
 
-    protected static ?string $pluralModelLabel = 'Історія пошуку';
+    protected static ?string $pluralModelLabel = 'історії пошуку';
 
     protected static ?string $navigationGroup = 'Історія';
 

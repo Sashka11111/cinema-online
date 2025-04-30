@@ -25,33 +25,6 @@ class LikesRelationManager extends RelationManager
 
     protected static ?string $title = 'Реакції';
 
-    public function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                Select::make('user_id')
-                    ->relationship('user', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->unique(table: 'comment_likes', column: 'user_id', modifyRuleUsing: function (UniqueRule $rule) {
-                        return $rule->where('comment_id', $this->getOwnerRecord()->id);
-                    })
-                    ->validationMessages([
-                        'unique' => 'Цей користувач вже поставив реакцію цьому коментарю.',
-                    ]),
-
-                Toggle::make('is_liked')
-                    ->label('Тип реакції')
-                    ->onIcon('heroicon-o-hand-thumb-up')
-                    ->offIcon('heroicon-o-hand-thumb-down')
-                    ->onColor('success')
-                    ->offColor('danger')
-                    ->default(true)
-                    ->helperText('Увімкнено = лайк, вимкнено = дизлайк'),
-            ]);
-    }
-
     public function table(Table $table): Table
     {
         return $table
@@ -89,6 +62,33 @@ class LikesRelationManager extends RelationManager
             ])
             ->bulkActions([
                 DeleteBulkAction::make(),
+            ]);
+    }
+
+    public function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Select::make('user_id')
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->required()
+                    ->unique(table: 'comment_likes', column: 'user_id', modifyRuleUsing: function (UniqueRule $rule) {
+                        return $rule->where('comment_id', $this->getOwnerRecord()->id);
+                    })
+                    ->validationMessages([
+                        'unique' => 'Цей користувач вже поставив реакцію цьому коментарю.',
+                    ]),
+
+                Toggle::make('is_liked')
+                    ->label('Тип реакції')
+                    ->onIcon('heroicon-o-hand-thumb-up')
+                    ->offIcon('heroicon-o-hand-thumb-down')
+                    ->onColor('success')
+                    ->offColor('danger')
+                    ->default(true)
+                    ->helperText('Увімкнено = лайк, вимкнено = дизлайк'),
             ]);
     }
 }
