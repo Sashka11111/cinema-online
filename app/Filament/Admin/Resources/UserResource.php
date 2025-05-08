@@ -279,7 +279,7 @@ class UserResource extends Resource
                         ->required()
                         ->dehydrated(fn ($state) => filled($state))
                         ->prefixIcon('clarity-key-line')
-                        ->disabled(fn ($context) => $context === 'edit'),
+                        ->visible(fn ($context) => $context === 'create'),
 
                     Select::make('role')
                         ->label('Роль')

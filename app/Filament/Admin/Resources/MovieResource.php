@@ -61,7 +61,9 @@ class MovieResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return (string) Movie::whereIn('status', [Status::ANONS, Status::ONGOING])->count();
+        return (string) Movie::withoutGlobalScopes([PublishedScope::class])
+            ->whereIn('status', [Status::ANONS, Status::ONGOING])
+            ->count();
     }
 
     public static function getEloquentQuery(): Builder

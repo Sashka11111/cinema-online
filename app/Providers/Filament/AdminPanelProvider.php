@@ -31,8 +31,8 @@ class AdminPanelProvider extends PanelProvider
                 DashStackThemePlugin::make(),
             ])
             ->font('DM Sans')
-            ->brandLogo(asset('images/icon.svg'))
-            ->favicon(asset('images/icon.svg'))
+            ->brandLogo(asset('images/icon.png'))
+            ->favicon(asset('images/icon.png'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'Liamtseva\\Cinema\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'Liamtseva\Cinema\\Filament\\Admin\\Pages')
             ->pages([])

@@ -49,7 +49,17 @@ class Movie extends Model
         'period' => Period::class,
         'restricted_rating' => RestrictedRating::class,
         'source' => Source::class,
+        'is_published' => 'boolean',
     ];
+
+    // Додаємо аксесор для is_public, який використовує is_published
+    protected function isPublic(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->is_published,
+            set: fn ($value) => ['is_published' => $value]
+        );
+    }
 
     public function newEloquentBuilder($query): MovieQueryBuilder
     {

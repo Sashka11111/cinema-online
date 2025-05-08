@@ -11,9 +11,9 @@
         "flowframe/laravel-trend": "^0.4.0",
         "laravel-lang/common": "^6.5",
         "laravel/framework": "^11.9",
+        "laravel/socialite": "^5.20",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.4",
-        "livewire/volt": "^1.0",
         "mallardduck/blade-boxicons": "^2.4",
         "nuxtifyts/dash-stack-theme": "^1.2",
         "owenvoke/blade-fontawesome": "^2.8"
