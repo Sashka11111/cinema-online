@@ -80,7 +80,7 @@
 
             <livewire:components.social-login-component/>
 
-            <livewire:components.footer-component :route="route('auth.login')"
+            <livewire:components.footer-component :route="route('login')"
                                                   :text="'Вже зареєстровані?'"
                                                   :linkText="'Авторизуватися'"/>
         </div>

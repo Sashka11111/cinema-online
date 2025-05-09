@@ -30,7 +30,7 @@
             </form>
 
             <livewire:components.footer-component
-                :route="route('auth.login')"
+                :route="route('login')"
                 :text="'Повернутися до входу?'"
                 :linkText="'Увійти'"
             />

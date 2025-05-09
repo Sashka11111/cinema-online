@@ -15,12 +15,17 @@ return new class extends Migration
             $table->dropColumn('id');
             $table->ulid('id')->primary();
             $table->string('name')->unique()->change();
+            $table->string('password')->nullable()->change();
             $table->enumAlterColumn('role', 'role', Role::class, default: Role::USER->value);
             $table->string('avatar', 2048)->nullable();
             $table->string('backdrop', 2048)->nullable();
             $table->enumAlterColumn('gender', 'gender', Gender::class, nullable: true);
             $table->string('description', 248)->nullable();
             $table->date('birthday')->nullable();
+            $table->string('provider_id', 128)->nullable()->after('password');
+            $table->string('provider_name', 128)->nullable()->after('provider_id');
+            $table->string('provider_token', 128)->nullable()->after('provider_name');
+            $table->string('provider_refresh_token', 128)->nullable()->after('provider_token');
             $table->boolean('allow_adult')->default(false);
             $table->timestamp('last_seen_at')->nullable();
             $table->boolean('is_auto_next')->default(false);
@@ -48,6 +53,10 @@ return new class extends Migration
             $table->dropColumn('gender');
             $table->dropColumn('description');
             $table->dropColumn('birthday');
+            $table->dropColumn('provider_id');
+            $table->dropColumn('provider_name');
+            $table->dropColumn('provider_token');
+            $table->dropColumn('provider_refresh_token');
             $table->dropColumn('allow_adult');
             $table->dropColumn('last_seen_at');
             $table->dropColumn('is_auto_next');
