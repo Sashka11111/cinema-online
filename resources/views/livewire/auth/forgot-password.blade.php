@@ -1,40 +1,47 @@
-<div class="auth-page">
-    <div class="auth-page__container">
-        <div class="auth-page__form-section">
-            <livewire:components.logo-component/>
+<div class="verify-page">
+    <div class="verify-card">
+        <img src="{{ asset('images/verify.jpg') }}" alt="Відновлення пароля" class="verify-image">
 
-            <p class="auth-page__subtitle">Забули свій пароль? Нічого. Просто повідомте нам свою
-                електронну адресу, і ми надішлемо вам посилання, яке дозволить змінити пароль.</p>
+        <h2 class="verify-title">Відновлення пароля</h2>
+        <p class="verify-description">
+            Забули свій пароль? Нічого страшного. Просто введіть свою електронну адресу, і ми
+            надішлемо вам посилання для скидання пароля, яке дозволить вам створити новий.
+        </p>
 
-            <form wire:submit="sendResetLink" class="auth-form">
-                <livewire:components.form-field-component
-                    label="Email"
+        <form wire:submit="sendResetLink" class="verify-form">
+            <div class="verify-form__input-container">
+                <input
                     id="email"
                     type="email"
                     name="email"
                     wire:model="email"
-                    required="true"
+                    required
                     autocomplete="email"
-                    :error="$errors->first('email')"
-                />
+                    class="verify-form__input"
+                    placeholder="Ваша електронна адреса"
+                >
+                @error('email')
+                <div class="verify-error">{{ $message }}</div>
+                @enderror
+            </div>
 
-                @if (session('status'))
-                    <div class="auth-page__status">{{ session('status') }}</div>
-                @endif
-                @if (session('error'))
-                    <div class="auth-form__error">{{ session('error') }}</div>
-                @endif
+            @if (session('status'))
+                <div class="verify-status">{{ session('status') }}</div>
+            @endif
 
-                <button type="submit" class="auth-form__button">Надіслати посилання для скидання
-                </button>
-            </form>
+            @if (session('error'))
+                <div class="verify-error">{{ session('error') }}</div>
+            @endif
 
-            <livewire:components.footer-component
-                :route="route('login')"
-                :text="'Повернутися до входу?'"
-                :linkText="'Увійти'"
-            />
-        </div>
-        <livewire:components.promo-section-component/>
+            <button type="submit" class="verify-button">
+                Надіслати посилання для скидання
+            </button>
+        </form>
+
+        <livewire:components.footer-component
+            :route="route('login')"
+            :text="'Повернутися до входу?'"
+            :linkText="'Авторизуватися'"
+        />
     </div>
 </div>

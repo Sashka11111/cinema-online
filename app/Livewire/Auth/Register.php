@@ -21,7 +21,7 @@ class Register extends Component
     protected $rules = [
         'name' => 'required|string|max:255|unique:users,name|min:3',
         'email' => 'required|email|unique:users,email|max:255|min:3',
-        'password' => 'required|confirmed|min:8|max:32',
+        'password' => 'required|min:8|max:32',
     ];
 
     public function register()
@@ -37,8 +37,9 @@ class Register extends Component
         event(new Registered($user));
         Auth::login($user);
 
-        session()->flash('status', 'Реєстрація успішна!');
-        $this->redirect(route('home'), navigate: true);
+        session()->flash('status', 'Реєстрація успішна! Будь ласка, підтвердіть вашу пошту.');
+
+        return redirect()->route('verification.notice');
     }
 
     public function render()

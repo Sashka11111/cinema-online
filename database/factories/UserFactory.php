@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'email_verified_at' => fake()->randomElement([now(), null]),
             'password' => static::$password ??= Hash::make('password'),
             'provider_id' => fake()->unique()->uuid(),
-            'provider_name' => fake()->randomElement(['google', 'twitter', 'instagram', 'discord', 'telegram', 'tiktok', null]),
+            'provider_name' => fake()->randomElement(['google', 'discord', 'telegram', null]),
             'provider_token' => fake()->uuid(),
             'provider_refresh_token' => fake()->uuid(),
             'remember_token' => Str::random(10),

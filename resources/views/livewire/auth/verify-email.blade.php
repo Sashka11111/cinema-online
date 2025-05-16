@@ -1,30 +1,28 @@
-<div class="auth-page">
-    <div class="auth-page__container">
-        <div class="auth-page__form-section">
-            <livewire:components.logo-component/>
+<div class="verify-page">
+    <div class="verify-card">
+        <img src="{{ asset('images/verify.jpg') }}" alt="Підтвердження Email" class="verify-image">
 
-            <p class="auth-page__subtitle">Дякуємо за реєстрацію! Будь ласка, перевірте ваш email
-                для верифікації.</p>
-
-            <form wire:submit.prevent="resend" class="auth-form">
-                @if (session('message'))
-                    <div class="auth-page__status">{{ session('message') }}</div>
-                @endif
-                @if (session('error'))
-                    <div class="auth-form__error">{{ session('error') }}</div>
-                @endif
-
-                <button type="submit" class="auth-form__button">Надіслати повторне посилання
-                </button>
-            </form>
-
-            <livewire:components.footer-component
-                :route="route('login')"
-                :text="'Повернутися до входу?'"
-                :linkText="'Увійти'"
-            />
-        </div>
-
-        <livewire:components.promo-section-component/>
+        <h2 class="verify-title">Підтвердження електронної пошти</h2>
+        <p class="verify-description">
+            Вітаємо на нашій платформі! Перш ніж продовжити, будь ласка, підтвердіть
+            свою електронну адресу, натиснувши на посилання, яке ми щойно надіслали Вам. Якщо ви не
+            отримали листа, ми із задоволенням надішлемо вам ще один.
+        </p>
+        <form wire:submit.prevent="resend" class="verify-form">
+            @if (session('message'))
+                <div class="verify-status">{{ session('message') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="verify-error">{{ session('error') }}</div>
+            @endif
+            <button type="submit" class="verify-button">
+                Відправити лист із підтвердженням
+            </button>
+        </form>
+        <livewire:components.footer-component
+            :route="route('login')"
+            :text="'Повернутися до входу?'"
+            :linkText="'Авторизуватися'"
+        />
     </div>
 </div>

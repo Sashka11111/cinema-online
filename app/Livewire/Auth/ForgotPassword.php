@@ -3,6 +3,7 @@
 namespace Liamtseva\Cinema\Livewire\Auth;
 
 use Illuminate\Support\Facades\Password;
+use Liamtseva\Cinema\Models\User;
 use Livewire\Component;
 
 class ForgotPassword extends Component
@@ -13,25 +14,30 @@ class ForgotPassword extends Component
         'email' => 'required|email|exists:users,email',
     ];
 
-    protected $messages = [
-        'email.required' => 'Поле Email є обов’язковим.',
-        'email.email' => 'Введіть коректну email-адресу.',
-        'email.exists' => 'Користувача з таким email не знайдено.',
-    ];
-
     public function sendResetLink()
     {
         $this->validate();
 
+        // Перевіряємо, чи підтверджена пошта
+        $user = User::where('email', $this->email)->first();
+
+        if ($user && ! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+            session()->flash('message', 'Ваша пошта не підтверджена. Ми надіслали вам лист для підтвердження.');
+
+            return $this->redirectRoute('verification.notice', navigate: true);
+        }
+
+        // Відправляємо посилання для скидання пароля
         $status = Password::sendResetLink(
             ['email' => $this->email]
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            session()->flash('status', 'Посилання для скидання пароля надіслано на ваш email!');
-            $this->email = ''; // Очищаємо поле після успіху
+            session()->flash('status', 'Посилання для скидання пароля надіслано на вашу електронну пошту!');
+            $this->reset('email'); // Очищаємо поле після успіху
         } else {
-            $this->addError('email', 'Не вдалося надіслати посилання. Перевірте email.');
+            $this->addError('email', __($status));
         }
     }
 

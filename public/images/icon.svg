@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+    <!-- Фон -->
+    <rect width="512" height="512" rx="128" fill="#6E8FE8"/>
+
+    <!-- Корпус камери -->
+    <rect x="96" y="176" width="256" height="160" rx="16" stroke="white" stroke-width="24"
+        fill="none"/>
+
+    <!-- Об'єктив -->
+    <circle cx="224" cy="256" r="64" stroke="white" stroke-width="24" fill="none"/>
+
+    <!-- Центр об'єктива -->
+    <circle cx="224" cy="256" r="24" fill="white"/>
+
+    <!-- Плівка -->
+    <path d="M352 192L416 144V368L352 320" stroke="white" stroke-width="24" stroke-linejoin="round"
+        fill="none"/>
+
+    <!-- Верхня котушка -->
+    <circle cx="144" cy="208" r="16" fill="white"/>
+
+    <!-- Нижня котушка -->
+    <circle cx="144" cy="304" r="16" fill="white"/>
+</svg>

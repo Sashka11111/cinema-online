@@ -1,0 +1,227 @@
+/* Стилі для домашньої сторінки */
+.home-page {
+    padding: var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.home-page__content {
+    text-align: center;
+    padding-top: var(--spacing-xl);
+}
+
+.home-page__title {
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-color);
+}
+
+.home-page__quote {
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-xl);
+    font-size: var(--font-size-lg);
+}
+
+.home-page__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+}
+
+.feature-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
+}
+
+.feature-card__icon {
+    background-color: var(--primary-color);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-lg);
+}
+
+.feature-card__icon-svg {
+    width: 30px;
+    height: 30px;
+    color: white;
+}
+
+.feature-card__title {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-md);
+    color: var(--text-color);
+}
+
+.feature-card__description {
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* Секція популярних фільмів */
+.popular-movies {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-xl) 0;
+}
+
+.popular-movies__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    color: var(--text-color);
+}
+
+.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.movie-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
+}
+
+.movie-card__poster {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+}
+
+.movie-card__content {
+    padding: var(--spacing-md);
+}
+
+.movie-card__title {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
+}
+
+.movie-card__year {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-xs);
+}
+
+.movie-card__rating {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.movie-card__rating-icon {
+    color: #ffc107;
+    margin-right: var(--spacing-xs);
+    width: 16px;
+    height: 16px;
+}
+
+/* Секція підписки */
+.subscription {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-lg);
+    text-align: center;
+    color: white;
+}
+
+.subscription__title {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.subscription__description {
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-lg);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.subscription__form {
+    display: flex;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.subscription__input {
+    flex-grow: 1;
+    padding: var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+    font-size: var(--font-size-base);
+}
+
+.subscription__button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.subscription__button:hover {
+    background-color: #5a7de2;
+}
+
+/* Адаптивність */
+@media (max-width: var(--breakpoint-tablet)) {
+    .home-page__features {
+        grid-template-columns: 1fr;
+    }
+    
+    .home-page__title {
+        font-size: 2rem;
+    }
+    
+    .subscription__form {
+        flex-direction: column;
+    }
+    
+    .subscription__input {
+        border-radius: var(--border-radius-md);
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .subscription__button {
+        border-radius: var(--border-radius-md);
+    }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+    .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .home-page {
+        padding: var(--spacing-lg);
+    }
+}

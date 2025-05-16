@@ -1,3 +1,8 @@
+@import 'header.css';
+@import 'home.css';
+@import 'movies.css';
+@import 'movie-show.css';
+
 :root {
     --primary-color: #93b3f4;
     --accent-color: #6e8fe8;
@@ -10,6 +15,15 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
     --promo-background: #1a1a1a;
     --social-button-bg: #ffffff;
+    --card-background: #ffffff;
+
+    /* Додаткові змінні для темної теми */
+    --dark-background: #121212;
+    --dark-card-background: #1e1e1e;
+    --dark-text-color: #e0e0e0;
+    --dark-text-muted: #a0a0a0;
+    --dark-border-color: #333333;
+    --dark-shadow-color: rgba(0, 0, 0, 0.3);
 
     --spacing-unit: 8px;
     --spacing-xs: calc(var(--spacing-unit) * 0.5);
@@ -28,12 +42,75 @@
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    --border-radius-xxl: 20px;
 
     --box-shadow: 0 2px 8px var(--shadow-color);
 
     --breakpoint-mobile: 576px;
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1024px;
+}
+
+/* Темна тема */
+[data-theme="dark"] {
+    --background-color: var(--dark-background);
+    --card-background: var(--dark-card-background);
+    --text-color: var(--dark-text-color);
+    --text-muted: var(--dark-text-muted);
+    --border-color: var(--dark-border-color);
+    --shadow-color: var(--dark-shadow-color);
+}
+
+/* Стилі для перемикача теми */
+.theme-toggle {
+    margin: 0 var(--spacing-md);
+}
+
+.theme-toggle__button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle__button:hover {
+    background-color: rgba(110, 143, 232, 0.1);
+    color: var(--accent-color);
+}
+
+.theme-toggle__icon {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+/* Додаємо стилі для іконок як маски */
+.theme-toggle__icon--sun {
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    -webkit-mask: url('../../public/images/sun.svg') no-repeat center;
+    mask: url('../../public/images/sun.svg') no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+
+.theme-toggle__icon--moon {
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    -webkit-mask: url('../../public/images/moon.svg') no-repeat center;
+    mask: url('../../public/images/moon.svg') no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
 }
 
 * {
@@ -160,7 +237,7 @@ body {
     color: var(--white);
     border: none;
     padding: var(--spacing-sm);
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-xl);
     font-size: var(--font-size-base);
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -170,15 +247,56 @@ body {
     background-color: #5a7de2;
 }
 
+.auth-form__forgot-password {
+    margin-top: var(--spacing-sm);
+    text-align: left;
+    margin-bottom: var(--spacing-md);
+}
+
+.auth-form__forgot-link {
+    font-size: var(--font-size-sm);
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.auth-form__forgot-link:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+.auth-form__forgot-link:focus {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 576px) {
+    .auth-form__forgot-password {
+        margin-top: calc(var(--spacing-sm) - 2px);
+    }
+
+    .auth-form__forgot-link {
+        font-size: calc(var(--font-size-sm) - 2px);
+    }
+}
+
 .auth-page__social-login {
     margin-top: var(--spacing-lg);
     text-align: center;
 }
 
+.auth-page__social-login-text {
+    color: var(--text-color);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
 .auth-page__social-buttons {
     display: flex;
-    justify-content: center;
-    gap: var(--spacing-sm);
+    flex-direction: column; /* Вертикальне розташування */
+    align-items: center; /* Центрування кнопок */
+    gap: var(--spacing-sm); /* Відстань між кнопками */
 }
 
 .auth-page__social-button {
@@ -187,26 +305,40 @@ body {
     gap: var(--spacing-xs);
     padding: var(--spacing-sm);
     border: 1px solid var(--border-color);
-    background-color: var(--social-button-bg);
-    border-radius: var(--border-radius-md);
+    border-radius: var(--border-radius-xxl);
     font-size: var(--font-size-sm);
     cursor: pointer;
-    transition: background-color 0.3s ease;
     text-decoration: none;
-    color: var(--text-color);
-    max-width: 100%; /* Дозволяє кнопці адаптуватися */
-    overflow: hidden; /* Запобігає переповненню */
+    color: #ffffff; /* Білий текст для всіх кнопок */
+    max-width: 100%;
+    overflow: hidden;
     box-sizing: border-box;
+    width: 240px;
+    height: 40px;
+    justify-content: center; /* Центрування вмісту */
 }
 
 .auth-page__social-icon {
     width: 20px;
     height: 20px;
-    flex-shrink: 0; /* Зберігає розмір іконки */
+    flex-shrink: 0;
 }
 
-.auth-page__social-button:hover {
-    background-color: var(--background-color);
+.auth-page__social-button--google {
+    background-color: var(--secondary-color); /* Блакитний колір Google */
+    color: #000000;
+}
+
+.auth-page__social-button--discord {
+    background-color: #7289da; /* Фіолетовий колір Discord */
+}
+
+/* Адаптивність (опціонально) */
+@media (max-width: 600px) {
+    .auth-page__social-button {
+        width: 210px;
+        height: 50px;
+    }
 }
 
 .auth-page__footer {
@@ -313,5 +445,146 @@ body {
     .auth-page__social-icon {
         width: 24px; /* Збільшуємо іконку на мобільних */
         height: 24px;
+    }
+}
+
+.verify-page {
+    display: flex;
+    flex-direction: column; /* Вертикальне розташування */
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    padding: var(--spacing-lg);
+}
+
+.verify-card {
+    background-color: var(--white);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.verify-image {
+    width: 100%;
+    max-height: 200px; /* Обмежуємо висоту для адаптивності */
+    object-fit: cover; /* Зберігаємо пропорції зображення */
+    border-top-left-radius: var(--border-radius-lg);
+    border-top-right-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-lg);
+    display: block; /* Забезпечує коректне центрування */
+}
+
+.verify-title {
+    font-size: var(--font-size-xl);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-sm);
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+}
+
+.verify-description {
+    font-size: var(--font-size-base);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-lg);
+    line-height: var(--line-height);
+    position: relative;
+    z-index: 1;
+}
+
+/* Стилі для форми відновлення пароля */
+.verify-form__input-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: var(--spacing-md);
+}
+
+.verify-form__input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+.verify-form__input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 576px) {
+    .verify-form__input-container {
+        width: 90%;
+    }
+}
+
+.verify-status {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-md);
+    text-align: center;
+}
+
+.verify-error {
+    color: var(--error-color);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+    text-align: left;
+}
+
+.verify-button {
+    background-color: var(--accent-color);
+    color: var(--white);
+    border: none;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    max-width: 400px;
+}
+
+.verify-button:hover {
+    background-color: #5a7de2; /* Темніший відтінок для ховера */
+    transform: translateY(-2px);
+}
+
+.verify-footer {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+.verify-footer-text {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.verify-footer-link:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 576px) {
+    .verify-card {
+        padding: var(--spacing-lg);
+    }
+
+    .verify-title {
+        font-size: var(--font-size-lg);
+    }
+
+    .verify-button {
+        padding: var(--spacing-sm) var(--spacing-md);
+        max-width: 250px;
     }
 }

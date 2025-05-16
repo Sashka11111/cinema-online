@@ -27,12 +27,12 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
                 'primary' => '#93b3f4',
             ])
-            ->plugins([
-                DashStackThemePlugin::make(),
-            ])
+//            ->plugins([
+//                DashStackThemePlugin::make(),
+//            ])
             ->font('DM Sans')
-            ->brandLogo(asset('images/icon.png'))
-            ->favicon(asset('images/icon.png'))
+            ->brandLogo(asset('images/icon.svg'))
+            ->favicon(asset('images/icon.svg'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'Liamtseva\\Cinema\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'Liamtseva\Cinema\\Filament\\Admin\\Pages')
             ->pages([])

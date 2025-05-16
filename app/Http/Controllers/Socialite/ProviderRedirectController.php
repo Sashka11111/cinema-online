@@ -13,7 +13,7 @@ class ProviderRedirectController extends Controller
      */
     public function __invoke(string $provider)
     {
-        if (! in_array($provider, ['google', 'telegram', 'discord', 'twitter', 'instagram', 'tiktok'])) {
+        if (! in_array($provider, ['google', 'telegram', 'discord'])) {
             return redirect()->route('login')->with('error', 'Непідтримуваний провайдер');
         }
 

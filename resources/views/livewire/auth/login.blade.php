@@ -47,6 +47,10 @@
                            class="auth-form__checkbox">
                     <label for="remember" class="auth-page__checkbox-label">Запам'ятати мене</label>
                 </div>
+                <div class="auth-form__forgot-password">
+                    <a href="{{ route('password.request') }}" class="auth-form__forgot-link">Забули
+                        пароль?</a>
+                </div>
 
                 <button type="submit" class="auth-form__button">Ввійти</button>
             </form>

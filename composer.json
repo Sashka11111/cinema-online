@@ -16,7 +16,9 @@
         "livewire/livewire": "^3.4",
         "mallardduck/blade-boxicons": "^2.4",
         "nuxtifyts/dash-stack-theme": "^1.2",
-        "owenvoke/blade-fontawesome": "^2.8"
+        "owenvoke/blade-fontawesome": "^2.8",
+        "socialiteproviders/discord": "^4.2",
+        "socialiteproviders/telegram": "^4.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.14",

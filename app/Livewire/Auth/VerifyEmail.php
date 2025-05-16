@@ -2,19 +2,41 @@
 
 namespace Liamtseva\Cinema\Livewire\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class VerifyEmail extends Component
 {
-    public function resend()
+    public function mount()
     {
-        if (auth()->user()->hasVerifiedEmail()) {
-            return redirect()->intended(route('dashboard'));
+        // Перевіряємо, чи користувач авторизований
+        if (! Auth::check()) {
+            return redirect()->route('login');
         }
 
-        auth()->user()->sendEmailVerificationNotification();
+        // Якщо пошта вже підтверджена, перенаправляємо на головну
+        if (Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('home');
+        }
+    }
 
-        session()->flash('message', 'Verification link sent!');
+    public function resend()
+    {
+        // Перевіряємо, чи користувач авторизований
+        if (! Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        // Перевіряємо, чи пошта вже підтверджена
+        if (Auth::user()->hasVerifiedEmail()) {
+            return redirect()->route('home');
+        }
+
+        // Відправляємо лист з підтвердженням
+        Auth::user()->sendEmailVerificationNotification();
+
+        // Встановлюємо повідомлення про успішну відправку
+        session()->flash('message', 'Повідомлення для підтвердження електронної пошти надіслано!');
 
         return back();
     }

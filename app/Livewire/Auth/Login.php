@@ -22,11 +22,24 @@ class Login extends Component
     {
         $this->validate();
 
-        if (Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        if (Auth::validate(['email' => $this->email, 'password' => $this->password])) {
+            $user = Auth::getProvider()->retrieveByCredentials(['email' => $this->email]);
+
+            if (! $user->hasVerifiedEmail()) {
+                // Тимчасовий вхід
+                Auth::login($user, false); // Не запам'ятовуємо сесію
+                $user->sendEmailVerificationNotification();
+                session()->flash('message', 'Будь ласка, підтвердіть вашу електронну пошту. Лист надіслано!');
+
+                return $this->redirectRoute('verification.notice', navigate: true);
+            }
+
+            Auth::login($user, $this->remember);
             session()->flash('status', 'Успішний вхід!');
 
-            return $this->redirect(route('home'), navigate: true);
+            return $this->redirectRoute('home', navigate: true);
         }
+
         $this->addError('password', 'Невірний пароль.');
     }
 

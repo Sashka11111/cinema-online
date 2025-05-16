@@ -57,22 +57,6 @@
                         class="auth-form__error">{{ $message }}</span> @enderror
                 </div>
 
-                <div class="auth-form__group">
-                    <label for="password_confirmation" class="auth-form__label">Повторити
-                        пароль</label>
-                    <input
-                        id="password_confirmation"
-                        type="password"
-                        name="password_confirmation"
-                        wire:model.live="password_confirmation"
-                        required
-                        autocomplete="new-password"
-                        class="auth-form__input"
-                    >
-                    @error('password_confirmation') <span
-                        class="auth-form__error">{{ $message }}</span> @enderror
-                </div>
-
                 <div class="flex items-center justify-end">
                     <button type="submit" class="auth-form__button">Зареєструватися</button>
                 </div>
