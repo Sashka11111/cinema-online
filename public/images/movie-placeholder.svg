@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="450" viewBox="0 0 300 450">
+    <!-- Фон з градієнтом у кольорах сайту -->
+    <defs>
+        <linearGradient id="posterGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#93b3f4"/> <!-- primary-color -->
+            <stop offset="100%" stop-color="#6e8fe8"/> <!-- accent-color -->
+        </linearGradient>
+    </defs>
+
+    <!-- Основний фон -->
+    <rect width="300" height="450" fill="url(#posterGradient)"/>
+
+    <!-- Декоративні елементи -->
+    <rect x="30" y="30" width="240" height="390" rx="8" fill="none" stroke="white" stroke-width="4"
+        stroke-opacity="0.2"/>
+
+    <!-- Іконка фільму - кінострічка -->
+    <g transform="translate(75, 125)">
+        <rect x="0" y="0" width="150" height="120" rx="10" fill="none" stroke="white"
+            stroke-width="4" opacity="0.8"/>
+        <circle cx="30" cy="30" r="15" fill="white" opacity="0.7"/>
+        <circle cx="120" cy="30" r="15" fill="white" opacity="0.7"/>
+        <circle cx="30" cy="90" r="15" fill="white" opacity="0.7"/>
+        <circle cx="120" cy="90" r="15" fill="white" opacity="0.7"/>
+        <rect x="55" y="45" width="40" height="30" rx="5" fill="white" opacity="0.7"/>
+    </g>
+
+    <!-- Декоративні лінії -->
+    <line x1="50" y1="280" x2="250" y2="280" stroke="white" stroke-width="3" stroke-opacity="0.3"/>
+    <line x1="75" y1="310" x2="225" y2="310" stroke="white" stroke-width="3" stroke-opacity="0.3"/>
+    <line x1="100" y1="340" x2="200" y2="340" stroke="white" stroke-width="3" stroke-opacity="0.3"/>
+</svg>

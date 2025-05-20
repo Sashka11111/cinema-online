@@ -1,2 +1,2 @@
 import './bootstrap';
-import './header';
+import './theme';

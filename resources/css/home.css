@@ -1,41 +1,294 @@
 /* Стилі для домашньої сторінки */
 .home-page {
-    padding: var(--spacing-xl);
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.home-page__content {
-    text-align: center;
-    padding-top: var(--spacing-xl);
-}
-
-.home-page__title {
-    font-size: 2.5rem;
-    margin-bottom: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--background-color);
     color: var(--text-color);
 }
 
-.home-page__quote {
-    font-style: italic;
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-xl);
-    font-size: var(--font-size-lg);
+.home-page__main {
+    flex: 1;
 }
 
-.home-page__features {
+.home-page__section {
+    padding: var(--spacing-xl) 0;
+    transition: background-color 0.3s ease;
+}
+
+.home-page__section--alt {
+    background-color: rgba(var(--primary-rgb), 0.05);
+}
+
+[data-theme="dark"] .home-page__section--alt {
+    background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+.home-page__section--about {
+    background-color: var(--card-background);
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-lg);
+}
+
+/* Стилі для слайдера фільмів */
+.home-page__slider {
+    margin: var(--spacing-lg) 0;
+    overflow: hidden;
+}
+
+/* Стилі для сітки жанрів */
+.home-page__genres {
+    margin: var(--spacing-lg) 0;
+}
+
+.genres-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.genre-card {
+    position: relative;
+    height: 150px;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--white);
+    background-size: cover;
+    background-position: center;
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.genre-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
+}
+
+.genre-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+    z-index: 1;
+}
+
+.genre-card__title {
+    position: relative;
+    z-index: 2;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: var(--spacing-xs);
+}
+
+.genre-card__count {
+    position: relative;
+    z-index: 2;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+}
+
+/* Стилі для сітки колекцій */
+.home-page__collections {
+    margin: var(--spacing-lg) 0;
+}
+
+.collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.collection-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.collection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
+}
+
+.collection-card__image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    overflow: hidden;
+}
+
+.collection-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.collection-card:hover .collection-card__image {
+    transform: scale(1.05);
+}
+
+.collection-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+}
+
+.collection-card__content {
+    padding: var(--spacing-md);
+}
+
+.collection-card__title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
+}
+
+.collection-card__description {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.collection-card__count {
+    display: inline-block;
+    font-size: var(--font-size-sm);
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+/* Стилі для відгуків */
+.home-page__testimonials {
+    margin: var(--spacing-lg) 0;
+}
+
+.testimonials {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.testimonial-card {
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow-color);
+}
+
+.testimonial-card__rating {
+    margin-bottom: var(--spacing-md);
+    color: #ffc107;
+}
+
+.testimonial-card__star--active {
+    color: #ffc107;
+}
+
+.testimonial-card__text {
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    margin-bottom: var(--spacing-lg);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.testimonial-card__author {
+    display: flex;
+    align-items: center;
+}
+
+.testimonial-card__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: var(--spacing-sm);
+}
+
+.testimonial-card__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.testimonial-card__author-name {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 2px;
+}
+
+.testimonial-card__date {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+/* Стилі для секції про сайт */
+.about-site {
+    padding: var(--spacing-xl) 0;
+    text-align: center;
+}
+
+.about-site__title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.about-site__description {
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xl);
+    color: var(--text-color);
+    font-size: var(--font-size-lg);
+    line-height: 1.6;
+}
+
+.about-site__features {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: var(--spacing-xl);
     margin-top: var(--spacing-xl);
 }
 
 .feature-card {
+    padding: var(--spacing-lg);
     background-color: var(--card-background);
-    border-radius: var(--border-radius-lg);
-    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-md);
     box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature-card:hover {
@@ -44,184 +297,71 @@
 }
 
 .feature-card__icon {
-    background-color: var(--primary-color);
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto var(--spacing-lg);
-}
-
-.feature-card__icon-svg {
-    width: 30px;
-    height: 30px;
-    color: white;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
 }
 
 .feature-card__title {
     font-size: var(--font-size-lg);
-    margin-bottom: var(--spacing-md);
+    font-weight: 600;
     color: var(--text-color);
+    margin-bottom: var(--spacing-sm);
 }
 
 .feature-card__description {
     color: var(--text-muted);
-    line-height: 1.6;
-}
-
-/* Секція популярних фільмів */
-.popular-movies {
-    margin-top: var(--spacing-xl);
-    padding: var(--spacing-xl) 0;
-}
-
-.popular-movies__title {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-lg);
-    text-align: center;
-    color: var(--text-color);
-}
-
-.movie-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: var(--spacing-lg);
-}
-
-.movie-card {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-md);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.movie-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--shadow-color);
-}
-
-.movie-card__poster {
-    width: 100%;
-    aspect-ratio: 2/3;
-    object-fit: cover;
-}
-
-.movie-card__content {
-    padding: var(--spacing-md);
-}
-
-.movie-card__title {
     font-size: var(--font-size-base);
-    font-weight: 600;
-    margin-bottom: var(--spacing-xs);
-    color: var(--text-color);
-}
-
-.movie-card__year {
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-xs);
-}
-
-.movie-card__rating {
-    display: flex;
-    align-items: center;
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
-}
-
-.movie-card__rating-icon {
-    color: #ffc107;
-    margin-right: var(--spacing-xs);
-    width: 16px;
-    height: 16px;
-}
-
-/* Секція підписки */
-.subscription {
-    margin-top: var(--spacing-xl);
-    padding: var(--spacing-xl);
-    background-color: var(--primary-color);
-    border-radius: var(--border-radius-lg);
-    text-align: center;
-    color: white;
-}
-
-.subscription__title {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-md);
-}
-
-.subscription__description {
-    font-size: var(--font-size-base);
-    margin-bottom: var(--spacing-lg);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.subscription__form {
-    display: flex;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.subscription__input {
-    flex-grow: 1;
-    padding: var(--spacing-md);
-    border: none;
-    border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
-    font-size: var(--font-size-base);
-}
-
-.subscription__button {
-    background-color: var(--accent-color);
-    color: white;
-    border: none;
-    padding: var(--spacing-md) var(--spacing-lg);
-    border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
-    font-size: var(--font-size-base);
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.subscription__button:hover {
-    background-color: #5a7de2;
 }
 
 /* Адаптивність */
-@media (max-width: var(--breakpoint-tablet)) {
-    .home-page__features {
-        grid-template-columns: 1fr;
+@media (max-width: 768px) {
+    .home-page__section {
+        padding: var(--spacing-lg) 0;
     }
-    
-    .home-page__title {
-        font-size: 2rem;
+
+    .genres-grid,
+    .collections-grid,
+    .testimonials,
+    .about-site__features {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--spacing-md);
     }
-    
-    .subscription__form {
-        flex-direction: column;
-    }
-    
-    .subscription__input {
-        border-radius: var(--border-radius-md);
-        margin-bottom: var(--spacing-sm);
-    }
-    
-    .subscription__button {
-        border-radius: var(--border-radius-md);
+
+    .about-site__description {
+        font-size: var(--font-size-base);
     }
 }
 
-@media (max-width: var(--breakpoint-mobile)) {
-    .movie-grid {
-        grid-template-columns: repeat(2, 1fr);
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-md);
     }
-    
-    .home-page {
-        padding: var(--spacing-lg);
+
+    .genres-grid,
+    .collections-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
+    }
+
+    .testimonials,
+    .about-site__features {
+        grid-template-columns: 1fr;
+    }
+
+    .genre-card {
+        height: 120px;
+    }
+
+    .genre-card__title {
+        font-size: var(--font-size-base);
+    }
+
+    .collection-card__image-wrapper {
+        height: 120px;
+    }
+
+    .collection-card__title {
+        font-size: var(--font-size-base);
     }
 }

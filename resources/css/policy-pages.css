@@ -1,0 +1,121 @@
+/* Спільні стилі для сторінок політики та умов використання */
+.policy-page {
+    max-width: 800px;
+    margin: 2rem auto 3rem;
+    padding: 2rem;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.policy-page__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.policy-page__updated {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.policy-page__section {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 2rem 0 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.policy-page__list {
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.policy-page__list li {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+.policy-page p {
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.policy-page a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.policy-page a:hover {
+    text-decoration: underline;
+}
+
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+    .policy-page {
+        padding: 1.5rem;
+        margin: 1rem auto 2rem;
+    }
+
+    .policy-page__title {
+        font-size: 1.75rem;
+    }
+
+    .policy-page__section {
+        font-size: 1.25rem;
+    }
+}
+
+/* Темна тема */
+[data-theme="dark"] .policy-page {
+    background-color: var(--dark-card-background);
+}
+
+[data-theme="dark"] .policy-page__section {
+    border-color: var(--dark-border-color);
+}
+
+/* Підтримка для старих класів (для зворотної сумісності) */
+.privacy-policy,
+.terms-of-use {
+    max-width: 800px;
+    margin: 2rem auto 3rem;
+    padding: 2rem;
+    background-color: var(--card-background);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.privacy-policy__title,
+.terms-of-use__title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    text-align: center;
+}
+
+.privacy-policy__updated,
+.terms-of-use__updated {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.privacy-policy__section,
+.terms-of-use__section {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 2rem 0 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}

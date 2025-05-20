@@ -143,15 +143,36 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
-}
-
-.header__user-avatar {
+    color: var(--text-color);
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.header__user-button:hover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    color: var(--accent-color);
+}
+
+.header__user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     object-fit: cover;
-    border: 2px solid var(--primary-color);
+}
+
+.header__user-icon {
+    width: 24px;
+    height: 24px;
+    background-color: currentColor;
+    -webkit-mask: url('../../public/images/avatar.svg') no-repeat center;
+    mask: url('../../public/images/avatar.svg') no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
 }
 
 .header__user-dropdown {
@@ -163,14 +184,22 @@
     box-shadow: 0 4px 12px var(--shadow-color);
     min-width: 200px;
     padding: var(--spacing-sm) 0;
-    margin-top: var(--spacing-sm);
-    display: none;
+    margin-top: 0; /* Прибрано прогалину для безперервного переходу */
+    opacity: 0;
+    visibility: hidden;
     z-index: 10;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s ease 0.3s;
+    pointer-events: none;
 }
 
-.header__user:hover .header__user-dropdown {
-    display: none;
+.header__user:hover .header__user-dropdown,
+.header__user-dropdown:hover {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s ease;
+    pointer-events: auto;
 }
 
 .header__dropdown-item {

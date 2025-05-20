@@ -5,14 +5,14 @@
         {!! Socialite::driver('telegram')->getButton() !!}
         <!-- Discord button -->
         <a class="auth-page__social-button auth-page__social-button--discord"
-           href="{{ route('auth.redirect', 'discord') }}">
+           href="{{ route('auth.redirect', 'discord') }}" wire:navigate>
             <img src="{{ asset('images/discord.svg') }}" alt="Discord Icon"
                  class="auth-page__social-icon">
             Увійти через Discord
         </a>
         <!-- Google button -->
         <a class="auth-page__social-button auth-page__social-button--google"
-           href="{{ route('auth.redirect', 'google') }}">
+           href="{{ route('auth.redirect', 'google') }}" wire:navigate>
             <img src="{{ asset('images/google.png') }}" alt="Google Icon"
                  class="auth-page__social-icon">
             Увійти через Google
