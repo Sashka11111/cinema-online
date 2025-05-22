@@ -20,348 +20,321 @@
     background-color: rgba(var(--primary-rgb), 0.05);
 }
 
-[data-theme="dark"] .home-page__section--alt {
-    background-color: rgba(var(--primary-rgb), 0.1);
-}
-
-.home-page__section--about {
-    background-color: var(--card-background);
-    border-top: 1px solid var(--border-color);
-    border-bottom: 1px solid var(--border-color);
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-lg);
-}
-
-/* Стилі для слайдера фільмів */
-.home-page__slider {
-    margin: var(--spacing-lg) 0;
-    overflow: hidden;
-}
-
-/* Стилі для сітки жанрів */
-.home-page__genres {
-    margin: var(--spacing-lg) 0;
-}
-
-.genres-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: var(--spacing-lg);
-}
-
-.genre-card {
-    position: relative;
-    height: 150px;
-    border-radius: var(--border-radius-md);
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    color: var(--white);
+/* Стилі для промо-секції на головній сторінці */
+.home-promo {
+    padding: var(--spacing-xl) 0;
+    margin-bottom: var(--spacing-lg);
     background-size: cover;
     background-position: center;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.genre-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--shadow-color);
-}
-
-.genre-card__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+    background-repeat: no-repeat;
+    border-radius: var(--border-radius-lg);
+    position: relative;
+    overflow: hidden;
+    transition: background-image 0.5s ease;
     width: 100%;
-    height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.7));
+}
+
+.home-promo__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    position: relative;
     z-index: 1;
 }
 
-.genre-card__title {
+.home-promo__content {
+    flex: 1;
+    max-width: 60%;
     position: relative;
     z-index: 2;
+}
+
+.home-promo__title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: #fff;
+    line-height: 1.2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.home-promo__description {
     font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: var(--spacing-lg);
+    max-width: 600px;
+    line-height: 1.5;
+}
+
+.home-promo__actions {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.home-promo__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
     font-weight: 600;
-    text-align: center;
-    margin-bottom: var(--spacing-xs);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    background-color: #1DA1F2;
+    color: white;
 }
 
-.genre-card__count {
+.home-promo__button--primary:hover {
+    background-color: #1a91da;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
+}
+
+.home-promo__button--secondary {
+    background-color: transparent;
+    color: #1DA1F2;
+    border: 2px solid #1DA1F2;
+}
+
+.home-promo__button--secondary:hover {
+    background-color: rgba(29, 161, 242, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Стилі для каруселі */
+.home-promo__slider {
     position: relative;
-    z-index: 2;
-    font-size: var(--font-size-sm);
-    opacity: 0.8;
+    flex: 0 0 200px;
+    max-width: 200px;
+    z-index: 3;
 }
 
-/* Стилі для сітки колекцій */
-.home-page__collections {
-    margin: var(--spacing-lg) 0;
+.home-promo__slider-inner {
+    overflow: hidden;
+    border-radius: var(--border-radius-lg);
 }
 
-.collections-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-lg);
+.home-promo__track {
+    display: flex;
+    gap: var(--spacing-sm);
+    transition: transform 0.5s ease;
 }
 
-.collection-card {
-    background-color: var(--card-background);
+.home-promo__featured-card {
+    flex: 0 0 200px;
+    position: relative;
+    background: rgba(0, 0, 0, 0.5);
     border-radius: var(--border-radius-md);
     overflow: hidden;
-    box-shadow: var(--box-shadow);
-    text-decoration: none;
-    color: var(--text-color);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: var(--spacing-xs);
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    z-index: 4;
 }
 
-.collection-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--shadow-color);
-}
-
-.collection-card__image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 160px;
-    overflow: hidden;
-}
-
-.collection-card__image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.collection-card:hover .collection-card__image {
-    transform: scale(1.05);
-}
-
-.collection-card__overlay {
+.home-promo__featured-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
 }
 
-.collection-card__content {
-    padding: var(--spacing-md);
-}
-
-.collection-card__title {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
+.home-promo__featured-poster {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
     margin-bottom: var(--spacing-xs);
-    color: var(--text-color);
+    z-index: 2;
 }
 
-.collection-card__description {
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
-    margin-bottom: var(--spacing-sm);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.collection-card__count {
-    display: inline-block;
-    font-size: var(--font-size-sm);
-    color: var(--primary-color);
-    font-weight: 500;
-}
-
-/* Стилі для відгуків */
-.home-page__testimonials {
-    margin: var(--spacing-lg) 0;
-}
-
-.testimonials {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-lg);
-}
-
-.testimonial-card {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-md);
-    padding: var(--spacing-lg);
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.testimonial-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--shadow-color);
-}
-
-.testimonial-card__rating {
-    margin-bottom: var(--spacing-md);
-    color: #ffc107;
-}
-
-.testimonial-card__star--active {
-    color: #ffc107;
-}
-
-.testimonial-card__text {
-    font-size: var(--font-size-base);
-    color: var(--text-color);
-    margin-bottom: var(--spacing-lg);
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.testimonial-card__author {
-    display: flex;
-    align-items: center;
-}
-
-.testimonial-card__avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin-right: var(--spacing-sm);
-}
-
-.testimonial-card__avatar img {
+.home-promo__featured-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    position: relative;
+    z-index: 2;
 }
 
-.testimonial-card__author-name {
-    font-size: var(--font-size-sm);
+.home-promo__featured-card:hover .home-promo__featured-image {
+    transform: scale(1.05);
+}
+
+.home-promo__featured-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #FFD700;
+    padding: 4px 8px;
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-md);
     font-weight: 600;
-    color: var(--text-color);
-    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    z-index: 5;
 }
 
-.testimonial-card__date {
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
-}
-
-/* Стилі для секції про сайт */
-.about-site {
-    padding: var(--spacing-xl) 0;
+.home-promo__featured-info {
     text-align: center;
+    padding: 0;
+    z-index: 5;
+    color: #fff;
 }
 
-.about-site__title {
-    font-size: var(--font-size-xl);
+.home-promo__featured-title {
+    font-size: var(--font-size-md);
     font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
+    color: #fff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
-.about-site__description {
-    max-width: 800px;
-    margin: 0 auto var(--spacing-xl);
-    color: var(--text-color);
+.home-promo__nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: var(--spacing-sm);
+    border-radius: 50%;
+    cursor: pointer;
     font-size: var(--font-size-lg);
-    line-height: 1.6;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.about-site__features {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-xl);
-    margin-top: var(--spacing-xl);
+.home-promo__nav-btn:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.1);
 }
 
-.feature-card {
-    padding: var(--spacing-lg);
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-md);
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.home-promo__nav-btn:disabled {
+    background-color: rgba(255, 255, 255, 0.1);
+    cursor: not-allowed;
+    transform: translateY(-50%) scale(1);
 }
 
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px var(--shadow-color);
+#promoPrev {
+    left: 10px;
 }
 
-.feature-card__icon {
-    font-size: 2.5rem;
-    color: var(--primary-color);
-    margin-bottom: var(--spacing-md);
-}
-
-.feature-card__title {
-    font-size: var(--font-size-lg);
-    font-weight: 600;
-    color: var(--text-color);
-    margin-bottom: var(--spacing-sm);
-}
-
-.feature-card__description {
-    color: var(--text-muted);
-    font-size: var(--font-size-base);
+#promoNext {
+    right: 10px;
 }
 
 /* Адаптивність */
-@media (max-width: 768px) {
-    .home-page__section {
-        padding: var(--spacing-lg) 0;
+@media (max-width: 992px) {
+    .home-promo__container {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        justify-content: center;
     }
 
-    .genres-grid,
-    .collections-grid,
-    .testimonials,
-    .about-site__features {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: var(--spacing-md);
+    .home-promo__content {
+        max-width: 100%;
+        text-align: center;
     }
 
-    .about-site__description {
-        font-size: var(--font-size-base);
+    .home-promo__slider {
+        flex: 0 0 180px;
+        max-width: 180px;
+        margin: 0 auto;
+    }
+
+    .home-promo__featured-card {
+        height: 250px;
+    }
+
+    .home-promo__featured-poster {
+        height: 160px;
     }
 }
 
-@media (max-width: 480px) {
-    .container {
-        padding: 0 var(--spacing-md);
+@media (max-width: 768px) {
+    .home-promo {
+        padding: var(--spacing-lg) 0;
     }
 
-    .genres-grid,
-    .collections-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .home-promo__title {
+        font-size: 1.8rem;
+    }
+
+    .home-promo__description {
+        font-size: var(--font-size-md);
+    }
+
+    .home-promo__actions {
+        flex-direction: column;
         gap: var(--spacing-sm);
     }
 
-    .testimonials,
-    .about-site__features {
-        grid-template-columns: 1fr;
+    .home-promo__button {
+        width: 100%;
     }
 
-    .genre-card {
-        height: 120px;
+    .home-promo__featured-poster {
+        height: 140px;
     }
 
-    .genre-card__title {
-        font-size: var(--font-size-base);
+    .home-promo__nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: var(--font-size-md);
     }
 
-    .collection-card__image-wrapper {
-        height: 120px;
+    .home-promo__featured-card {
+        height: 220px;
     }
+}
 
-    .collection-card__title {
-        font-size: var(--font-size-base);
+/* Темна тема */
+[data-theme="dark"] .home-promo {
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.2), rgba(var(--primary-rgb), 0.1));
+}
+
+[data-theme="dark"] .home-promo__featured-card {
+    background-color: var(--dark-card-background);
+}
+
+[data-theme="dark"] .home-promo__button--secondary {
+    color: var(--primary-light);
+    border-color: var(--primary-light);
+}
+
+.home-promo__image {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-md);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 768px) {
+    .home-promo__image {
+        max-height: 200px;
+        object-fit: cover;
     }
 }

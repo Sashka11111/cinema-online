@@ -105,7 +105,36 @@ class Movie extends Model
     protected function posterUrl(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->poster ? asset("storage/$this->poster") : null
+            get: function ($value) {
+                if (! $this->poster) {
+                    return null;
+                }
+
+                // Перевіряємо, чи починається шлях з http:// або https://
+                if (str_starts_with($this->poster, 'http://') || str_starts_with($this->poster, 'https://')) {
+                    return $this->poster;
+                }
+
+                // Інакше це локальний файл
+                return asset("storage/{$this->poster}");
+            }
+        );
+    }
+
+    protected function imageNameUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (! $this->image_name) {
+                    return urlencode($this->name);
+                }
+
+                if (str_starts_with($this->image_name, 'http://') || str_starts_with($this->image_name, 'https://')) {
+                    return $this->image_name;
+                }
+
+                return asset("storage/{$this->image_name}");
+            }
         );
     }
 }

@@ -1,0 +1,283 @@
+/* Стилі для сторінки підбірок */
+.selections-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-page__main {
+    flex: 1;
+    padding: var(--spacing-xl) 0;
+}
+
+/* Прибираємо відступ після футера */
+.selections-page .main-footer {
+    margin-top: 0;
+}
+
+/* Фільтри */
+.selections-page__filters {
+    margin-bottom: 30px;
+    background-color: var(--bg-secondary);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.selections-page__search {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.selections-page__search-input {
+    width: 100%;
+    padding: 12px 45px 12px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.selections-page__search-input:focus {
+    border-color: var(--accent-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(var(--accent-color-rgb), 0.2);
+}
+
+.selections-page__search-button {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 18px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.selections-page__search-button:hover {
+    color: var(--accent-color);
+}
+
+.selections-page__categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.selections-page__category-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.selections-page__category-btn:hover {
+    background-color: rgba(var(--accent-color-rgb), 0.1);
+    border-color: var(--accent-color);
+}
+
+.selections-page__category-btn--active {
+    background-color: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+.selections-page__sort {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.selections-page__sort-label {
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-right: 10px;
+}
+
+.selections-page__sort-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.selections-page__sort-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.selections-page__sort-btn:hover {
+    background-color: rgba(var(--accent-color-rgb), 0.1);
+}
+
+.selections-page__sort-btn--active {
+    background-color: rgba(var(--accent-color-rgb), 0.2);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    font-weight: 500;
+}
+
+/* Сітка підбірок */
+.selections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+/* Картка підбірки */
+.selection-card {
+    display: block;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: var(--bg-secondary);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    text-decoration: none;
+}
+
+.selection-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.selection-card__image-wrapper {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+}
+
+.selection-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.selection-card:hover .selection-card__image {
+    transform: scale(1.05);
+}
+
+.selection-card__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.7));
+}
+
+.selection-card__count {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.selection-card__content {
+    padding: 15px;
+}
+
+.selection-card__title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+.selection-card__description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 15px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.selection-card__meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-tertiary);
+}
+
+.selection-card__date,
+.selection-card__author {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Порожній стан */
+.selections-page__empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 0;
+}
+
+.selections-page__empty-text {
+    font-size: 18px;
+    color: var(--text-secondary);
+}
+
+/* Адаптивність */
+@media (max-width: 768px) {
+    .selections-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 20px;
+    }
+
+    .selections-page__sort {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .selections-page__sort-options {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .selections-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .selections-page__categories {
+        overflow-x: auto;
+        padding-bottom: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .selections-page__category-btn {
+        white-space: nowrap;
+    }
+}

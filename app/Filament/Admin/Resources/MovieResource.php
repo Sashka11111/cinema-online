@@ -89,7 +89,7 @@ class MovieResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 ImageColumn::make('image_name')
-                    ->label('Зображення')
+                    ->label('Зображення назви фільму')
                     ->disk('public')
                     ->width(50)
                     ->height(50)

@@ -17,6 +17,8 @@ use Liamtseva\Cinema\Livewire\Pages\MovieShow;
 use Liamtseva\Cinema\Livewire\Pages\MoviesPage;
 use Liamtseva\Cinema\Livewire\Pages\PrivacyPolicy;
 use Liamtseva\Cinema\Livewire\Pages\Profile;
+use Liamtseva\Cinema\Livewire\Pages\SelectionShowPage;
+use Liamtseva\Cinema\Livewire\Pages\SelectionsPage;
 use Liamtseva\Cinema\Livewire\Pages\TermsOfUse;
 
 Route::get('/', Home::class)->name('home');
@@ -27,7 +29,10 @@ Route::get('/series', MoviesPage::class)->defaults('contentType', 'series')->nam
 Route::get('/cartoons', MoviesPage::class)->defaults('contentType', 'cartoons')->name('cartoons');
 Route::get('/cartoon-series', MoviesPage::class)->defaults('contentType', 'cartoon_series')->name('cartoon-series');
 Route::get('/anime', MoviesPage::class)->defaults('contentType', 'anime')->name('anime');
-Route::get('/selections', MoviesPage::class)->defaults('contentType', 'selections')->name('selections');
+
+Route::get('/selections', SelectionsPage::class)->name('selections');
+Route::get('/selection/{slug}', SelectionShowPage::class)->name('selection.show');
+
 Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/terms-of-use', TermsOfUse::class)->name('terms-of-use');
 Route::get('/cookie-policy', CookiePolicy::class)->name('cookie-policy');

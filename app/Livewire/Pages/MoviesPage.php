@@ -17,13 +17,15 @@ class MoviesPage extends Component
 {
     use WithPagination;
 
-    // Тип контенту
-    #[Url(except: '')]
-    public $contentType = 'movies';
+    // Встановлюємо тему пагінації
+    protected $paginationTheme = 'bootstrap';
 
     // Додаємо властивість page для пагінації
     #[Url]
     public $page = 1;
+
+    // Тип контенту - прибираємо з URL
+    public $contentType = 'movies';
 
     // Фільтри
     #[Url(except: '')]
@@ -41,7 +43,6 @@ class MoviesPage extends Component
     #[Url(except: '')]
     public $year = '';
 
-    // Додаємо нові фільтри, але не використовуємо ті, яких немає в БД
     #[Url(except: '')]
     public $genre = '';
 
@@ -61,22 +62,6 @@ class MoviesPage extends Component
     // Дані для відображення
     public $trendingMovies;
 
-    // Параметри URL (для Livewire 2 - можна видалити, якщо використовуєте Livewire 3)
-    protected $queryString = [
-        'contentType' => ['except' => ''],
-        'search' => ['except' => ''],
-        'status' => ['except' => ''],
-        'period' => ['except' => ''],
-        'studio' => ['except' => ''],
-        'year' => ['except' => ''],
-        'genre' => ['except' => ''],
-        'rating' => ['except' => ''],
-        'duration' => ['except' => ''],
-        'sortField' => ['except' => 'created_at'],
-        'sortDirection' => ['except' => 'desc'],
-        'page' => ['except' => 1],
-    ];
-
     protected $listeners = [
         'filter-changed' => 'handleFilterChange',
         'sort-changed' => 'handleSortChange',
@@ -84,18 +69,32 @@ class MoviesPage extends Component
         'filters-applied' => 'applyAllFilters',
     ];
 
+    public function previousPage($pageName = 'page'): void
+    {
+        if ($this->page > 1) {
+            $this->page--;
+        }
+    }
+
+    public function nextPage($pageName = 'page'): void
+    {
+        if ($this->getMoviesProperty()->hasMorePages()) {
+            $this->page++;
+        }
+    }
+
     // Оновлюємо методи для нових фільтрів
-    public function updatedSearch()
+    public function updatedSearch(): void
     {
         $this->resetPage();
     }
 
-    public function updatedStatus()
+    public function updatedStatus(): void
     {
         $this->resetPage();
     }
 
-    public function updatedPeriod()
+    public function updatedPeriod(): void
     {
         $this->resetPage();
     }
@@ -161,7 +160,7 @@ class MoviesPage extends Component
         // Використовуємо try-catch для обробки помилок
         try {
             return cache()->remember($cacheKey, 60, function () {
-                return $this->moviesQuery()->paginate(10);
+                return $this->moviesQuery()->paginate(10, ['*'], 'page', $this->page);
             });
         } catch (\Exception $e) {
             // Логуємо помилку
@@ -169,7 +168,7 @@ class MoviesPage extends Component
 
             // Повертаємо порожню колекцію
             return new \Illuminate\Pagination\LengthAwarePaginator(
-                collect([]), 0, 20, $this->page
+                collect([]), 0, 10, $this->page
             );
         }
     }
@@ -351,7 +350,6 @@ class MoviesPage extends Component
 
     public function applyAllFilters($filters)
     {
-        dd($filters);
         foreach ($filters as $key => $value) {
             if (property_exists($this, $key)) {
                 $this->$key = $value;
@@ -361,8 +359,14 @@ class MoviesPage extends Component
     }
 
     // Метод resetPage для Livewire 3
-    public function resetPage()
+    public function resetPage($pageName = 'page')
     {
         $this->page = 1;
+    }
+
+    // Метод для переходу на конкретну сторінку
+    public function gotoPage($page, $pageName = 'page')
+    {
+        $this->page = $page;
     }
 }

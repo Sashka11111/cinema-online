@@ -10,6 +10,9 @@
 
             <h1 class="content-page__title">{{ $pageTitle }}</h1>
 
+            <!-- Додаємо компонент "В тренді" -->
+            <livewire:components.trending-movies-component :contentType="$contentType"/>
+
             <livewire:components.movies-filter
                 :statuses="$this->statuses"
                 :periods="$this->periods"

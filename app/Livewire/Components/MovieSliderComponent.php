@@ -25,25 +25,25 @@ class MovieSliderComponent extends Component
 
             switch ($this->type) {
                 case 'latest':
-                    $query->latest('first_air_date');
+                    $query->orderBy('created_at', 'desc');
                     break;
                 case 'popular':
                     // Якщо є поле views, використовуємо його, інакше використовуємо imdb_score
                     if (Schema::hasColumn('movies', 'views')) {
                         $query->orderBy('views', 'desc');
                     } else {
-                        $query->orderBy('imdb_score', 'desc');
+                        $query->orderBy('imdb_score', 'desc')->orderBy('created_at', 'desc');
                     }
                     break;
                 case 'series':
                     $query->where('kind', Kind::TV_SERIES->value)
-                        ->orderBy('imdb_score', 'desc');
+                        ->orderBy('imdb_score', 'desc')->orderBy('created_at', 'desc');
                     break;
                 case 'top_rated':
-                    $query->orderBy('imdb_score', 'desc');
+                    $query->orderBy('imdb_score', 'desc')->orderBy('created_at', 'desc');
                     break;
                 default:
-                    $query->latest();
+                    $query->orderBy('created_at', 'desc');
             }
 
             return $query->limit(10)->get();

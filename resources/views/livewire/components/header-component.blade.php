@@ -21,13 +21,6 @@
         </nav>
 
         <div class="header__actions">
-            <div class="header__search">
-                <button class="header__search-button">
-                    <img src="{{ asset('images/search-icon.svg') }}" alt="Пошук"
-                         class="header__search-icon">
-                </button>
-            </div>
-
             <livewire:components.theme-toggle/>
 
             @auth
@@ -52,8 +45,9 @@
                 </div>
             @else
                 <div class="header__auth">
-                    <a href="{{ route('login') }}" class="header__auth-link">Увійти</a>
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('login') }}" wire:navigate
+                       class="header__auth-link">Увійти</a>
+                    <a href="{{ route('register') }}" wire:navigate
                        class="header__auth-button">Зареєструватися</a>
                 </div>
             @endauth

@@ -11,7 +11,7 @@
                 </li>
             @else
                 <li class="pagination__item">
-                    <button wire:click="setPage({{ $paginator->currentPage() - 1 }})"
+                    <button wire:click="previousPage('page')"
                             wire:loading.attr="disabled" rel="prev" class="pagination__link"
                             aria-label="Попередня">
                         <span class="pagination__arrow" aria-hidden="true">&lsaquo;</span>
@@ -36,7 +36,7 @@
                                 <span class="pagination__link pagination__link--active"
                                       aria-current="page">{{ $page }}</span>
                             @else
-                                <button wire:click="setPage({{ $page }})"
+                                <button wire:click="gotoPage({{ $page }}, 'page')"
                                         class="pagination__link">{{ $page }}</button>
                             @endif
                         </li>
@@ -47,7 +47,7 @@
             {{-- Наступна сторінка --}}
             @if ($paginator->hasMorePages())
                 <li class="pagination__item">
-                    <button wire:click="setPage({{ $paginator->currentPage() + 1 }})"
+                    <button wire:click="nextPage('page')"
                             wire:loading.attr="disabled" rel="next" class="pagination__link"
                             aria-label="Наступна">
                         <span class="pagination__arrow" aria-hidden="true">&rsaquo;</span>

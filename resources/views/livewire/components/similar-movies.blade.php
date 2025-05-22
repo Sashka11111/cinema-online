@@ -14,9 +14,9 @@
                     </div>
                     <div class="similar-movie-card__info">
                         <div class="similar-movie-card__title">{{ $similarMovie->name }}</div>
-                        @if($similarMovie->first_air_date)
+                        @if(isset($similarMovie->first_air_date) && $similarMovie->first_air_date)
                             <div
-                                class="similar-movie-card__year">{{ $similarMovie->first_air_date->format('Y') }}</div>
+                                class="similar-movie-card__year">{{ date('Y', strtotime($similarMovie->first_air_date)) }}</div>
                         @endif
                     </div>
                 </a>
