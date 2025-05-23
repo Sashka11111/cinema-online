@@ -1,23 +1,15 @@
 <section class="home-promo" id="promoSection">
     <div class="home-promo__container">
         <div class="home-promo__content">
-            <!-- Показуємо лише перше зображення -->
-            <div class="home-promo__image-wrapper">
-                <img
-                    src="{{ $featuredMovies->first()->image ?? asset('images/movie-placeholder.svg') }}"
-                    alt="{{ $featuredMovies->first()->name ?? 'Кінотека' }}"
-                    class="home-promo__image"
-                >
-            </div>
             <h1 class="home-promo__title">Ласкаво просимо до нашої кінотеки</h1>
             <div class="home-promo__actions">
-                <a href="{{ route('movies') }}" wire:navigate
-                   class="home-promo__button home-promo__button--primary">
-                    Переглянути каталог
+                <a href="{{ route('movies.show', $featuredMovies->first()) }}" wire:navigate
+                   class="home-promo__button home-promo__button--primary" id="promoWatchButton">
+                    Переглянути
                 </a>
-                <a href="{{ route('movies', ['contentType' => 'series']) }}" wire:navigate
+                <a href="{{ route('selections') }}" wire:navigate
                    class="home-promo__button home-promo__button--secondary">
-                    Серіали
+                    Підбірки
                 </a>
             </div>
         </div>
@@ -27,7 +19,9 @@
                 <div id="promoTrack" class="home-promo__track">
                     @foreach($featuredMovies as $movie)
                         <div class="home-promo__featured-card"
-                             data-poster="{{ $movie->poster_url ?? asset('images/movie-placeholder.svg') }}">
+                             data-poster="{{ $movie->poster_url ?? asset('images/movie-placeholder.svg') }}"
+                             data-title="{{ $movie->name }}"
+                             data-slug="{{ $movie->slug }}">
                             <div class="home-promo__featured-overlay"></div>
                             <div class="home-promo__featured-poster">
                                 <img

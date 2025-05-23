@@ -19,7 +19,7 @@ class HomePromoComponent extends Component
                     'id', 'name', 'slug', 'poster', 'image_name', 'imdb_score',
                     'status', 'restricted_rating', 'kind', 'first_air_date', 'description',
                 ])
-                ->limit(5)
+                ->limit(7)
                 ->get();
         });
 
