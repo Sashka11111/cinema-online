@@ -14,7 +14,7 @@
                         <ul class="main-footer__movie-list">
                             @foreach($movies as $movie)
                                 <li class="main-footer__movie-item">
-                                    <a href="{{ route('movies.show', $movie) }}"
+                                    <a href="{{ route('movies.show', $movie) }}" wire:navigate
                                        class="main-footer__movie-link">
                                         {{ $movie->name }}
                                     </a>

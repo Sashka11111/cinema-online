@@ -1,42 +1,60 @@
-<div class="movie-comment">
-    <div class="movie-comment__avatar">
-        <img 
-            src="{{ $comment->user->avatar ? asset('storage/' . $comment->user->avatar) : asset('images/default-avatar.jpg') }}" 
-            alt="{{ $comment->user->name }}" 
-            class="movie-comment__avatar-img"
-        >
-    </div>
-    <div class="movie-comment__content">
-        <div class="movie-comment__header">
-            <div class="movie-comment__author">{{ $comment->user->name }}</div>
-            <div class="movie-comment__date">{{ $comment->created_at->diffForHumans() }}</div>
-        </div>
-        <div class="movie-comment__text">{{ $comment->content }}</div>
-        <div class="movie-comment__actions">
-            <button class="movie-comment__action movie-comment__action--reply" wire:click="showReplyForm">Відповісти</button>
-            <button class="movie-comment__action movie-comment__action--like" wire:click="likeComment">
-                <i class="fas fa-thumbs-up"></i> 
-                <span class="movie-comment__likes-count">{{ $comment->likes_count ?? 0 }}</span>
-            </button>
-        </div>
-        
-        @if($showReplyForm)
-            <div class="movie-comment__reply-form">
-                <textarea 
-                    class="movie-comment__reply-input" 
-                    placeholder="Напишіть вашу відповідь..."
-                    wire:model="replyText"
-                ></textarea>
-                <button class="movie-comment__reply-submit" wire:click="addReply">Відповісти</button>
-                <button class="movie-comment__reply-cancel" wire:click="hideReplyForm">Скасувати</button>
+<div class="comment-item {{ $comment->parent_id ? 'comment-item--reply' : '' }}">
+    <div class="comment-item__avatar">
+        @if($comment->user && $comment->user->avatar)
+            <img src="{{ asset('storage/' . $comment->user->avatar) }}"
+                 alt="{{ $comment->user->name }}">
+        @else
+            <div class="comment-item__avatar-placeholder">
+                {{ $comment->user ? substr($comment->user->name, 0, 1) : '?' }}
             </div>
         @endif
-        
-        @if($comment->replies && $comment->replies->isNotEmpty())
-            <div class="movie-comment__replies">
-                @foreach($comment->replies as $reply)
-                    <livewire:components.comment-item :comment="$reply" :key="'reply-'.$reply->id" />
+    </div>
+
+    <div class="comment-item__content">
+        <div class="comment-item__header">
+            <span
+                class="comment-item__author">{{ $comment->user ? $comment->user->name : 'Користувач видалений' }}</span>
+            <span class="comment-item__date">{{ $comment->created_at->diffForHumans() }}</span>
+        </div>
+
+        <div class="comment-item__body">
+            {{ $comment->body }}
+        </div>
+
+        <div class="comment-item__actions">
+            @auth
+                <button class="comment-item__action comment-item__action--reply"
+                        wire:click="toggleReplies">
+                    {{ $showReplies ? 'Сховати відповіді' : 'Відповісти' }}
+                </button>
+            @endauth
+
+            @if(!$comment->parent_id)
+                <button class="comment-item__action comment-item__action--replies"
+                        wire:click="toggleReplies">
+                    {{ $comment->children_count ?? 0 }} відповідей
+                </button>
+            @endif
+        </div>
+
+        @if($showReplies)
+            <div class="comment-item__replies">
+                @foreach($replies as $reply)
+                    <livewire:components.comment-item :comment="$reply" :key="'reply-'.$reply->id"/>
                 @endforeach
+
+                @auth
+                    <div class="comment-item__reply-form">
+                        <textarea
+                            class="comment-item__reply-input"
+                            placeholder="Напишіть вашу відповідь..."
+                            wire:model="replyText"
+                        ></textarea>
+                        <button class="comment-item__reply-submit" wire:click="addReply">
+                            Відповісти
+                        </button>
+                    </div>
+                @endauth
             </div>
         @endif
     </div>

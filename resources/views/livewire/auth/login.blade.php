@@ -14,7 +14,7 @@
                             id="email"
                             type="email"
                             name="email"
-                            wire:model.live="email"
+                            wire:model.blur="email"
                             required
                             autocomplete="username"
                             class="auth-form__input"
@@ -29,7 +29,7 @@
                             id="password"
                             type="password"
                             name="password"
-                            wire:model.live="password"
+                            wire:model.blur="password"
                             required
                             autocomplete="current-password"
                             class="auth-form__input"

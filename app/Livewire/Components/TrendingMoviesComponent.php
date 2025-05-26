@@ -18,7 +18,6 @@ class TrendingMoviesComponent extends Component
 
     public function render()
     {
-        // Кешуємо результати на 1 годину
         $trendingMovies = Cache::remember("trending_movies_{$this->contentType}", 3600, function () {
             $query = Movie::query()
                 ->where('is_published', true)
@@ -27,9 +26,7 @@ class TrendingMoviesComponent extends Component
                     'status', 'restricted_rating', 'kind',
                 ]);
 
-            // Фільтруємо за типом контенту, якщо він вказаний
             if ($this->contentType !== 'all') {
-                // Перетворюємо рядкове значення на відповідне значення з переліку Kind
                 $kindValue = $this->getContentKind()->value;
                 $query->where('kind', $kindValue);
             }

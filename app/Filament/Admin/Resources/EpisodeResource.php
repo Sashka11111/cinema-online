@@ -197,7 +197,6 @@ class EpisodeResource extends Resource
                         ->label('Номер епізоду')
                         ->required()
                         ->numeric()
-                        ->unique(Episode::class, 'number', ignoreRecord: true)
                         ->minValue(1)
                         ->maxValue(65535)
                         ->prefixIcon('heroicon-o-hashtag'),
@@ -301,9 +300,13 @@ class EpisodeResource extends Resource
                                 ->label('URL плеєра')
                                 ->required()
                                 ->url(),
-                            TextInput::make('file_url')
-                                ->label('URL файлу')
-                                ->url()
+                            FileUpload::make('file_url')
+                                ->label('Файл')
+                                ->required()
+                                ->maxSize(51200)
+                                ->disk('public')
+                                ->directory('episodes/videos')
+                                ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
                                 ->nullable(),
                             TextInput::make('dubbing')
                                 ->label('Озвучка')

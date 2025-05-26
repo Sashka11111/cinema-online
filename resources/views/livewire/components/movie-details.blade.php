@@ -1,14 +1,13 @@
 <div class="movie-details">
     <div class="movie-details__poster-container">
-        <img
-            src="{{ $movie->poster ? asset('storage/' . $movie->poster) : asset('images/no-image.svg') }}"
-            alt="{{ $movie->name }}"
-            class="movie-details__poster"
-        >
+        <img src="{{ $movie->poster_url }}" alt="{{ $movie->name }}"
+             class="movie-card__poster">
 
         @if($movie->imdb_score)
             <div class="movie-details__rating">
-                <span class="movie-details__rating-icon">★</span>
+                <span class="movie-card__rating">
+                                    <i class="fas fa-star"></i> {{ number_format($movie->imdb_score, 1) }}
+                                </span>
                 <span
                     class="movie-details__rating-value">{{ number_format($movie->imdb_score, 1) }}</span>
                 <span class="movie-details__rating-label">IMDb</span>
@@ -19,7 +18,7 @@
     <div class="movie-details__info">
         <h1 class="movie-details__title">{{ $movie->name }}</h1>
 
-        @if(count($movie->aliases ?? []) > 0)
+        @if(isset($movie->aliases) && is_array($movie->aliases) && count($movie->aliases) > 0)
             <div class="movie-details__original-title">
                 {{ $movie->aliases[0] }}
             </div>
@@ -33,7 +32,7 @@
                 </span>
             </div>
 
-            @if($movie->countries && count($movie->countries) > 0)
+            @if(isset($movie->countries) && is_array($movie->countries) && count($movie->countries) > 0)
                 <div class="movie-details__meta-item">
                     <span class="movie-details__meta-label">Країна:</span>
                     <span class="movie-details__meta-value">
@@ -79,7 +78,7 @@
             @endif
         </div>
 
-        @if($movie->tags->isNotEmpty())
+        @if($movie->tags && $movie->tags->isNotEmpty())
             <div class="movie-details__tags">
                 @foreach($movie->tags as $tag)
                     <a href="{{ route('movies', ['tag' => $tag->id]) }}" class="movie-details__tag">
@@ -92,14 +91,15 @@
         <div class="movie-details__description">
             <h2 class="movie-details__section-title">Опис</h2>
             <div class="movie-details__description-text">
-                {{ $movie->description }}
+                {!! nl2br(e($movie->description)) !!}
             </div>
         </div>
 
         <div class="movie-details__actions">
-            <button class="movie-details__action-button movie-details__action-button--watch">
+            <a href="{{ route('movies.watch', $movie) }}"
+               class="movie-details__action-button movie-details__action-button--watch">
                 <i class="fas fa-play"></i> Дивитися
-            </button>
+            </a>
             <button class="movie-details__action-button movie-details__action-button--favorite">
                 <i class="fas fa-heart"></i> У вибране
             </button>

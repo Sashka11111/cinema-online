@@ -88,4 +88,9 @@ class Episode extends Model
 
         return implode(' ', $formatted);
     }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
 }

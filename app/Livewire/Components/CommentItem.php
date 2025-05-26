@@ -9,19 +9,18 @@ class CommentItem extends Component
 {
     public Comment $comment;
 
-    public bool $showReplyForm = false;
+    public bool $showReplies = false;
 
     public string $replyText = '';
 
-    public function showReplyForm()
+    public function mount(Comment $comment)
     {
-        $this->showReplyForm = true;
+        $this->comment = $comment;
     }
 
-    public function hideReplyForm()
+    public function toggleReplies()
     {
-        $this->showReplyForm = false;
-        $this->replyText = '';
+        $this->showReplies = ! $this->showReplies;
     }
 
     public function addReply()
@@ -34,17 +33,27 @@ class CommentItem extends Component
             'commentable_id' => $this->comment->commentable_id,
             'commentable_type' => $this->comment->commentable_type,
             'user_id' => auth()->id(),
+            'body' => $this->replyText,
             'parent_id' => $this->comment->id,
-            'content' => $this->replyText,
         ]);
 
         $this->replyText = '';
-        $this->showReplyForm = false;
         $this->comment->refresh();
+    }
+
+    public function getRepliesProperty()
+    {
+        // Завантажуємо відповіді з eager loading для зв'язку user
+        return Comment::where('parent_id', $this->comment->id)
+            ->with('user')
+            ->orderBy('created_at', 'asc')
+            ->get();
     }
 
     public function render()
     {
-        return view('livewire.components.comment-item');
+        return view('livewire.components.comment-item', [
+            'replies' => $this->showReplies ? $this->getRepliesProperty() : collect(),
+        ]);
     }
 }

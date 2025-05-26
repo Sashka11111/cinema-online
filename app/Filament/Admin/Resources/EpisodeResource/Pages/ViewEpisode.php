@@ -100,8 +100,6 @@ class ViewEpisode extends ViewRecord
                                     ->label('Назва'),
                                 TextEntry::make('url')
                                     ->label('URL плеєра'),
-                                TextEntry::make('file_url')
-                                    ->label('URL файлу'),
                                 TextEntry::make('dubbing')
                                     ->label('Озвучка'),
                                 TextEntry::make('quality')

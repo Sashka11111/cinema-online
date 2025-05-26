@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Liamtseva\Cinema\Http\Controllers\Socialite\ProviderCallbackController;
 use Liamtseva\Cinema\Http\Controllers\Socialite\ProviderRedirectController;
@@ -15,8 +16,10 @@ use Liamtseva\Cinema\Livewire\Pages\CookiePolicy;
 use Liamtseva\Cinema\Livewire\Pages\Home;
 use Liamtseva\Cinema\Livewire\Pages\MovieShow;
 use Liamtseva\Cinema\Livewire\Pages\MoviesPage;
+use Liamtseva\Cinema\Livewire\Pages\MovieWatchPage;
 use Liamtseva\Cinema\Livewire\Pages\PrivacyPolicy;
 use Liamtseva\Cinema\Livewire\Pages\Profile;
+use Liamtseva\Cinema\Livewire\Pages\RoomWatchPage;
 use Liamtseva\Cinema\Livewire\Pages\SelectionShowPage;
 use Liamtseva\Cinema\Livewire\Pages\SelectionsPage;
 use Liamtseva\Cinema\Livewire\Pages\TermsOfUse;
@@ -37,8 +40,6 @@ Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/terms-of-use', TermsOfUse::class)->name('terms-of-use');
 Route::get('/cookie-policy', CookiePolicy::class)->name('cookie-policy');
 // Додаємо маршрут для перегляду окремого фільму
-Route::get('/movies/{movie}', MovieShow::class)->name('movies.show');
-
 Route::middleware('guest')->group(function () {
     Route::get('/login', Login::class)->name('login');
     Route::get('/register', Register::class)->name('register');
@@ -64,4 +65,14 @@ Route::middleware('auth')->group(function () {
         return back()->with('message', 'Verification link sent!');
     })->name('verification.send');
     Route::get('/profile', Profile::class)->name('profile');
+
+    // Broadcasting authorization
+    Broadcast::routes(['middleware' => ['web', 'auth']]);
 });
+
+Route::get('/movies/{movie}', MovieShow::class)->name('movies.show');
+Route::get('/movies/{movie}/watch/', MovieWatchPage::class)->name('movies.watch');
+
+Route::get('/movies/{movie}/watch/{episodeNumber}', MovieWatchPage::class)->name('movies.watch.episode');
+// нову сторінку
+Route::get('/movies/{movie}/watch/{episodeNumber}/{room}', RoomWatchPage::class)->name('movies.watch.room');

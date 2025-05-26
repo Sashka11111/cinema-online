@@ -1,12 +1,13 @@
-@import 'header.css';
-@import 'home.css';
-@import 'movies.css';
-@import 'movie-show.css';
-@import 'policy-pages.css';
-@import 'auth.css';
-@import 'profile.css';
-@import 'selections-page.css';
-@import 'footer.css';
+@import url('header.css');
+@import url('home.css');
+@import url('movies.css');
+@import url('movie-details.css');
+@import url('movie-watch.css');
+@import url('policy-pages.css');
+@import url('auth.css');
+@import url('profile.css');
+@import url('selections-page.css');
+@import url('footer.css');
 
 :root {
     --primary-color: #93b3f4;
@@ -17,7 +18,7 @@
     --error-color: #e63946;
     --border-color: #d3d3d3;
     --white: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgb(0 0 0 / 10%);
     --promo-background: #1a1a1a;
     --social-button-bg: #ffffff;
     --card-background: #ffffff;
@@ -30,30 +31,25 @@
     --dark-text-color: #e0e0e0;
     --dark-text-muted: #a0a0a0;
     --dark-border-color: #333333;
-    --dark-shadow-color: rgba(0, 0, 0, 0.3);
-
+    --dark-shadow-color: rgb(0 0 0 / 30%);
     --spacing-unit: 8px;
     --spacing-xs: calc(var(--spacing-unit) * 0.5);
     --spacing-sm: var(--spacing-unit);
     --spacing-md: calc(var(--spacing-unit) * 2);
     --spacing-lg: calc(var(--spacing-unit) * 3);
     --spacing-xl: calc(var(--spacing-unit) * 4);
-
-    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-family: 'Inter', -apple-system, blinkmacsystemfont, sans-serif;
     --font-size-base: 16px;
     --font-size-sm: 14px;
     --font-size-lg: 18px;
     --font-size-xl: 24px;
     --line-height: 1.5;
-
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
     --border-radius-xl: 16px;
     --border-radius-xxl: 20px;
-
     --box-shadow: 0 2px 8px var(--shadow-color);
-
     --breakpoint-mobile: 576px;
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1024px;
@@ -75,62 +71,58 @@
 }
 
 .theme-toggle__button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--text-color);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    height: 40px;
+    color: var(--text-color);
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-radius: 50%;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .theme-toggle__button:hover {
-    background-color: rgba(110, 143, 232, 0.1);
     color: var(--accent-color);
+    background-color: rgb(110 143 232 / 10%);
 }
 
 .theme-toggle__icon {
     width: 24px;
     height: 24px;
-    fill: currentColor;
+    fill: currentcolor;
 }
 
 /* Додаємо стилі для іконок як маски */
 .theme-toggle__icon--sun {
     width: 24px;
     height: 24px;
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/sun.svg') no-repeat center;
+    background-color: currentcolor;
     mask: url('../../public/images/sun.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
 }
 
 .theme-toggle__icon--moon {
     width: 24px;
     height: 24px;
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/moon.svg') no-repeat center;
+    background-color: currentcolor;
     mask: url('../../public/images/moon.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
 }
 
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }
 
 body {
+    min-height: 100vh;
     font-family: var(--font-family);
     font-size: var(--font-size-base);
     line-height: var(--line-height);
-    background-color: var(--background-color);
     color: var(--text-color);
-    min-height: 100vh;
+    background-color: var(--background-color);
 }

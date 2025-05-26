@@ -67,7 +67,7 @@ class MovieFactory extends Factory
             'similars' => [],
             'is_published' => $this->faker->boolean(),
             'meta_title' => Str::limit("Дивитись онлайн $title | ".config('app.name'), 255, '...'),
-            'meta_description' => $this->getDescription($movieData),
+            'meta_description' => Str::limit($this->getDescription($movieData), 370, '...'),
             'meta_image' => $this->getBackdrop($movieData),
         ];
     }

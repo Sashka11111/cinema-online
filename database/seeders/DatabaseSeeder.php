@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             SelectionSeeder::class,
             SearchHistorySeeder::class,
             WatchHistorySeeder::class,
+            RoomSeeder::class, // Додаємо сідер для кімнат
         ]);
     }
 }

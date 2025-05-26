@@ -176,4 +176,27 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             get: fn ($value) => $value ? asset("storage/$value") : null
         );
     }
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
+
+    /**
+     * Отримати кімнати, в яких користувач є глядачем.
+     */
+    public function viewingRooms(): BelongsToMany
+    {
+        return $this->belongsToMany(Room::class, 'room_user')
+            ->withPivot('joined_at', 'left_at')
+            ->withTimestamps();
+    }
+
+    /**
+     * Отримати кімнати, в яких користувач зараз активно переглядає.
+     */
+    public function activeViewingRooms(): BelongsToMany
+    {
+        return $this->viewingRooms()->whereNull('room_user.left_at');
+    }
 }

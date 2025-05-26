@@ -11,17 +11,16 @@
 
             <livewire:components.movie-details :movie="$movie"/>
 
-            {{--            <livewire:components.movie-player :movie="$movie"/>--}}
-
             {{--            @if($movie->persons->isNotEmpty())--}}
             {{--                <livewire:components.movie-cast :persons="$movie->persons"/>--}}
             {{--            @endif--}}
 
             {{--            @if($similarMovies->isNotEmpty())--}}
             {{--                <livewire:components.similar-movies :movies="$similarMovies"/>--}}
-            {{--            --}}{{--            @endif--}}
+            {{--            @endif--}}
 
             {{--            <livewire:components.movie-comments :movie="$movie"/>--}}
         </div>
     </main>
+    <livewire:components.main-footer-component/>
 </div>
