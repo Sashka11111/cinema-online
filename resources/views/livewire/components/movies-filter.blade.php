@@ -24,7 +24,7 @@
         <!-- Статус -->
         <div class="filters__item">
             <div class="filters__select-wrapper">
-                <select wire:model.live="status" class="filters__select">
+                <select wire:model="status" class="filters__select">
                     <option value="">Всі статуси</option>
                     @foreach($statuses as $statusOption)
                         <option
@@ -38,7 +38,7 @@
         <!-- Період -->
         <div class="filters__item">
             <div class="filters__select-wrapper">
-                <select wire:model.live="period" class="filters__select">
+                <select wire:model="period" class="filters__select">
                     <option value="">Всі періоди</option>
                     @foreach($periods as $periodOption)
                         <option
@@ -52,7 +52,7 @@
         <!-- Студія -->
         <div class="filters__item">
             <div class="filters__select-wrapper">
-                <select wire:model.live="studio" class="filters__select">
+                <select wire:model="studio" class="filters__select">
                     <option value="">Всі студії</option>
                     @foreach($studios as $studioOption)
                         <option
@@ -66,7 +66,7 @@
         <!-- Рік -->
         <div class="filters__item">
             <div class="filters__select-wrapper">
-                <select wire:model.live="year" class="filters__select">
+                <select wire:model="year" class="filters__select">
                     <option value="">Всі роки</option>
                     @foreach($years as $yearOption)
                         <option value="{{ $yearOption }}">{{ $yearOption }}</option>
@@ -89,9 +89,20 @@
 
     <div x-show="showAdvanced" x-transition class="filters__advanced">
         <div class="filters__group">
-
+            <!-- Жанр -->
             <div class="filters__select-wrapper">
-                <select wire:model.live="rating" class="filters__select">
+                <select wire:model="genre" class="filters__select">
+                    <option value="">Усі жанри</option>
+                    @foreach($genres as $genreOption)
+                        <option value="{{ $genreOption->id }}">{{ $genreOption->name }}</option>
+                    @endforeach
+                </select>
+                <div class="filters__select-arrow"></div>
+            </div>
+
+            <!-- Рейтинг -->
+            <div class="filters__select-wrapper">
+                <select wire:model="rating" class="filters__select">
                     <option value="">Усі рейтинги</option>
                     @foreach($ratings as $ratingOption)
                         <option
@@ -101,8 +112,9 @@
                 <div class="filters__select-arrow"></div>
             </div>
 
+            <!-- Тривалість -->
             <div class="filters__select-wrapper">
-                <select wire:model.live="duration" class="filters__select">
+                <select wire:model="duration" class="filters__select">
                     <option value="">Будь-яка тривалість</option>
                     <option value="short">До 90 хв</option>
                     <option value="medium">90-120 хв</option>
@@ -111,8 +123,9 @@
                 <div class="filters__select-arrow"></div>
             </div>
 
+            <!-- Країна -->
             <div class="filters__select-wrapper">
-                <select wire:model.live="country" class="filters__select">
+                <select wire:model="country" class="filters__select">
                     <option value="">Усі країни</option>
                     @foreach($countries as $countryOption)
                         <option
@@ -124,8 +137,9 @@
                 <div class="filters__select-arrow"></div>
             </div>
 
+            <!-- Джерело -->
             <div class="filters__select-wrapper">
-                <select wire:model.live="source" class="filters__select">
+                <select wire:model="source" class="filters__select">
                     <option value="">Усі джерела</option>
                     @foreach($sources as $sourceOption)
                         <option
@@ -135,9 +149,10 @@
                 <div class="filters__select-arrow"></div>
             </div>
 
+            <!-- IMDB рейтинг -->
             <div class="filters__select-wrapper">
-                <select wire:model.live="imdbScoreMin" class="filters__select">
-                    <option value="">Будь-який рейтинг IMDB</option>
+                <select wire:model="imdbScore" class="filters__select">
+                    <option value="">Рейтинг IMDB</option>
                     @foreach(range(1, 10) as $score)
                         <option value="{{ $score }}">{{ $score }}</option>
                     @endforeach
@@ -147,64 +162,4 @@
         </div>
     </div>
 
-    <div class="filters__sort">
-        <span class="filters__sort-label">
-            <div class="filters__sort-icon"></div>
-            Сортувати за:
-        </span>
-        <div class="filters__sort-buttons">
-            <button
-                wire:click="sortBy('name')"
-                class="filters__sort-button {{ $sortField === 'name' ? 'filters__sort-button--active' : '' }}"
-            >
-                Назвою
-                @if($sortField === 'name')
-                    <span
-                        class="filters__sort-direction {{ $sortDirection === 'desc' ? 'desc' : '' }}"></span>
-                @endif
-            </button>
-            <button
-                wire:click="sortBy('first_air_date')"
-                class="filters__sort-button {{ $sortField === 'first_air_date' ? 'filters__sort-button--active' : '' }}"
-            >
-                Датою виходу
-                @if($sortField === 'first_air_date')
-                    <span
-                        class="filters__sort-direction {{ $sortDirection === 'desc' ? 'desc' : '' }}"></span>
-                @endif
-            </button>
-            <button
-                wire:click="sortBy('imdb_score')"
-                class="filters__sort-button {{ $sortField === 'imdb_score' ? 'filters__sort-button--active' : '' }}"
-            >
-                Рейтингом IMDB
-                @if($sortField === 'imdb_score')
-                    <span
-                        class="filters__sort-direction {{ $sortDirection === 'desc' ? 'desc' : '' }}"></span>
-                @endif
-            </button>
-            @if(in_array($contentType, ['series', 'cartoon_series', 'anime']))
-                <button
-                    wire:click="sortBy('episodes_count')"
-                    class="filters__sort-button {{ $sortField === 'episodes_count' ? 'filters__sort-button--active' : '' }}"
-                >
-                    Кількістю епізодів
-                    @if($sortField === 'episodes_count')
-                        <span
-                            class="filters__sort-direction {{ $sortDirection === 'desc' ? 'desc' : '' }}"></span>
-                    @endif
-                </button>
-            @endif
-            <button
-                wire:click="sortBy('duration')"
-                class="filters__sort-button {{ $sortField === 'duration' ? 'filters__sort-button--active' : '' }}"
-            >
-                Тривалістю
-                @if($sortField === 'duration')
-                    <span
-                        class="filters__sort-direction {{ $sortDirection === 'desc' ? 'desc' : '' }}"></span>
-                @endif
-            </button>
-        </div>
-    </div>
 </div>

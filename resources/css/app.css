@@ -3,6 +3,8 @@
 @import url('movies.css');
 @import url('movie-details.css');
 @import url('movie-watch.css');
+@import url('room-watch.css');
+@import url('user-lists.css');
 @import url('policy-pages.css');
 @import url('auth.css');
 @import url('profile.css');
@@ -125,4 +127,93 @@ body {
     line-height: var(--line-height);
     color: var(--text-color);
     background-color: var(--background-color);
+}
+
+/* Стилі для скролбару */
+* {
+    scrollbar-color: var(--primary-color) rgba(var(--primary-rgb), 0.1);
+    scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+*::-webkit-scrollbar-track {
+    background: rgba(var(--primary-rgb), 0.05);
+    border-radius: var(--border-radius-sm);
+}
+
+*::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    background-clip: content-box;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.3s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--accent-color), var(--primary-color));
+    border: 1px solid transparent;
+}
+
+*::-webkit-scrollbar-corner {
+    background: rgba(var(--primary-rgb), 0.05);
+}
+
+/* Темна тема для скролбару */
+[data-theme="dark"] * {
+    scrollbar-color: var(--primary-color) rgb(0 0 0 / 20%);
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-track {
+    background: rgb(0 0 0 / 20%);
+}
+
+[data-theme="dark"] *::-webkit-scrollbar-corner {
+    background: rgb(0 0 0 / 20%);
+}
+
+/* Анімації */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }

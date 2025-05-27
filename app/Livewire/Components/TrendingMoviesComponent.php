@@ -20,7 +20,6 @@ class TrendingMoviesComponent extends Component
     {
         $trendingMovies = Cache::remember("trending_movies_{$this->contentType}", 3600, function () {
             $query = Movie::query()
-                ->where('is_published', true)
                 ->select([
                     'id', 'name', 'slug', 'poster', 'imdb_score',
                     'status', 'restricted_rating', 'kind',

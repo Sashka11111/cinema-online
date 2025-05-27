@@ -90,7 +90,7 @@
                         <h3>Епізоди:</h3>
                         <div class="room-watch__episodes-list">
                             @foreach($movie->episodes->sortBy('number') as $ep)
-                                <a href="{{ route('movies.watch.episode', ['movie' => $movie->id, 'episodeNumber' => $ep->number]) }}"
+                                <a href="{{ route('movies.watch.episode', ['movie' => $movie, 'episodeNumber' => $ep->number]) }}"
                                    class="room-watch__episode-link @if($ep->id === $episode->id) room-watch__episode-link--active @endif">
                                     Епізод {{ $ep->number }}
                                     @if($ep->name)

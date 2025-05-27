@@ -4,11 +4,7 @@ namespace Liamtseva\Cinema\Livewire\Pages;
 
 use Illuminate\Database\Eloquent\Builder;
 use Liamtseva\Cinema\Enums\Kind;
-use Liamtseva\Cinema\Enums\Period;
-use Liamtseva\Cinema\Enums\Status;
 use Liamtseva\Cinema\Models\Movie;
-use Liamtseva\Cinema\Models\Scopes\PublishedScope;
-use Liamtseva\Cinema\Models\Studio;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -24,7 +20,7 @@ class MoviesPage extends Component
     #[Url]
     public $page = 1;
 
-    // Тип контенту - прибираємо з URL
+    // Тип контенту
     public $contentType = 'movies';
 
     // Фільтри
@@ -52,6 +48,15 @@ class MoviesPage extends Component
     #[Url(except: '')]
     public $duration = '';
 
+    #[Url(except: '')]
+    public $country = '';
+
+    #[Url(except: '')]
+    public $source = '';
+
+    #[Url(except: '')]
+    public $imdbScoreMin = '';
+
     // Сортування
     #[Url(except: 'created_at')]
     public $sortField = 'created_at';
@@ -64,70 +69,7 @@ class MoviesPage extends Component
 
     protected $listeners = [
         'filter-changed' => 'handleFilterChange',
-        'sort-changed' => 'handleSortChange',
-        'filters-reset' => 'resetAllFilters',
-        'filters-applied' => 'applyAllFilters',
     ];
-
-    public function previousPage($pageName = 'page'): void
-    {
-        if ($this->page > 1) {
-            $this->page--;
-        }
-    }
-
-    public function nextPage($pageName = 'page'): void
-    {
-        if ($this->getMoviesProperty()->hasMorePages()) {
-            $this->page++;
-        }
-    }
-
-    // Оновлюємо методи для нових фільтрів
-    public function updatedSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatedStatus(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatedPeriod(): void
-    {
-        $this->resetPage();
-    }
-
-    public function updatedStudio()
-    {
-        $this->resetPage();
-    }
-
-    public function updatedYear()
-    {
-        $this->resetPage();
-    }
-
-    public function updatedGenre()
-    {
-        $this->resetPage();
-    }
-
-    public function updatedRating()
-    {
-        $this->resetPage();
-    }
-
-    public function updatedDuration()
-    {
-        $this->resetPage();
-    }
-
-    public function updatedContentType()
-    {
-        $this->resetPage();
-    }
 
     public function sortBy($field)
     {
@@ -152,6 +94,9 @@ class MoviesPage extends Component
             $this->genre,
             $this->rating,
             $this->duration,
+            $this->country,
+            $this->source,
+            $this->imdbScoreMin,
             $this->sortField,
             $this->sortDirection,
             $this->page,
@@ -160,7 +105,7 @@ class MoviesPage extends Component
         // Використовуємо try-catch для обробки помилок
         try {
             return cache()->remember($cacheKey, 60, function () {
-                return $this->moviesQuery()->paginate(10, ['*'], 'page', $this->page);
+                return $this->moviesQuery()->paginate(20, ['*'], 'page', $this->page);
             });
         } catch (\Exception $e) {
             // Логуємо помилку
@@ -168,31 +113,9 @@ class MoviesPage extends Component
 
             // Повертаємо порожню колекцію
             return new \Illuminate\Pagination\LengthAwarePaginator(
-                collect([]), 0, 10, $this->page
+                collect([]), 0, 20, $this->page
             );
         }
-    }
-
-    public function getStatusesProperty()
-    {
-        return collect(Status::cases());
-    }
-
-    public function getPeriodsProperty()
-    {
-        return collect(Period::cases());
-    }
-
-    public function getStudiosProperty()
-    {
-        return Studio::orderBy('name')->get();
-    }
-
-    public function getYearsProperty()
-    {
-        $currentYear = now()->year;
-
-        return collect(range($currentYear, $currentYear - 50));
     }
 
     public function getPageTitleProperty()
@@ -222,16 +145,11 @@ class MoviesPage extends Component
     private function moviesQuery(): Builder
     {
         $query = Movie::query()
-            ->withoutGlobalScopes([PublishedScope::class])
-            ->where('is_published', true)
             ->where('kind', $this->getContentKind());
 
-        // Використовуємо індекси для швидшого пошуку
-        if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('name', 'like', "%{$this->search}%")
-                    ->orWhereRaw("searchable @@ plainto_tsquery('ukrainian', ?)", [$this->search]);
-            });
+        // Використовуємо метод search() з MovieQueryBuilder
+        if (!empty($this->search)) {
+            $query->search($this->search);
         }
 
         if ($this->status) {
@@ -275,6 +193,18 @@ class MoviesPage extends Component
             }
         }
 
+        if ($this->country) {
+            $query->where('country_code', $this->country);
+        }
+
+        if ($this->source) {
+            $query->where('source', $this->source);
+        }
+
+        if ($this->imdbScoreMin) {
+            $query->where('imdb_score', '>=', $this->imdbScoreMin);
+        }
+
         // Сортування
         $query->orderBy($this->sortField, $this->sortDirection);
 
@@ -297,8 +227,6 @@ class MoviesPage extends Component
 
         // Отримуємо фільми в тренді для поточного типу контенту
         $this->trendingMovies = Movie::query()
-            ->withoutGlobalScopes([PublishedScope::class])
-            ->where('is_published', true)
             ->where('kind', $this->getContentKind())
             ->select([
                 'id', 'name', 'slug', 'poster', 'imdb_score',
@@ -318,37 +246,7 @@ class MoviesPage extends Component
         ]);
     }
 
-    public function handleFilterChange($filter)
-    {
-        foreach ($filter as $key => $value) {
-            if (property_exists($this, $key)) {
-                $this->$key = $value;
-            }
-        }
-        $this->resetPage();
-    }
-
-    public function handleSortChange($sort)
-    {
-        $this->sortField = $sort['field'];
-        $this->sortDirection = $sort['direction'];
-    }
-
-    // Додаємо нові методи для обробки подій
-    public function resetAllFilters()
-    {
-        $this->search = '';
-        $this->status = '';
-        $this->period = '';
-        $this->studio = '';
-        $this->year = '';
-        $this->genre = '';
-        $this->rating = '';
-        $this->duration = '';
-        $this->resetPage();
-    }
-
-    public function applyAllFilters($filters)
+    public function handleFilterChange($filters)
     {
         foreach ($filters as $key => $value) {
             if (property_exists($this, $key)) {

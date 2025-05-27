@@ -23,6 +23,7 @@ use Liamtseva\Cinema\Livewire\Pages\RoomWatchPage;
 use Liamtseva\Cinema\Livewire\Pages\SelectionShowPage;
 use Liamtseva\Cinema\Livewire\Pages\SelectionsPage;
 use Liamtseva\Cinema\Livewire\Pages\TermsOfUse;
+use Liamtseva\Cinema\Livewire\Pages\UserListsPage;
 
 Route::get('/', Home::class)->name('home');
 
@@ -65,6 +66,7 @@ Route::middleware('auth')->group(function () {
         return back()->with('message', 'Verification link sent!');
     })->name('verification.send');
     Route::get('/profile', Profile::class)->name('profile');
+    Route::get('/my-lists', UserListsPage::class)->name('user-lists');
 
     // Broadcasting authorization
     Broadcast::routes(['middleware' => ['web', 'auth']]);

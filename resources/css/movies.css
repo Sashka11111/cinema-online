@@ -1,8 +1,8 @@
 /* Стилі для сторінки фільмів */
 .movies-page {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
 }
 
 .movies-page__main {
@@ -12,13 +12,13 @@
 
 .container {
     max-width: 1200px;
-    margin: 0 auto;
     padding: 0 var(--spacing-lg);
+    margin: 0 auto;
 }
 
 .content-page__title {
-    font-size: var(--font-size-xl);
     margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-xl);
     color: var(--primary-color);
 }
 
@@ -30,21 +30,21 @@
 .breadcrumbs__list {
     display: flex;
     flex-wrap: wrap;
-    list-style: none;
     padding: 0;
+    list-style: none;
 }
 
 .breadcrumbs__item {
     display: flex;
     align-items: center;
-    color: var(--text-muted);
     font-size: var(--font-size-sm);
+    color: var(--text-muted);
 }
 
 .breadcrumbs__item:not(:last-child)::after {
-    content: "/";
     margin: 0 var(--spacing-xs);
     color: var(--text-muted);
+    content: "/";
 }
 
 .breadcrumbs__link {
@@ -58,16 +58,16 @@
 }
 
 .breadcrumbs__item--active {
-    color: var(--text-color);
     font-weight: 500;
+    color: var(--text-color);
 }
 
 /* Фільтри */
 .movies-page__filters {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-md);
     padding: var(--spacing-lg);
     margin-bottom: var(--spacing-xl);
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
     box-shadow: var(--box-shadow);
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -81,10 +81,10 @@
 /* Верхня панель фільтрів */
 .filters__top-panel {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: var(--spacing-md);
     gap: var(--spacing-md);
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
 }
 
 /* Пошук */
@@ -94,42 +94,42 @@
 }
 
 .filters__search::before {
-    content: "";
     position: absolute;
-    left: 12px;
     top: 50%;
-    transform: translateY(-50%);
+    left: 12px;
     width: 18px;
     height: 18px;
+    content: "";
     background-image: url('../../public/images/search-icon.svg');
-    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
     opacity: 0.7;
+    transform: translateY(-50%);
 }
 
 .filters__search-input {
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     padding-left: 40px;
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    background-color: transparent;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
-    background-color: transparent;
-    color: var(--text-color);
-    font-size: var(--font-size-base);
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .filters__search-input:focus {
-    outline: none;
     border-color: var(--primary-color);
+    outline: none;
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
 }
 
 /* Темна тема для пошуку */
 [data-theme="dark"] .filters__search-input {
-    background-color: var(--dark-card-background);
     color: var(--dark-text-color);
+    background-color: var(--dark-card-background);
     border-color: var(--dark-border-color);
 }
 
@@ -143,8 +143,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -154,19 +154,19 @@
 
 .filters__item-label {
     display: block;
+    align-items: center;
     margin-bottom: var(--spacing-xs);
     font-size: var(--font-size-sm);
     color: var(--text-muted);
-    align-items: center;
 }
 
 .filters__item-icon {
     width: 16px;
     height: 16px;
     margin-right: var(--spacing-xs);
-    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    background-size: contain;
 }
 
 .filters__item-icon--year {
@@ -188,19 +188,19 @@
     width: 100%;
     padding: var(--spacing-sm) var(--spacing-md);
     padding-right: calc(var(--spacing-md) * 2);
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-md);
-    background-color: var(--card-background);
-    color: var(--text-color);
     font-size: var(--font-size-base);
+    color: var(--text-color);
     appearance: none;
     cursor: pointer;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
     transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .filters__select:focus {
-    outline: none;
     border-color: var(--primary-color);
+    outline: none;
     box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
 }
 
@@ -208,14 +208,14 @@
     position: absolute;
     top: 50%;
     right: var(--spacing-md);
-    transform: translateY(-50%);
     width: 10px;
     height: 10px;
     pointer-events: none;
-    border-style: solid;
-    border-width: 6px 5px 0 5px;
     border-color: var(--text-muted) transparent transparent transparent;
+    border-style: solid;
+    border-width: 6px 5px 0;
     transition: border-color 0.3s ease;
+    transform: translateY(-50%);
 }
 
 .filters__select:focus + .filters__select-arrow {
@@ -224,14 +224,14 @@
 
 /* Темна тема для селектів */
 [data-theme="dark"] .filters__select {
-    background-color: var(--dark-card-background);
     color: var(--dark-text-color);
+    background-color: var(--dark-card-background);
     border-color: var(--dark-border-color);
 }
 
 [data-theme="dark"] .filters__select option {
-    background-color: var(--dark-card-background);
     color: var(--dark-text-color);
+    background-color: var(--dark-card-background);
 }
 
 [data-theme="dark"] .filters__select:focus {
@@ -249,50 +249,46 @@
 
 /* Розширені фільтри */
 .filters__advanced-toggle {
-    margin-bottom: var(--spacing-lg);
-    padding-top: var(--spacing-sm);
     display: flex;
     justify-content: center;
+    padding-top: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
 }
 
 .filters__advanced-button {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 200px;
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--primary-color);
+    cursor: pointer;
     background: none;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
-    color: var(--primary-color);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-xs) var(--spacing-md);
     transition: all 0.3s ease;
-    width: auto;
-    min-width: 200px;
-    justify-content: center;
 }
 
 .filters__advanced-button::before {
-    content: "";
     display: inline-block;
     width: 16px;
     height: 16px;
     margin-right: var(--spacing-xs);
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/filter-icon.svg') no-repeat center;
+    content: "";
+    background-color: currentcolor;
     mask: url('../../public/images/filter-icon.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
 }
 
 .filters__advanced-icon {
     width: 14px;
     height: 14px;
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/chevron-down.svg') no-repeat center;
+    background-color: currentcolor;
     mask: url('../../public/images/chevron-down.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
     transition: transform 0.3s ease;
 }
@@ -302,10 +298,10 @@
 }
 
 .filters__advanced {
+    max-width: 100%;
+    padding-bottom: var(--spacing-lg);
     margin-bottom: var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
-    padding-bottom: var(--spacing-lg);
-    max-width: 100%;
 }
 
 .filters__group {
@@ -316,7 +312,7 @@
 }
 
 /* Адаптивність для фільтрів */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .filters__advanced-button {
         width: 100%;
         max-width: none;
@@ -337,14 +333,14 @@
 
 .filters__checkbox-label {
     display: flex;
-    align-items: center;
     gap: var(--spacing-sm);
-    cursor: pointer;
+    align-items: center;
+    padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-sm);
     color: var(--text-color);
-    transition: color 0.3s ease;
-    padding: var(--spacing-xs) var(--spacing-sm);
+    cursor: pointer;
     border-radius: var(--border-radius-sm);
+    transition: color 0.3s ease;
 }
 
 .filters__checkbox-label:hover {
@@ -353,14 +349,14 @@
 }
 
 .filters__checkbox {
-    appearance: none;
+    position: relative;
     width: 18px;
     height: 18px;
+    appearance: none;
+    cursor: pointer;
+    background-color: transparent;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-sm);
-    background-color: transparent;
-    cursor: pointer;
-    position: relative;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -370,12 +366,12 @@
 }
 
 .filters__checkbox:checked::after {
-    content: "";
     position: absolute;
     top: 3px;
     left: 6px;
     width: 5px;
     height: 9px;
+    content: "";
     border: solid white;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
@@ -388,8 +384,8 @@
 
 /* Темна тема для чекбоксів */
 [data-theme="dark"] .filters__checkbox {
-    border-color: var(--dark-border-color);
     background-color: var(--dark-card-background);
+    border-color: var(--dark-border-color);
 }
 
 [data-theme="dark"] .filters__checkbox-label {
@@ -402,8 +398,8 @@
 
 /* Сортування */
 .filters__sort {
-    margin-bottom: var(--spacing-lg);
     padding-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
     border-bottom: 1px solid var(--border-color);
 }
 
@@ -420,10 +416,8 @@
     width: 16px;
     height: 16px;
     margin-right: var(--spacing-xs);
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/sort-icon.svg') no-repeat center;
+    background-color: currentcolor;
     mask: url('../../public/images/sort-icon.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
 }
 
@@ -434,44 +428,44 @@
 }
 
 .filters__sort-button {
-    background: none;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius-md);
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: var(--font-size-sm);
     color: var(--text-color);
     cursor: pointer;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
     transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
 }
 
 .filters__sort-button:hover {
-    border-color: var(--primary-color);
     color: var(--primary-color);
     background-color: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--primary-color);
 }
 
 .filters__sort-button--active {
+    color: white;
     background-color: var(--primary-color);
     border-color: var(--primary-color);
-    color: white;
 }
 
 .filters__sort-direction {
     position: relative;
-    width: 16px;
-    height: 16px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 16px;
+    height: 16px;
 }
 
 .filters__sort-direction::after {
-    content: "↑";
     font-size: 14px;
     line-height: 1;
+    content: "↑";
 }
 
 .filters__sort-direction.desc::after {
@@ -479,21 +473,21 @@
 }
 
 .filters__sort-button--active:hover {
+    color: white;
     background-color: var(--accent-color);
     border-color: var(--accent-color);
-    color: white;
 }
 
 /* Темна тема для сортування */
 [data-theme="dark"] .filters__sort-button {
-    border-color: var(--dark-border-color);
     color: var(--dark-text-color);
+    border-color: var(--dark-border-color);
 }
 
 [data-theme="dark"] .filters__sort-button:hover {
-    border-color: var(--primary-color);
     color: var(--primary-color);
     background-color: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary-color);
 }
 
 /* Кнопки дій */
@@ -503,63 +497,59 @@
 }
 
 .filters__reset-button {
-    background: none;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
     white-space: nowrap;
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
 }
 
 .filters__reset-button::before {
-    content: "";
     display: inline-block;
     width: 16px;
     height: 16px;
     margin-right: var(--spacing-xs);
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/reset-icon.svg') no-repeat center;
+    content: "";
+    background-color: currentcolor;
     mask: url('../../public/images/reset-icon.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
 }
 
 .filters__reset-button:hover {
-    border-color: var(--text-color);
     color: var(--text-color);
     background-color: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--text-color);
 }
 
 .filters__apply-button {
-    background-color: var(--primary-color);
-    border: 1px solid var(--primary-color);
-    color: white;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: var(--border-radius-md);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: white;
     white-space: nowrap;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
 }
 
 .filters__apply-button::before {
-    content: "";
     display: inline-block;
     width: 16px;
     height: 16px;
     margin-right: var(--spacing-xs);
-    background-color: currentColor;
-    -webkit-mask: url('../../public/images/check-icon.svg') no-repeat center;
+    content: "";
+    background-color: currentcolor;
     mask: url('../../public/images/check-icon.svg') no-repeat center;
-    -webkit-mask-size: contain;
     mask-size: contain;
 }
 
@@ -570,18 +560,18 @@
 
 /* Темна тема для кнопок дій */
 [data-theme="dark"] .filters__reset-button {
-    border-color: var(--dark-border-color);
     color: var(--dark-text-muted);
+    border-color: var(--dark-border-color);
 }
 
 [data-theme="dark"] .filters__reset-button:hover {
-    border-color: var(--dark-text-color);
     color: var(--dark-text-color);
     background-color: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--dark-text-color);
 }
 
 /* Адаптивність для верхньої панелі */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .filters__top-panel {
         flex-direction: column;
         align-items: stretch;
@@ -598,15 +588,15 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .filters__actions {
         flex-direction: column;
     }
 
     .filters__reset-button,
     .filters__apply-button {
-        width: 100%;
         justify-content: center;
+        width: 100%;
     }
 }
 
@@ -620,27 +610,27 @@
 
 /* Картка фільму */
 .movie-card {
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-md);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    height: 100%;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .movie-card:hover {
-    transform: translateY(-5px);
     box-shadow: 0 10px 20px var(--shadow-color);
+    transform: translateY(-5px);
 }
 
 .movie-card__link {
-    text-decoration: none;
-    color: inherit;
     display: flex;
     flex-direction: column;
     height: 100%;
+    color: inherit;
+    text-decoration: none;
 }
 
 .movie-card__poster-wrapper {
@@ -656,130 +646,130 @@
 }
 
 .movie-card__poster-placeholder {
-    background-image: url('../../public/images/movie-placeholder.svg');
-    background-size: cover;
-    background-position: center;
     width: 100%;
     height: 100%;
+    background-image: url('../../public/images/movie-placeholder.svg');
+    background-position: center;
+    background-size: cover;
 }
 
 .movie-card__rating {
     position: absolute;
     top: 8px;
     right: 8px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #ffc107;
+    z-index: 2;
+    display: flex;
+    gap: 3px;
+    align-items: center;
     padding: 4px 6px;
-    border-radius: 4px;
     font-size: 12px;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    z-index: 2;
+    color: #ffc107;
+    background-color: rgb(0 0 0 / 70%);
+    border-radius: 4px;
 }
 
 .movie-card__rating-icon {
     width: 16px;
     height: 16px;
+    margin-right: 2px;
     background-image: url('../../public/images/star.png');
-    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    margin-right: 2px;
+    background-size: contain;
 }
 
 .movie-card__badges {
     position: absolute;
     bottom: 8px;
     left: 8px;
+    z-index: 2;
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    z-index: 2;
 }
 
 .movie-card__badge {
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
     padding: 3px 6px;
-    border-radius: 4px;
     font-size: 10px;
     font-weight: 500;
+    color: white;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    background-color: rgb(0 0 0 / 70%);
+    border-radius: 4px;
 }
 
 .movie-card__badge--movie {
-    background-color: rgba(25, 118, 210, 0.8);
+    background-color: rgb(25 118 210 / 80%);
 }
 
 .movie-card__badge--tv_series {
-    background-color: rgba(76, 175, 80, 0.8);
+    background-color: rgb(76 175 80 / 80%);
 }
 
 .movie-card__badge--animated_movie {
-    background-color: rgba(156, 39, 176, 0.8);
+    background-color: rgb(156 39 176 / 80%);
 }
 
 .movie-card__badge--animated_series {
-    background-color: rgba(255, 152, 0, 0.8);
+    background-color: rgb(255 152 0 / 80%);
 }
 
 .movie-card__badge--anime {
-    background-color: rgba(244, 67, 54, 0.8);
+    background-color: rgb(244 67 54 / 80%);
 }
 
 .movie-card__badge--ongoing {
-    background-color: rgba(76, 175, 80, 0.8);
+    background-color: rgb(76 175 80 / 80%);
 }
 
 .movie-card__badge--completed {
-    background-color: rgba(33, 150, 243, 0.8);
+    background-color: rgb(33 150 243 / 80%);
 }
 
 .movie-card__badge--announced {
-    background-color: rgba(156, 39, 176, 0.8);
+    background-color: rgb(156 39 176 / 80%);
 }
 
 .movie-card__badge--canceled {
-    background-color: rgba(244, 67, 54, 0.8);
+    background-color: rgb(244 67 54 / 80%);
 }
 
 .movie-card__content {
-    padding: 10px;
-    flex-grow: 1;
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
+    padding: 10px;
 }
 
 .movie-card__title {
+    display: -webkit-box;
+    margin-bottom: 3px;
+    overflow: hidden;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 3px;
-    color: var(--text-color);
     line-height: 1.3;
-    overflow: hidden;
+    color: var(--text-color);
     text-overflow: ellipsis;
-    display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
 
 .movie-card__original-title {
-    font-size: 12px;
-    color: var(--text-muted);
     margin-bottom: 5px;
     overflow: hidden;
+    font-size: 12px;
+    color: var(--text-muted);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .movie-card__meta {
     display: flex;
-    align-items: center;
     flex-wrap: wrap;
     gap: 5px;
+    align-items: center;
     margin-bottom: 5px;
     font-size: 12px;
     color: var(--text-muted);
@@ -791,10 +781,10 @@
 }
 
 .movie-card__studio {
-    font-size: 12px;
-    color: var(--text-muted);
     margin-bottom: 5px;
     overflow: hidden;
+    font-size: 12px;
+    color: var(--text-muted);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -803,17 +793,17 @@
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: auto;
     padding-top: 5px;
+    margin-top: auto;
 }
 
 .movie-card__tag {
-    background-color: rgba(var(--primary-rgb), 0.1);
-    color: var(--text-color);
     padding: 2px 6px;
-    border-radius: 10px;
     font-size: 10px;
     font-weight: 500;
+    color: var(--text-color);
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-radius: 10px;
 }
 
 /* Темна тема для карток фільмів */
@@ -837,12 +827,12 @@
 }
 
 [data-theme="dark"] .movie-card__tag {
-    background-color: rgba(var(--primary-rgb), 0.2);
     color: var(--dark-text-color);
+    background-color: rgba(var(--primary-rgb), 0.2);
 }
 
 /* Адаптивність для карток фільмів */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
     .movie-card__title {
         font-size: 13px;
     }
@@ -852,18 +842,18 @@
     }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .movie-card__content {
         padding: 8px;
     }
 
     .movie-card__badge {
-        font-size: 9px;
         padding: 2px 5px;
+        font-size: 9px;
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .movie-card__content {
         padding: 6px;
     }
@@ -873,23 +863,23 @@
     }
 
     .movie-card__original-title {
-        font-size: 10px;
         margin-bottom: 3px;
+        font-size: 10px;
     }
 
     .movie-card__meta {
-        font-size: 10px;
         margin-bottom: 3px;
+        font-size: 10px;
     }
 
     .movie-card__studio {
-        font-size: 10px;
         margin-bottom: 3px;
+        font-size: 10px;
     }
 
     .movie-card__tag {
-        font-size: 9px;
         padding: 1px 4px;
+        font-size: 9px;
     }
 }
 
@@ -901,16 +891,16 @@
 /* Пусте повідомлення */
 .movies-page__empty {
     grid-column: 1 / -1;
-    text-align: center;
     padding: var(--spacing-xl);
+    text-align: center;
     background-color: var(--card-background);
     border-radius: var(--border-radius-md);
     box-shadow: var(--box-shadow);
 }
 
 .movies-page__empty-text {
-    color: var(--text-muted);
     font-size: var(--font-size-md);
+    color: var(--text-muted);
 }
 
 /* Пагінація */
@@ -920,11 +910,11 @@
 
 .pagination {
     display: flex;
-    justify-content: center;
-    align-items: center;
     gap: var(--spacing-sm);
-    list-style: none;
+    align-items: center;
+    justify-content: center;
     padding: 0;
+    list-style: none;
 }
 
 .pagination__item {
@@ -937,43 +927,42 @@
     justify-content: center;
     min-width: 40px;
     height: 40px;
-    cursor: pointer;
     padding: 0 var(--spacing-sm);
-    border-radius: var(--border-radius-md);
-    background-color: var(--card-background);
+    font-weight: 500;
     color: var(--text-color);
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    cursor: pointer;
+    background-color: var(--card-background);
     border: 1px solid transparent;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 5px rgb(0 0 0 / 5%);
+    transition: all 0.3s ease;
 }
 
 .pagination__link:hover {
     background-color: var(--background-hover);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-color: var(--primary-color);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 10%);
+    transform: translateY(-2px);
 }
 
 .pagination__link--active {
-    background-color: var(--primary-color);
     color: white;
-    box-shadow: 0 4px 8px rgba(147, 179, 244, 0.3);
+    background-color: var(--primary-color);
+    box-shadow: 0 4px 8px rgb(147 179 244 / 30%);
 }
 
 .pagination__link--active:hover {
     background-color: var(--accent-color);
     border-color: var(--accent-color);
-    box-shadow: 0 4px 8px rgba(147, 179, 244, 0.3);
-    border-color: var(--accent-color);
+    box-shadow: 0 4px 8px rgb(147 179 244 / 30%);
     transform: translateY(-2px);
 }
 
 .pagination__link--disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
     pointer-events: none;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 /* Стрілки пагінації */
@@ -994,14 +983,14 @@
 
 /* Темна тема для пагінації */
 [data-theme="dark"] .pagination__link {
-    background-color: var(--dark-card-background);
     color: var(--dark-text-color);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    background-color: var(--dark-card-background);
+    box-shadow: 0 2px 5px rgb(0 0 0 / 20%);
 }
 
 [data-theme="dark"] .pagination__link:hover {
     background-color: rgba(var(--primary-rgb), 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 30%);
 }
 
 [data-theme="dark"] .pagination__ellipsis {
@@ -1009,13 +998,13 @@
 }
 
 /* Адаптивність */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
     .movie-grid {
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .filters__group {
         flex-direction: column;
     }
@@ -1034,7 +1023,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .movie-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--spacing-md);
@@ -1067,32 +1056,32 @@
 }
 
 .trending-section__title {
+    margin-bottom: var(--spacing-xs);
     font-size: var(--font-size-xl);
     font-weight: 700;
-    margin-bottom: var(--spacing-xs);
     color: var(--text-color);
     text-align: center;
 }
 
 .trending-section__description {
+    margin-bottom: var(--spacing-lg);
     font-size: var(--font-size-md);
     color: var(--text-muted);
-    margin-bottom: var(--spacing-lg);
     text-align: center;
 }
 
 .trending-movies__wrapper {
     position: relative;
     display: flex;
-    align-items: center;
     gap: var(--spacing-md);
+    align-items: center;
     padding: 0 var(--spacing-md);
 }
 
 .trending-movies__carousel {
-    overflow: hidden;
     width: 100%;
     padding: var(--spacing-sm) 0;
+    overflow: hidden;
 }
 
 .trending-movies__track {
@@ -1105,24 +1094,24 @@
 .trending-movie-card {
     flex: 0 0 auto;
     width: 180px;
+    overflow: hidden;
     background-color: var(--card-background);
     border-radius: var(--border-radius-md);
-    overflow: hidden;
     box-shadow: var(--box-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .trending-movie-card:hover {
-    transform: translateY(-5px);
     box-shadow: 0 10px 20px var(--shadow-color);
+    transform: translateY(-5px);
 }
 
 .trending-movie-card__link {
-    text-decoration: none;
-    color: inherit;
     display: flex;
     flex-direction: column;
     height: 100%;
+    color: inherit;
+    text-decoration: none;
 }
 
 .trending-movie-card__poster-wrapper {
@@ -1141,69 +1130,69 @@
     position: absolute;
     top: 8px;
     right: 8px;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: #ffc107;
+    z-index: 2;
+    display: flex;
+    gap: 3px;
+    align-items: center;
     padding: 4px 6px;
-    border-radius: 4px;
     font-size: 12px;
     font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 3px;
-    z-index: 2;
+    color: #ffc107;
+    background-color: rgb(0 0 0 / 70%);
+    border-radius: 4px;
 }
 
 .trending-movie-card__rating-icon {
-    font-size: 14px;
     margin-right: 2px;
+    font-size: 14px;
 }
 
 .trending-movie-card__badge {
     position: absolute;
     bottom: 8px;
     left: 8px;
+    z-index: 2;
     padding: 3px 6px;
-    border-radius: 4px;
     font-size: 10px;
     font-weight: 500;
+    color: white;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    color: white;
-    z-index: 2;
+    border-radius: 4px;
 }
 
 .trending-movie-card__badge--ongoing {
-    background-color: rgba(76, 175, 80, 0.8);
+    background-color: rgb(76 175 80 / 80%);
 }
 
 .trending-movie-card__badge--completed {
-    background-color: rgba(33, 150, 243, 0.8);
+    background-color: rgb(33 150 243 / 80%);
 }
 
 .trending-movie-card__badge--announced {
-    background-color: rgba(156, 39, 176, 0.8);
+    background-color: rgb(156 39 176 / 80%);
 }
 
 .trending-movie-card__badge--canceled {
-    background-color: rgba(244, 67, 54, 0.8);
+    background-color: rgb(244 67 54 / 80%);
 }
 
 .trending-movie-card__info {
-    padding: var(--spacing-sm);
-    flex-grow: 1;
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
+    padding: var(--spacing-sm);
 }
 
 .trending-movie-card__title {
+    display: -webkit-box;
+    margin-bottom: 4px;
+    overflow: hidden;
     font-size: 14px;
     font-weight: 600;
-    margin-bottom: 4px;
-    color: var(--text-color);
     line-height: 1.3;
-    overflow: hidden;
+    color: var(--text-color);
     text-overflow: ellipsis;
-    display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
 }
@@ -1215,30 +1204,30 @@
 
 /* Навігаційні кнопки */
 .trending-movies__nav {
+    z-index: 1;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
     transition: all 0.3s ease;
-    z-index: 1;
-    flex-shrink: 0;
 }
 
 .trending-movies__nav:hover:not(:disabled) {
+    color: white;
     background-color: var(--primary-color);
     border-color: var(--primary-color);
-    color: white;
     transform: scale(1.1);
 }
 
 .trending-movies__nav:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .trending-movies__nav-icon {
@@ -1269,25 +1258,25 @@
 }
 
 [data-theme="dark"] .trending-movies__nav {
+    color: var(--dark-text-color);
     background-color: var(--dark-card-background);
     border-color: var(--dark-border-color);
-    color: var(--dark-text-color);
 }
 
 [data-theme="dark"] .trending-movies__nav:hover:not(:disabled) {
+    color: white;
     background-color: var(--primary-color);
     border-color: var(--primary-color);
-    color: white;
 }
 
 /* Адаптивність */
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
     .trending-movie-card {
         width: 160px;
     }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .trending-movie-card {
         width: 140px;
     }
@@ -1302,7 +1291,7 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .trending-movie-card {
         width: 120px;
     }
@@ -1322,8 +1311,8 @@
     }
 
     .trending-movie-card__badge {
-        font-size: 8px;
         padding: 2px 4px;
+        font-size: 8px;
     }
 
     .trending-section__title {
@@ -1339,14 +1328,14 @@
 .trending-section__empty {
     width: 100%;
     padding: var(--spacing-lg);
-    text-align: center;
     color: var(--text-muted);
+    text-align: center;
     background-color: var(--card-background);
     border-radius: var(--border-radius-md);
     box-shadow: var(--box-shadow);
 }
 
 [data-theme="dark"] .trending-section__empty {
-    background-color: var(--dark-card-background);
     color: var(--dark-text-muted);
+    background-color: var(--dark-card-background);
 }

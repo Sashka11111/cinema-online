@@ -79,12 +79,61 @@
                 </div>
 
                 <div class="movie-watch__episode-info">
-                    <h2 class="movie-watch__episode-title">
-                        @if($episode->number)
-                            Епізод {{ $episode->number }}:
+                    <div class="movie-watch__episode-header">
+                        <h2 class="movie-watch__episode-title">
+                            @if($episode->number)
+                                Епізод {{ $episode->number }}:
+                            @endif
+                            {{ $episode->name }}
+                        </h2>
+
+                        @if($movie->episodes && $movie->episodes->count() > 1)
+                            <div class="movie-watch__episode-navigation">
+                                @php
+                                    $currentIndex = $movie->episodes->search(function($ep) use ($episode) {
+                                        return $ep->id === $episode->id;
+                                    });
+                                    $prevEpisode = $currentIndex > 0 ? $movie->episodes[$currentIndex - 1] : null;
+                                    $nextEpisode = $currentIndex < $movie->episodes->count() - 1 ? $movie->episodes[$currentIndex + 1] : null;
+                                @endphp
+
+                                @if($prevEpisode)
+                                    <a href="{{ route('movies.watch.episode', ['movie' => $movie, 'episodeNumber' => $prevEpisode->number]) }}"
+                                       class="movie-watch__nav-button movie-watch__nav-button--prev">
+                                        <i class="fas fa-chevron-left"></i>
+                                        <span class="movie-watch__nav-text">
+                                            <small>Попередній</small>
+                                            <span>Епізод {{ $prevEpisode->number }}</span>
+                                        </span>
+                                    </a>
+                                @endif
+
+                                <div class="movie-watch__episode-selector">
+                                    <select onchange="window.location.href = this.value" class="movie-watch__episode-select">
+                                        @foreach($movie->episodes as $ep)
+                                            <option
+                                                value="{{ route('movies.watch.episode', ['movie' => $movie, 'episodeNumber' => $ep->number]) }}"
+                                                {{ $ep->id === $episode->id ? 'selected' : '' }}
+                                            >
+                                                Епізод {{ $ep->number }}: {{ $ep->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                @if($nextEpisode)
+                                    <a href="{{ route('movies.watch.episode', ['movie' => $movie, 'episodeNumber' => $nextEpisode->number]) }}"
+                                       class="movie-watch__nav-button movie-watch__nav-button--next">
+                                        <span class="movie-watch__nav-text">
+                                            <small>Наступний</small>
+                                            <span>Епізод {{ $nextEpisode->number }}</span>
+                                        </span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                @endif
+                            </div>
                         @endif
-                        {{ $episode->name }}
-                    </h2>
+                    </div>
 
                     @if($episode->duration)
                         <div class="movie-watch__episode-duration">
@@ -143,7 +192,7 @@
                         <div class="movie-watch__episodes-grid">
                             @foreach($movie->episodes as $ep)
                                 <a
-                                    href="{{ route('movies.watch.episode', ['movie' => $movie->id, 'episodeNumber' => $ep->number]) }}"
+                                    href="{{ route('movies.watch.episode', ['movie' => $movie, 'episodeNumber' => $ep->number]) }}"
                                     class="movie-watch__episode-item {{ $ep->id === $episode->id ? 'movie-watch__episode-item--active' : '' }}"
                                 >
                                     <span

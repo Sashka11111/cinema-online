@@ -1,72 +1,92 @@
 /* Стилі для сторінки перегляду фільму */
 .movie-watch {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--background-color);
-    color: var(--text-color);
+    background: linear-gradient(135deg, var(--background-color) 0%, rgba(var(--primary-rgb), 0.02) 100%);
 }
 
 .movie-watch__main {
-    flex: 1;
-    padding: var(--spacing-xl) 0;
+    max-width: 1400px;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    margin: 0 auto;
 }
 
 .movie-watch__title {
-    font-size: var(--font-size-xl);
-    margin-bottom: var(--spacing-lg);
-    color: var(--primary-color);
-    font-weight: 700;
+    margin-bottom: var(--spacing-xl);
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: var(--text-color);
+    text-align: center;
+    text-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 /* Стилі для плеєра */
 .movie-watch__player-container {
+    position: relative;
     width: 100%;
-    margin-bottom: var(--spacing-lg);
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-lg);
+    margin-bottom: var(--spacing-xl);
     overflow: hidden;
-    box-shadow: var(--box-shadow);
+    background: linear-gradient(145deg, #000000, #1a1a1a);
+    border-radius: var(--border-radius-lg);
+    box-shadow:
+        0 20px 40px rgb(0 0 0 / 30%),
+        0 0 0 1px rgb(255 255 255 / 5%);
+}
+
+.movie-watch__player-container::before {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    content: '';
+    background: linear-gradient(45deg,
+        rgba(var(--primary-rgb), 0.1) 0%,
+        transparent 30%,
+        transparent 70%,
+        rgba(var(--accent-rgb), 0.1) 100%);
 }
 
 .movie-watch__player {
     position: relative;
-    padding-bottom: 56.25%; /* 16:9 */
+    z-index: 2;
     height: 0;
+    padding-bottom: 56.25%; /* 16:9 */
     overflow: hidden;
-    background-color: #000;
+    background: #000000;
 }
 
 .movie-watch__video {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 3;
     width: 100%;
     height: 100%;
-    background-color: #000;
-    object-fit: contain;
+    object-fit: cover;
 }
 
 /* Стилі для плейсхолдера */
 .movie-watch__placeholder {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     height: 400px;
-    background-color: var(--card-background);
-    color: var(--text-muted);
+    padding: var(--spacing-lg);
     font-size: var(--font-size-lg);
+    color: var(--text-muted);
+    text-align: center;
+    background-color: var(--card-background);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--box-shadow);
-    text-align: center;
-    padding: var(--spacing-lg);
 }
 
 .movie-watch__placeholder-hint {
+    margin-top: var(--spacing-sm);
     font-size: var(--font-size-sm);
     color: var(--text-muted);
-    margin-top: var(--spacing-sm);
 }
 
 /* Додаємо анімацію завантаження для iframe */
@@ -74,11 +94,11 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
     z-index: 1;
     font-size: var(--font-size-md);
+    color: white;
     opacity: 0.8;
+    transform: translate(-50%, -50%);
 }
 
 .movie-watch__iframe:not([src=""]) + .movie-watch__player::before {
@@ -88,28 +108,160 @@
 /* Стилі для інформації про епізод */
 .movie-watch__episode-info {
     padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
     background-color: var(--card-background);
     border-radius: var(--border-radius-lg);
-    margin-bottom: var(--spacing-lg);
     box-shadow: var(--box-shadow);
 }
 
-.movie-watch__episode-title {
-    font-size: var(--font-size-lg);
+.movie-watch__episode-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
     margin-bottom: var(--spacing-md);
-    color: var(--heading-color);
+}
+
+.movie-watch__episode-title {
+    margin: 0;
+    font-size: var(--font-size-lg);
     font-weight: 600;
+    color: var(--text-color);
+}
+
+.movie-watch__episode-navigation {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--spacing-md);
+    align-items: center;
+    max-width: 800px;
+    padding: var(--spacing-md);
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--card-background), rgba(var(--primary-rgb), 0.02));
+    border-radius: var(--border-radius-lg);
+    box-shadow:
+        0 8px 32px rgb(0 0 0 / 10%),
+        inset 0 1px 0 rgb(255 255 255 / 10%);
+}
+
+.movie-watch__nav-button {
+    position: relative;
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    overflow: hidden;
+    color: var(--text-color);
+    text-decoration: none;
+    white-space: nowrap;
+    background: linear-gradient(135deg, var(--background-color), var(--card-background));
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
+    transition: all 0.3s ease;
+}
+
+.movie-watch__nav-button::before {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    content: '';
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 10%), transparent);
+    transition: left 0.6s;
+}
+
+.movie-watch__nav-button:hover {
+    color: var(--white);
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-2px);
+}
+
+.movie-watch__nav-button:hover::before {
+    left: 100%;
+}
+
+.movie-watch__nav-button--prev {
+    justify-content: flex-start;
+}
+
+.movie-watch__nav-button--next {
+    justify-content: flex-end;
+}
+
+.movie-watch__nav-text {
+    display: flex;
+    flex-direction: column;
+    align-items: inherit;
+}
+
+.movie-watch__nav-text small {
+    margin-bottom: 2px;
+    font-size: var(--font-size-xs);
+    color: var(--text-muted);
+    opacity: 0.8;
+}
+
+.movie-watch__nav-text span {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.movie-watch__episode-selector {
+    position: relative;
+    justify-self: center;
+    min-width: 280px;
+    max-width: 400px;
+}
+
+.movie-watch__episode-select {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    padding-right: calc(var(--spacing-lg) + 24px);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-color);
+    appearance: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--card-background), rgba(var(--primary-rgb), 0.02));
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-md) center;
+    background-size: 16px 16px;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-lg);
+    box-shadow:
+        0 4px 16px rgb(0 0 0 / 10%),
+        inset 0 1px 0 rgb(255 255 255 / 10%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.movie-watch__episode-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow:
+        0 8px 24px rgba(var(--primary-rgb), 0.2),
+        0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    transform: translateY(-2px);
+}
+
+.movie-watch__episode-select:hover {
+    background: linear-gradient(135deg, var(--card-background), rgba(var(--primary-rgb), 0.05));
+    border-color: var(--primary-color);
 }
 
 .movie-watch__episode-duration {
     display: inline-flex;
     align-items: center;
     padding: var(--spacing-xs) var(--spacing-sm);
-    background-color: var(--background-color);
-    border-radius: var(--border-radius-sm);
     margin-bottom: var(--spacing-md);
     font-size: var(--font-size-sm);
     color: var(--text-muted);
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-sm);
 }
 
 .movie-watch__episode-duration i {
@@ -125,23 +277,23 @@
 
 /* Стилі для кнопки повернення */
 .movie-watch__actions {
-    margin-top: var(--spacing-xl);
     display: flex;
     justify-content: flex-start;
+    margin-top: var(--spacing-xl);
 }
 
 .movie-watch__back-button {
     display: inline-flex;
     align-items: center;
     padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
+    color: var(--text-color);
+    text-decoration: none;
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-md);
-    color: var(--text-color);
-    font-size: var(--font-size-base);
-    text-decoration: none;
-    transition: all 0.3s ease;
     box-shadow: var(--box-shadow);
+    transition: all 0.3s ease;
 }
 
 .movie-watch__back-button i {
@@ -149,11 +301,11 @@
 }
 
 .movie-watch__back-button:hover {
-    background-color: var(--primary-color);
     color: white;
+    background-color: var(--primary-color);
     border-color: var(--primary-color);
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-2px);
 }
 
 /* Темна тема */
@@ -169,28 +321,28 @@
 }
 
 [data-theme="dark"] .movie-watch__back-button {
+    color: var(--dark-text-color);
     background-color: var(--dark-card-background);
     border-color: var(--dark-border-color);
-    color: var(--dark-text-color);
     box-shadow: 0 4px 8px var(--dark-shadow-color);
 }
 
 [data-theme="dark"] .movie-watch__back-button:hover {
-    background-color: var(--primary-color);
     color: white;
+    background-color: var(--primary-color);
     border-color: var(--primary-color);
     box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.5);
 }
 
 /* Адаптивність */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .movie-watch__main {
         padding: var(--spacing-lg) 0;
     }
 
     .movie-watch__title {
-        font-size: var(--font-size-lg);
         margin-bottom: var(--spacing-md);
+        font-size: var(--font-size-lg);
     }
 
     .movie-watch__episode-title {
@@ -204,9 +356,38 @@
     .movie-watch__actions {
         margin-top: var(--spacing-lg);
     }
+
+    .movie-watch__episode-navigation {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .movie-watch__nav-button {
+        justify-content: center;
+        width: 100%;
+        min-width: auto;
+    }
+
+    .movie-watch__episode-selector {
+        order: -1;
+        min-width: auto;
+    }
+
+    .movie-watch__episodes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .movie-watch__player-buttons {
+        justify-content: center;
+    }
+
+    .movie-watch__player-button {
+        flex: 1;
+        min-width: 120px;
+    }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
     .movie-watch__main {
         padding: var(--spacing-md) 0;
     }
@@ -229,7 +410,229 @@
     }
 
     .movie-watch__back-button {
-        width: 100%;
         justify-content: center;
+        width: 100%;
     }
+}
+
+/* Стилі для плеєрів */
+.movie-watch__player-options {
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    background: var(--card-background);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow);
+}
+
+.movie-watch__player-options-title {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.movie-watch__player-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.movie-watch__player-button {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.movie-watch__player-button:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--primary-color);
+}
+
+.movie-watch__player-button--active {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.movie-watch__player-dubbing,
+.movie-watch__player-quality {
+    font-size: var(--font-size-xs);
+    opacity: 0.8;
+}
+
+/* Стилі для створення кімнати */
+.movie-watch__create-room {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+}
+
+.movie-watch__create-room h3 {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.movie-watch__room-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.movie-watch__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.movie-watch__form-group label {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.movie-watch__form-group input[type="number"],
+.movie-watch__form-group input[type="password"] {
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: border-color 0.3s ease;
+}
+
+.movie-watch__form-group input[type="number"]:focus,
+.movie-watch__form-group input[type="password"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.movie-watch__form-group input[type="checkbox"] {
+    margin-right: var(--spacing-xs);
+}
+
+.movie-watch__create-room-btn {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    align-self: flex-start;
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--white);
+    cursor: pointer;
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    border: none;
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.movie-watch__create-room-btn:hover {
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.4);
+    transform: translateY(-2px);
+}
+
+/* Стилі для списку епізодів */
+.movie-watch__episodes-list {
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) 0;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+}
+
+.movie-watch__episodes-title {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.movie-watch__episodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.movie-watch__episode-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-md);
+    color: var(--text-color);
+    text-decoration: none;
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.movie-watch__episode-item:hover {
+    text-decoration: none;
+    background: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.movie-watch__episode-item--active {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.movie-watch__episode-item--active:hover {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.movie-watch__episode-number {
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    opacity: 0.8;
+}
+
+.movie-watch__episode-name {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.movie-watch__episode-item-duration {
+    margin-top: auto;
+    font-size: var(--font-size-xs);
+    opacity: 0.7;
+}
+
+/* Стилі для помилок */
+.alert {
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+}
+
+.alert-error {
+    color: #dc3545;
+    background: rgb(220 53 69 / 10%);
+    border: 1px solid rgb(220 53 69 / 30%);
+}
+
+.error {
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-xs);
+    color: #dc3545;
 }

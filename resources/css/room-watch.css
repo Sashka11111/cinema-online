@@ -1,0 +1,302 @@
+/* Стилі для сторінки перегляду кімнати */
+.room-watch {
+    min-height: 100vh;
+    background-color: var(--background-color);
+}
+
+.room-watch__main {
+    max-width: 1200px;
+    padding: var(--spacing-lg);
+    margin: 0 auto;
+}
+
+.room-watch__title {
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-color);
+    text-align: center;
+}
+
+/* Інформація про кімнату */
+.room-watch__info {
+    max-width: 600px;
+    padding: var(--spacing-lg);
+    margin: 0 auto var(--spacing-xl);
+    text-align: center;
+    background: linear-gradient(135deg, var(--card-background), rgba(var(--primary-rgb), 0.02));
+    border-radius: var(--border-radius-lg);
+    box-shadow:
+        0 8px 32px rgb(0 0 0 / 10%),
+        inset 0 1px 0 rgb(255 255 255 / 10%);
+}
+
+.room-watch__info h2 {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.room-watch__info p {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.room-watch__private-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    color: var(--white);
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-radius: var(--border-radius-sm);
+    box-shadow: 0 2px 8px rgb(245 158 11 / 30%);
+}
+
+/* Плеєр контейнер */
+.room-watch__player-container {
+    width: 100%;
+    margin-bottom: var(--spacing-lg);
+    overflow: hidden;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+}
+
+.room-watch__player {
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%; /* 16:9 */
+    overflow: hidden;
+    background-color: #000000;
+}
+
+.room-watch__video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: #000000;
+}
+
+.room-watch__placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    padding: var(--spacing-xl);
+    color: var(--text-muted);
+    text-align: center;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+}
+
+.room-watch__placeholder p {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+}
+
+.room-watch__placeholder-hint {
+    font-size: var(--font-size-sm) !important;
+    opacity: 0.7;
+}
+
+/* Вибір плеєра */
+.room-watch__player-selection {
+    max-width: 600px;
+    padding: var(--spacing-md);
+    margin: var(--spacing-lg) auto 0;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+}
+
+.room-watch__player-selection h3 {
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.room-watch__player-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--spacing-sm);
+    justify-items: center;
+}
+
+.room-watch__player-button {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    align-items: center;
+    width: 100%;
+    max-width: 160px;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-color);
+    text-align: center;
+    cursor: pointer;
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.room-watch__player-button:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.room-watch__player-button--active {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Епізоди */
+.room-watch__episodes {
+    max-width: 800px;
+    padding: var(--spacing-lg);
+    margin: var(--spacing-xl) auto;
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+}
+
+.room-watch__episodes h3 {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.room-watch__episodes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-sm);
+    justify-items: center;
+}
+
+.room-watch__episode-link {
+    display: block;
+    width: 100%;
+    max-width: 220px;
+    padding: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--text-color);
+    text-align: center;
+    text-decoration: none;
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.room-watch__episode-link:hover {
+    text-decoration: none;
+    background: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+}
+
+.room-watch__episode-link--active {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.room-watch__episode-link--active:hover {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Дії */
+.room-watch__actions {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    max-width: 500px;
+    margin: var(--spacing-xl) auto 0;
+}
+
+.room-watch__leave-button,
+.room-watch__back-button {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.room-watch__leave-button {
+    color: var(--white);
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: #ef4444;
+}
+
+.room-watch__leave-button:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    box-shadow: 0 4px 16px rgb(239 68 68 / 30%);
+    transform: translateY(-2px);
+}
+
+.room-watch__back-button {
+    color: var(--text-color);
+    background: var(--card-background);
+    border-color: var(--border-color);
+}
+
+.room-watch__back-button:hover {
+    color: var(--white);
+    text-decoration: none;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-2px);
+}
+
+/* Адаптивність */
+@media (width <= 768px) {
+    .room-watch__main {
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .room-watch__actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .room-watch__leave-button,
+    .room-watch__back-button {
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .room-watch__episodes-list {
+        grid-template-columns: 1fr;
+    }
+
+    .room-watch__player-buttons {
+        grid-template-columns: 1fr;
+    }
+}
