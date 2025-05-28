@@ -1,0 +1,40 @@
+/* Хлібні крихти */
+.breadcrumbs {
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.breadcrumbs__list {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0;
+    list-style: none;
+}
+
+.breadcrumbs__item {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+.breadcrumbs__item:not(:last-child)::after {
+    margin: 0 var(--spacing-xs);
+    color: var(--text-muted);
+    content: "/";
+}
+
+.breadcrumbs__link {
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumbs__link:hover {
+    color: var(--primary-color);
+}
+
+.breadcrumbs__item--active {
+    font-weight: 500;
+    color: var(--text-color);
+}

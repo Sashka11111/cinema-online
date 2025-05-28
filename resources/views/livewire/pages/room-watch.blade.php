@@ -6,19 +6,15 @@
             <livewire:components.breadcrumbs :items="[
                 ['label' => 'Головна', 'route' => 'home'],
                 ['label' => 'Фільми', 'route' => 'movies'],
-                ['label' => $movie->name, 'active' => true],
+                ['label' => $movie->name, 'route' => 'movies.show', 'params' => ['movie' => $movie]],
                 ['label' => 'Кімната', 'active' => true]
             ]"/>
-
-            <h1 class="room-watch__title">Кімната: {{ $movie->name }}</h1>
 
             @if($room)
                 <div class="room-watch__info">
                     <h2>{{ $room->name }}</h2>
-                    <p>Глядачів: {{ $room->viewers()->wherePivot('left_at', null)->count() }}
-                        /{{ $room->max_viewers }}</p>
                     @if($room->is_private)
-                        <span class="room-watch__private-badge">🔒 Приватна кімната</span>
+                        <span class="room-watch__private-badge">Приватна кімната</span>
                     @endif
                 </div>
             @endif
@@ -49,11 +45,10 @@
                                 <div class="room-watch__player-buttons">
                                     @foreach($episode->video_players as $index => $player)
                                         <button
-                                            onclick="changeVideoSource('{{ asset('storage/' . $player['file_url']) }}', this)"
-                                            class="room-watch__player-button @if($index === 0) room-watch__player-button--active @endif"
-                                            data-player-index="{{ $index }}"
+                                            class="room-watch__player-button {{ $index === 0 ? 'room-watch__player-button--active' : '' }}"
+                                            onclick="changeVideoSource('{{ asset('storage/' . ($player['file_url'] ?? '')) }}', this)"
                                         >
-                                            Джерело {{ $index + 1 }}
+                                            {{ $player['name'] ?? 'Плеєр ' . ($index + 1) }}
                                         </button>
                                     @endforeach
                                 </div>
@@ -148,25 +143,25 @@
 
         // Listen for sync events
         Echo.channel(`room.${roomSlug}`)
-            .listen('.VideoSyncEvent', (e) => {
-                console.log('🎬 Received VideoSyncEvent:', e.action, 'time:', e.data?.currentTime);
+        .listen('.VideoSyncEvent', (e) => {
+            console.log('🎬 Received VideoSyncEvent:', e.action, 'time:', e.data?.currentTime);
 
-                ignoreNextEvent = true;
+            ignoreNextEvent = true;
 
-                if (e.action === 'play') {
-                    console.log('▶️ Playing video from sync');
-                    video.currentTime = e.data?.currentTime || video.currentTime;
-                    video.play();
-                } else if (e.action === 'pause') {
-                    console.log('⏸️ Pausing video from sync');
-                    video.currentTime = e.data?.currentTime || video.currentTime;
-                    video.pause();
-                }
+            if (e.action === 'play') {
+                console.log('▶️ Playing video from sync');
+                video.currentTime = e.data?.currentTime || video.currentTime;
+                video.play();
+            } else if (e.action === 'pause') {
+                console.log('⏸️ Pausing video from sync');
+                video.currentTime = e.data?.currentTime || video.currentTime;
+                video.pause();
+            }
 
-                setTimeout(() => {
-                    ignoreNextEvent = false;
-                }, 200);
-            });
+            setTimeout(() => {
+                ignoreNextEvent = false;
+            }, 200);
+        });
 
         // Send sync events
         video.addEventListener('play', () => {

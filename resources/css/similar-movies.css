@@ -1,0 +1,151 @@
+/* Стилі для компонента схожих фільмів */
+.similar-movies {
+    margin: var(--spacing-xl) 0;
+    padding: var(--spacing-xl) 0;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.similar-movies__title {
+    margin: 0 0 var(--spacing-xl) 0;
+    padding: 0 var(--spacing-lg);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-color);
+    text-align: center;
+    position: relative;
+}
+
+.similar-movies__title::after {
+    content: '';
+    position: absolute;
+    bottom: calc(-1 * var(--spacing-md));
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    border-radius: var(--border-radius-sm);
+}
+
+.similar-movies__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+    padding: 0 var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Анімації появи для карток фільмів */
+.similar-movies .movie-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.similar-movies .movie-card:nth-child(1) { animation-delay: 0.1s; }
+.similar-movies .movie-card:nth-child(2) { animation-delay: 0.2s; }
+.similar-movies .movie-card:nth-child(3) { animation-delay: 0.3s; }
+.similar-movies .movie-card:nth-child(4) { animation-delay: 0.4s; }
+.similar-movies .movie-card:nth-child(5) { animation-delay: 0.5s; }
+.similar-movies .movie-card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Темна тема */
+[data-theme="dark"] .similar-movies {
+    background-color: var(--dark-card-background);
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .similar-movies__title {
+    color: var(--dark-text-color);
+}
+
+/* Адаптивність */
+@media (max-width: 1024px) {
+    .similar-movies__list {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: var(--spacing-md);
+        padding: 0 var(--spacing-md);
+    }
+}
+
+@media (max-width: 768px) {
+    .similar-movies {
+        margin: var(--spacing-lg) 0;
+        padding: var(--spacing-lg) 0;
+        border-radius: var(--border-radius-md);
+    }
+
+    .similar-movies__title {
+        font-size: var(--font-size-lg);
+        padding: 0 var(--spacing-md);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .similar-movies__list {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: var(--spacing-sm);
+        padding: 0 var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    .similar-movies {
+        margin: var(--spacing-md) 0;
+        padding: var(--spacing-md) 0;
+    }
+
+    .similar-movies__title {
+        font-size: var(--font-size-base);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .similar-movies__list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-xs);
+        padding: 0 var(--spacing-sm);
+    }
+}
+
+@media (max-width: 320px) {
+    .similar-movies__list {
+        grid-template-columns: 1fr;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+}
+
+/* Порожній стан */
+.similar-movies__empty {
+    padding: var(--spacing-xl);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: var(--font-size-base);
+    background-color: rgba(var(--primary-rgb), 0.05);
+    border-radius: var(--border-radius-md);
+    margin: 0 var(--spacing-lg);
+}
+
+[data-theme="dark"] .similar-movies__empty {
+    color: var(--dark-text-muted);
+    background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+/* Покращення доступності */
+@media (prefers-reduced-motion: reduce) {
+    .similar-movies .movie-card {
+        animation: none;
+    }
+}

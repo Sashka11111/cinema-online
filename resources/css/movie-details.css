@@ -62,20 +62,6 @@
     opacity: 0.9;
 }
 
-.movie-details__type-badge {
-    position: absolute;
-    bottom: var(--spacing-sm);
-    left: var(--spacing-sm);
-    display: flex;
-    gap: var(--spacing-xs);
-    align-items: center;
-    padding: var(--spacing-xs) var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    color: var(--white);
-    background: rgb(0 0 0 / 80%);
-    border-radius: var(--border-radius-sm);
-}
 
 .movie-details__info {
     display: flex;
@@ -228,49 +214,132 @@
 
 .movie-details__actions {
     display: flex;
+    flex-direction: column;
     gap: var(--spacing-md);
-    margin-top: auto;
+    margin-top: var(--spacing-lg);
+}
+
+.movie-details__primary-actions {
+    display: flex;
+    gap: var(--spacing-md);
 }
 
 .movie-details__action-button {
     display: flex;
-    gap: var(--spacing-sm);
     align-items: center;
-    padding: var(--spacing-sm) var(--spacing-lg);
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-base);
     font-weight: 600;
     text-decoration: none;
-    cursor: pointer;
-    border: none;
     border-radius: var(--border-radius-md);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 12%);
     transition: all 0.3s ease;
+    text-align: center;
+    height: 42px;
+    flex: 1;
+    min-width: 150px;
 }
 
 .movie-details__action-button:hover {
-    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
 }
 
 .movie-details__action-button--watch {
     color: var(--white);
     background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
-    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.4);
+    border: none;
 }
 
-.movie-details__action-button--watch:hover {
-    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.6);
-    transform: translateY(-3px);
+.movie-details__action-button--comments {
+    color: var(--text-color);
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
 }
 
-.movie-details__action-button--favorite {
-    color: var(--primary-color);
-    background-color: transparent;
-    border: 2px solid var(--primary-color);
+.movie-details__action-button--comments:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+    border-color: var(--primary-color);
 }
 
-.movie-details__action-button--favorite:hover {
-    background-color: rgba(var(--primary-rgb), 0.1);
-    transform: translateY(-3px);
+/* Стилі для списків фільмів */
+.movie-details__lists {
+    margin-top: var(--spacing-lg);
 }
 
+.movie-details__lists-title {
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    margin: 0 0 var(--spacing-md) 0;
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.movie-details__lists-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+}
+
+.movie-details__list-button {
+    flex: 1;
+    display: flex;
+    gap: var(--spacing-xs);
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--white);
+    cursor: pointer;
+    border: none;
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+    text-align: center;
+    height: 40px; /* Фіксована висота для всіх кнопок */
+}
+
+.movie-details__list-button:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    transform: translateY(-2px);
+}
+
+.movie-details__list-button--watching {
+    background: #3498db;
+}
+
+.movie-details__list-button--planned {
+    background: #f39c12;
+}
+
+.movie-details__list-button--watched {
+    background: #2ecc71;
+}
+
+/* Адаптивність */
+@media (width <= 768px) {
+    .movie-details__lists-buttons {
+        flex-wrap: wrap;
+    }
+
+    .movie-details__list-button {
+        min-width: 30%;
+    }
+}
+
+@media (width <= 576px) {
+    .movie-details__lists-buttons {
+        flex-direction: column;
+    }
+
+    .movie-details__list-button {
+        width: 100%;
+    }
+}
 
 
 .movie-details__tags-section {
@@ -295,6 +364,68 @@
     color: var(--dark-text-muted);
 }
 
+[data-theme="dark"] .movie-details__lists-title {
+    color: var(--dark-text-color);
+}
+
+/* Стилі для сповіщень */
+.movie-details__notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: center;
+    max-width: 400px;
+    padding: var(--spacing-md);
+    color: var(--white);
+    backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
+}
+
+.movie-details__notification--success {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    border-left: 4px solid #2E7D32;
+}
+
+.movie-details__notification--error {
+    background: linear-gradient(45deg, #f44336, #d32f2f);
+    border-left: 4px solid #c62828;
+}
+
+.movie-details__notification--info {
+    background: linear-gradient(45deg, #2196F3, #1976D2);
+    border-left: 4px solid #1565C0;
+}
+
+.movie-details__notification-icon {
+    flex: 0 0 auto;
+    font-size: var(--font-size-lg);
+}
+
+.movie-details__notification-content {
+    flex: 1;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.movie-details__notification-close {
+    flex: 0 0 auto;
+    padding: var(--spacing-xs);
+    color: var(--white);
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.2s ease;
+}
+
+.movie-details__notification-close:hover {
+    background-color: rgb(255 255 255 / 20%);
+}
+
 
 /* Адаптивність */
 @media (width <= 992px) {
@@ -315,22 +446,21 @@
     .movie-details__original-title {
         text-align: center;
     }
+
+    .movie-details__action-button {
+        padding: var(--spacing-sm) var(--spacing-md);
+        font-size: var(--font-size-base);
+    }
 }
 
 @media (width <= 768px) {
-    .movie-details__actions {
+    .movie-details__primary-actions {
         flex-direction: column;
+        gap: var(--spacing-sm);
     }
 
-    .movie-details__meta-grid {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-md);
-    }
-
-    .movie-details__age-rating {
-        position: static;
-        align-self: flex-start;
-        margin-top: var(--spacing-xs);
+    .movie-details__action-button {
+        width: 100%;
     }
 }
 
@@ -345,5 +475,12 @@
 
     .movie-details__original-title {
         font-size: var(--font-size-base);
+    }
+
+    .movie-details__notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
     }
 }

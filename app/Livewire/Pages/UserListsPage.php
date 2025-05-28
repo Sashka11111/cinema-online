@@ -4,7 +4,9 @@ namespace Liamtseva\Cinema\Livewire\Pages;
 
 use Illuminate\Support\Facades\Auth;
 use Liamtseva\Cinema\Enums\UserListType;
+use Liamtseva\Cinema\Models\Episode;
 use Liamtseva\Cinema\Models\Movie;
+use Liamtseva\Cinema\Models\Person;
 use Liamtseva\Cinema\Models\UserList;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -14,6 +16,7 @@ class UserListsPage extends Component
     use WithPagination;
 
     public string $activeTab = 'favorite';
+
     public string $contentType = 'movies';
 
     protected $queryString = [
@@ -23,7 +26,7 @@ class UserListsPage extends Component
 
     public function mount()
     {
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             return redirect()->route('login');
         }
     }
@@ -55,43 +58,40 @@ class UserListsPage extends Component
     public function render()
     {
         $user = Auth::user();
-        
-        if (!$user) {
+
+        if (! $user) {
             return redirect()->route('login');
         }
 
         // Отримуємо тип списку з активної вкладки
         $listType = UserListType::from($this->activeTab);
 
-        // Базовий запит для списків користувача
+        // Базовий запит для списків користувача з використанням скоупів
         $query = $user->userLists()
-            ->where('type', $listType)
-            ->with('listable');
+            ->ofType($listType)
+            ->with([
+                'listable' => function ($morphTo) {
+                    $morphTo->morphWith([
+                        Movie::class => ['studio', 'tags'],
+                        Episode::class => ['movie'],
+                        Person::class => ['movies'],
+                    ]);
+                },
+            ]);
 
         // Фільтруємо за типом контенту
         if ($this->contentType === 'movies') {
             $query->where('listable_type', Movie::class);
         } elseif ($this->contentType === 'episodes') {
-            $query->where('listable_type', \Liamtseva\Cinema\Models\Episode::class);
+            $query->where('listable_type', Episode::class);
         } elseif ($this->contentType === 'people') {
-            $query->where('listable_type', \Liamtseva\Cinema\Models\Person::class);
+            $query->where('listable_type', Person::class);
         }
 
         $userLists = $query->latest()->paginate(12);
 
-        // Статистика для вкладок
-        $stats = [
-            'favorite' => $user->userLists()->where('type', UserListType::FAVORITE)->count(),
-            'watching' => $user->userLists()->where('type', UserListType::WATCHING)->count(),
-            'planned' => $user->userLists()->where('type', UserListType::PLANNED)->count(),
-            'watched' => $user->userLists()->where('type', UserListType::WATCHED)->count(),
-            'stopped' => $user->userLists()->where('type', UserListType::STOPPED)->count(),
-            'rewatching' => $user->userLists()->where('type', UserListType::REWATCHING)->count(),
-        ];
-
         return view('livewire.pages.user-lists-page', [
             'userLists' => $userLists,
-            'stats' => $stats,
         ])->title('Мої списки');
     }
 }

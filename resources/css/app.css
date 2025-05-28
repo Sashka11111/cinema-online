@@ -1,14 +1,17 @@
 @import url('header.css');
+@import url('breadcrumbs.css');
 @import url('home.css');
 @import url('movies.css');
 @import url('movie-details.css');
+@import url('movie-cast.css');
+@import url('similar-movies.css');
 @import url('movie-watch.css');
-@import url('room-watch.css');
 @import url('user-lists.css');
 @import url('policy-pages.css');
 @import url('auth.css');
 @import url('profile.css');
 @import url('selections-page.css');
+@import url('comments.css');
 @import url('footer.css');
 
 :root {

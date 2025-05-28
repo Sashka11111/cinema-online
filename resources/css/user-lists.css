@@ -130,6 +130,15 @@
     box-shadow: var(--box-shadow);
     overflow: hidden;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column; /* Встановлюємо колонку для вертикального вирівнювання */
+}
+
+.user-lists__item-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md); /* Додаємо відступи для кнопки */
+    margin-top: auto; /* Переміщуємо дії внизу картки */
 }
 
 .user-lists__item:hover {
@@ -214,11 +223,6 @@
     padding: var(--spacing-xs) var(--spacing-sm);
     background: var(--background-color);
     border-radius: var(--border-radius-sm);
-}
-
-.user-lists__item-actions {
-    display: flex;
-    gap: var(--spacing-sm);
 }
 
 .user-lists__item-remove {

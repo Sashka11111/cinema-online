@@ -151,8 +151,8 @@
 
             <!-- IMDB рейтинг -->
             <div class="filters__select-wrapper">
-                <select wire:model="imdbScore" class="filters__select">
-                    <option value="">Рейтинг IMDB</option>
+                <select wire:model="imdbScoreMin" class="filters__select">
+                    <option value="">Рейтинг IMDB більший за...</option>
                     @foreach(range(1, 10) as $score)
                         <option value="{{ $score }}">{{ $score }}</option>
                     @endforeach

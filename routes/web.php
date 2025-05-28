@@ -14,6 +14,7 @@ use Liamtseva\Cinema\Livewire\Auth\ResetPassword;
 use Liamtseva\Cinema\Livewire\Auth\VerifyEmail;
 use Liamtseva\Cinema\Livewire\Pages\CookiePolicy;
 use Liamtseva\Cinema\Livewire\Pages\Home;
+use Liamtseva\Cinema\Livewire\Pages\MovieCommentsPage;
 use Liamtseva\Cinema\Livewire\Pages\MovieShow;
 use Liamtseva\Cinema\Livewire\Pages\MoviesPage;
 use Liamtseva\Cinema\Livewire\Pages\MovieWatchPage;
@@ -73,6 +74,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/movies/{movie}', MovieShow::class)->name('movies.show');
+Route::get('/movies/{movie}/comments', MovieCommentsPage::class)->name('movies.comments');
 Route::get('/movies/{movie}/watch/', MovieWatchPage::class)->name('movies.watch');
 
 Route::get('/movies/{movie}/watch/{episodeNumber}', MovieWatchPage::class)->name('movies.watch.episode');

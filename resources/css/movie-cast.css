@@ -1,0 +1,231 @@
+/* Стилі для секції акторського складу */
+.movie-cast {
+    margin: 3rem 0;
+    padding: 2rem 0;
+}
+
+.movie-cast__header {
+    margin-bottom: var(--spacing-xl);
+    text-align: center;
+}
+
+.movie-cast__title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.movie-cast__title i {
+    color: var(--primary-color);
+    font-size: 1.75rem;
+}
+
+.movie-cast__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 1rem;
+}
+
+.movie-cast__card {
+    background: var(--card-background);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--box-shadow);
+    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+}
+
+.movie-cast__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--shadow-color);
+}
+
+.movie-cast__photo {
+    position: relative;
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--background-color) 0%, rgba(var(--primary-rgb), 0.05) 100%);
+}
+
+.movie-cast__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.movie-cast__card:hover .movie-cast__image {
+    transform: scale(1.05);
+}
+
+.movie-cast__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: var(--white);
+    overflow: hidden;
+}
+
+.movie-cast__placeholder-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-cast__type-badge {
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-color);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.movie-cast__type-badge--actor {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    color: var(--white);
+}
+
+.movie-cast__type-badge--director {
+    background: linear-gradient(135deg, var(--error-color) 0%, #dc2626 100%);
+    color: var(--white);
+}
+
+.movie-cast__type-badge--producer {
+    background: linear-gradient(135deg, var(--accent-color) 0%, #0ea5e9 100%);
+    color: var(--white);
+}
+
+.movie-cast__type-badge--writer {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: var(--white);
+}
+
+.movie-cast__info {
+    padding: var(--spacing-md);
+}
+
+.movie-cast__name {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 var(--spacing-xs) 0;
+    line-height: 1.3;
+}
+
+.movie-cast__character {
+    font-size: var(--font-size-sm);
+    color: var(--primary-color);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Адаптивність */
+@media (max-width: 1024px) {
+    .movie-cast__grid {
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 1.25rem;
+        padding: 0 0.75rem;
+    }
+
+    .movie-cast__card {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .movie-cast__grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+        padding: 0 0.5rem;
+    }
+
+    .movie-cast__card {
+        max-width: 180px;
+    }
+
+    .movie-cast__title {
+        font-size: var(--font-size-xl);
+    }
+
+    .movie-cast__photo {
+        height: 160px;
+    }
+
+    .movie-cast__name {
+        font-size: 0.95rem;
+    }
+
+    .movie-cast__character {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .movie-cast__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        padding: 0 0.25rem;
+    }
+
+    .movie-cast__card {
+        max-width: none;
+    }
+
+    .movie-cast__photo {
+        height: 180px;
+    }
+
+    .movie-cast__name {
+        font-size: 0.9rem;
+    }
+
+    .movie-cast__character {
+        font-size: 0.75rem;
+    }
+
+    .movie-cast__type-badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+@media (max-width: 320px) {
+    .movie-cast__grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .movie-cast__card {
+        max-width: 250px;
+    }
+
+    .movie-cast__photo {
+        height: 200px;
+    }
+}

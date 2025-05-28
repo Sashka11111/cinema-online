@@ -67,4 +67,15 @@ class Person extends Model
                 : null,
         );
     }
+
+    protected function imageUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->image
+                ? (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://'))
+                    ? $this->image
+                    : asset("storage/{$this->image}")
+                : null
+        );
+    }
 }

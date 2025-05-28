@@ -102,6 +102,11 @@ class Movie extends Model
         return $this->morphToMany(Selection::class, 'selectionable');
     }
 
+    public function ratings(): HasMany
+    {
+        return $this->hasMany(Rating::class);
+    }
+
     protected function posterUrl(): Attribute
     {
         return Attribute::make(

@@ -19,6 +19,9 @@ class MovieShow extends Component
             abort(404);
         }
 
+        // Завантажуємо необхідні зв'язки
+        $this->movie->load(['persons', 'tags', 'studio']);
+
         // Можна додати логіку для збільшення лічильника переглядів
         // $movie->increment('views_count');
     }
@@ -66,11 +69,19 @@ class MovieShow extends Component
     {
         // Отримуємо схожі фільми з колекції similars або за тегами
         $similarIds = collect($this->movie->similars ?? [])
-            ->pluck('movie_id')
+            ->filter() // Видаляємо порожні значення
             ->toArray();
+
+        // Дебаг: перевіряємо, що є в similars
+        \Log::info('Similar movies debug', [
+            'movie_id' => $this->movie->id,
+            'similars_raw' => $this->movie->similars,
+            'similar_ids' => $similarIds
+        ]);
 
         if (! empty($similarIds)) {
             return Movie::query()
+                ->with(['studio', 'tags'])
                 ->whereIn('id', $similarIds)
                 ->where('is_published', true)
                 ->limit(6)
@@ -85,6 +96,7 @@ class MovieShow extends Component
         }
 
         return Movie::query()
+            ->with(['studio', 'tags'])
             ->where('id', '!=', $this->movie->id)
             ->where('is_published', true)
             ->whereHas('tags', function ($query) use ($tagIds) {

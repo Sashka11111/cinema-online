@@ -119,6 +119,16 @@ class UserListQueryBuilder extends Builder
     }
 
     /**
+     * Filter not watching user lists.
+     *
+     * @return $this
+     */
+    public function notWatching(): self
+    {
+        return $this->where('type', UserListType::NOT_WATCHING->value);
+    }
+
+    /**
      * Filter stopped user lists.
      *
      * @return $this

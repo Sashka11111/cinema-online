@@ -5,7 +5,4 @@
             {{ $linkText }}
         </a>
     </p>
-    <p class="auth-page__footer-text">
-        © 2025 Cinema company. Всі права захищені.
-    </p>
 </div>

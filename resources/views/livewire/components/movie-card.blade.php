@@ -1,5 +1,5 @@
 <article class="movie-card">
-    <a href="{{ route('movies.show', $movie) }}" class="movie-card__link">
+    <a href="{{ route('movies.show', $movie) }}" wire:navigate class="movie-card__link">
         <div class="movie-card__poster-wrapper">
             <img
                 src="{{ $movie->poster_url ?? asset('images/movie-placeholder.svg') }}"

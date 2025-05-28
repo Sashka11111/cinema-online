@@ -17,6 +17,12 @@ class CommentLike extends Model
     /** @use HasFactory<CommentLikeFactory> */
     use HasFactory, HasUlids;
 
+    protected $fillable = [
+        'comment_id',
+        'user_id',
+        'is_liked',
+    ];
+
     public function newEloquentBuilder($query): CommentLikeQueryBuilder
     {
         return new CommentLikeQueryBuilder($query);

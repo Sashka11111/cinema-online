@@ -141,6 +141,13 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             ->where('type', UserListType::WATCHED->value);
     }
 
+    public function notWatchingMovies(): HasMany
+    {
+        return $this->userLists()
+            ->where('listable_type', Movie::class)
+            ->where('type', UserListType::NOT_WATCHING->value);
+    }
+
     public function stoppedMovies(): HasMany
     {
         return $this->userLists()
@@ -157,7 +164,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function isAuthenticated(): bool
     {
-        return auth()->check();  // Перевіряє, чи користувач аутентифікований
+        return auth()->check();
     }
 
     public function canAccessPanel(Panel $panel): bool

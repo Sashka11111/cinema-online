@@ -24,43 +24,11 @@
 
 /* Хлібні крихти */
 .breadcrumbs {
-    margin-bottom: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
 }
 
-.breadcrumbs__list {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0;
-    list-style: none;
-}
 
-.breadcrumbs__item {
-    display: flex;
-    align-items: center;
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
-}
-
-.breadcrumbs__item:not(:last-child)::after {
-    margin: 0 var(--spacing-xs);
-    color: var(--text-muted);
-    content: "/";
-}
-
-.breadcrumbs__link {
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.breadcrumbs__link:hover {
-    color: var(--primary-color);
-}
-
-.breadcrumbs__item--active {
-    font-weight: 500;
-    color: var(--text-color);
-}
 
 /* Фільтри */
 .movies-page__filters {
@@ -1338,4 +1306,124 @@
 [data-theme="dark"] .trending-section__empty {
     color: var(--dark-text-muted);
     background-color: var(--dark-card-background);
+}
+
+/* Стилі для секції персон фільму */
+.movie-persons {
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--box-shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-persons__title {
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-lg);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.movie-persons__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.movie-persons__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.movie-persons__item:hover {
+    transform: translateY(-5px);
+}
+
+.movie-persons__photo {
+    width: 120px;
+    height: 120px;
+    margin-bottom: var(--spacing-sm);
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.movie-persons__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.movie-persons__name {
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.movie-persons__character {
+    margin-bottom: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--primary-color);
+}
+
+.movie-persons__type {
+    font-size: var(--font-size-sm);
+    color: var(--text-muted);
+}
+
+/* Темна тема для секції персон */
+[data-theme="dark"] .movie-persons {
+    background-color: var(--dark-card-background);
+    box-shadow: 0 4px 12px var(--dark-shadow-color);
+}
+
+[data-theme="dark"] .movie-persons__title {
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .movie-persons__name {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .movie-persons__type {
+    color: var(--dark-text-muted);
+}
+
+/* Адаптивність для секції персон */
+@media (width <= 768px) {
+    .movie-persons__list {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+
+    .movie-persons__photo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .movie-persons__name {
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (width <= 480px) {
+    .movie-persons__list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .movie-persons__photo {
+        width: 80px;
+        height: 80px;
+    }
+
+    .breadcrumbs {
+        margin-bottom: var(--spacing-lg);
+    }
 }

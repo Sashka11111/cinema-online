@@ -32,7 +32,7 @@
 
         <div class="main-footer__bottom">
             <div class="main-footer__copyright">
-                <p>© {{ date('Y') }} Фільми. Всі права захищені.</p>
+                <p>© {{ date('Y') }} Cinema. Всі права захищені.</p>
             </div>
             <div class="main-footer__links">
                 <a href="{{ route('privacy-policy') }}" wire:navigate class="main-footer__link">Політика

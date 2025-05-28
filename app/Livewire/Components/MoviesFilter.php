@@ -18,28 +18,46 @@ class MoviesFilter extends Component
 {
     // Дані для селектів (завантажуються в компоненті)
     public Collection $statuses;
+
     public Collection $periods;
+
     public Collection $studios;
+
     public Collection $years;
+
     public Collection $genres;
+
     public Collection $ratings;
+
     public Collection $countries;
+
     public Collection $sources;
 
     public string $contentType = 'movies';
 
     // Поточні значення фільтрів
     public string $search = '';
+
     public string $status = '';
+
     public string $period = '';
+
     public string $studio = '';
+
     public string $year = '';
+
     public string $genre = '';
+
     public string $rating = '';
+
     public string $duration = '';
+
     public string $country = '';
+
     public string $source = '';
-    public string $imdbScore = '';
+
+    public string $imdbScoreMin = '';
+
     public bool $hasEpisodes = false;
 
     public function mount($contentType = 'movies'): void
@@ -94,7 +112,7 @@ class MoviesFilter extends Component
         $this->duration = '';
         $this->country = '';
         $this->source = '';
-        $this->imdbScore = '';
+        $this->imdbScoreMin = '';
         $this->hasEpisodes = false;
 
         // Відправляємо подію з порожніми фільтрами
@@ -104,7 +122,7 @@ class MoviesFilter extends Component
     public function applyFilters(): void
     {
         // Зберігаємо пошуковий запит в історію, якщо користувач авторизований
-        if (!empty($this->search) && auth()->check()) {
+        if (! empty($this->search) && auth()->check()) {
             SearchHistory::create([
                 'user_id' => auth()->id(),
                 'query' => $this->search,
@@ -128,7 +146,7 @@ class MoviesFilter extends Component
             'duration' => $this->duration,
             'country' => $this->country,
             'source' => $this->source,
-            'imdbScore' => $this->imdbScore,
+            'imdbScoreMin' => $this->imdbScoreMin,
             'hasEpisodes' => $this->hasEpisodes,
         ];
     }
