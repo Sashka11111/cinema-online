@@ -303,7 +303,7 @@ class EpisodeResource extends Resource
                             FileUpload::make('file_url')
                                 ->label('Файл')
                                 ->required()
-                                ->maxSize(51200)
+                                ->maxSize(2097152)
                                 ->disk('public')
                                 ->directory('episodes/videos')
                                 ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/ogg'])
