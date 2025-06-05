@@ -1,61 +1,91 @@
 <div class="selections-page">
     <livewire:components.header-component/>
 
-    <div class="content-page__main">
+    <main class="content-page-main">
         <div class="container">
             <livewire:components.breadcrumbs :items="[
-                ['label' => 'Головна', 'route' => 'home'],
-                ['label' => 'Підбірки', 'active' => true]
-            ]"/>
+                    ['label' => 'Головна', 'route' => 'home'],
+                    ['label' => 'Підбірки', 'active' => true]
+                ]"/>
 
-            <h1 class="content-page__title">Підбірки фільмів</h1>
+            <h1 class="content-page__title">Підбірки</h1>
 
             <div class="selections-page__filters">
-                <div class="selections-page__search">
-                    <input type="text" wire:model.live.debounce.300ms="search"
-                           class="selections-page__search-input"
-                           placeholder="Пошук підбірок...">
-                    <button class="selections-page__search-button">
-                        <i class="fas fa-search"></i>
-                    </button>
+                <div class="selections-page__top-panel">
+                    <div class="selections-page__search">
+                        <input type="text" wire:model="tempSearch"
+                               placeholder="Пошук підбірок..."
+                               class="selections-page__search-input">
+                    </div>
+                    <div class="selections-page__actions">
+                        <button type="button" wire:click="resetFilters"
+                                class="selections-page__reset-button">
+                            Скинути фільтри
+                        </button>
+                        <button type="button" wire:click="applyFilters"
+                                class="selections-page__apply-button">
+                            Застосувати
+                        </button>
+                    </div>
                 </div>
 
-                <div class="selections-page__categories">
-                    <button wire:click="$set('category', '')"
-                            class="selections-page__category-btn {{ $category === '' ? 'selections-page__category-btn--active' : '' }}">
-                        Усі
-                    </button>
-                    @foreach($categories as $key => $label)
-                        <button wire:click="$set('category', '{{ $key }}')"
-                                class="selections-page__category-btn {{ $category === $key ? 'selections-page__category-btn--active' : '' }}">
-                            {{ $label }}
-                        </button>
-                    @endforeach
+                <div class="selections-page__filters-group">
+                    <div class="selections-page__filter-item">
+                        <label for="minItems" class="selections-page__filter-label">Кількість
+                            елементів</label>
+                        <div class="selections-page__select-wrapper">
+                            <select wire:model="tempMinItems" class="selections-page__select"
+                                    id="minItems">
+                                <option value="">Будь-яка кількість елементів</option>
+                                <option value="5">Більше 5</option>
+                                <option value="10">Більше 10</option>
+                                <option value="20">Більше 20</option>
+                            </select>
+                            <div class="selections-page__select-arrow"></div>
+                        </div>
+                    </div>
+
+                    <div class="selections-page__filter-item">
+                        <label for="author" class="selections-page__filter-label">Автор</label>
+                        <div class="selections-page__select-wrapper">
+                            <select wire:model="tempAuthor" class="selections-page__select"
+                                    id="author">
+                                <option value="">Усі автори</option>
+                                @foreach($authors as $authorId => $authorName)
+                                    <option value="{{ $authorId }}">{{ $authorName }}</option>
+                                @endforeach
+                            </select>
+                            <div class="selections-page__select-arrow"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="selections-page__sort">
-                    <div class="selections-page__sort-label">Сортувати:</div>
-                    <div class="selections-page__sort-options">
-                        <button wire:click="sortBy('created_at')"
-                                class="selections-page__sort-btn {{ $sortField === 'created_at' ? 'selections-page__sort-btn--active' : '' }}">
-                            За датою
-                            @if($sortField === 'created_at')
-                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                            @endif
+                    <div class="selections-page__sort-label">
+                        <span class="selections-page__sort-icon"></span>
+                        Сортувати за:
+                    </div>
+                    <div class="selections-page__sort-buttons">
+                        <button
+                            class="selections-page__sort-button {{ $sortField == 'created_at' ? 'selections-page__sort-button--active' : '' }}"
+                            wire:click="$set('sortField', 'created_at')">
+                            Датою створення
+                            <span
+                                class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : '' }}"></span>
                         </button>
-                        <button wire:click="sortBy('name')"
-                                class="selections-page__sort-btn {{ $sortField === 'name' ? 'selections-page__sort-btn--active' : '' }}">
-                            За назвою
-                            @if($sortField === 'name')
-                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                            @endif
+                        <button
+                            class="selections-page__sort-button {{ $sortField == 'popularity' ? 'selections-page__sort-button--active' : '' }}"
+                            wire:click="$set('sortField', 'popularity')">
+                            Популярністю
+                            <span
+                                class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : '' }}"></span>
                         </button>
-                        <button wire:click="sortBy('movies_count')"
-                                class="selections-page__sort-btn {{ $sortField === 'movies_count' ? 'selections-page__sort-btn--active' : '' }}">
-                            За кількістю фільмів
-                            @if($sortField === 'movies_count')
-                                <i class="fas fa-sort-{{ $sortDirection === 'asc' ? 'up' : 'down' }}"></i>
-                            @endif
+                        <button
+                            class="selections-page__sort-button {{ $sortField == 'items_count' ? 'selections-page__sort-button--active' : '' }}"
+                            wire:click="$set('sortField', 'items_count')">
+                            Кількістю елементів
+                            <span
+                                class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : '' }}"></span>
                         </button>
                     </div>
                 </div>
@@ -63,52 +93,11 @@
 
             <div class="selections-grid">
                 @forelse($selections as $selection)
-                    <a href="{{ route('selection.show', $selection->slug) }}"
-                       class="selection-card">
-                        <div class="selection-card__image-wrapper">
-                            @php
-                                // Отримуємо перший фільм з підбірки
-                                $firstMovie = $selection->movies->first();
-                            @endphp
-
-                            @if($firstMovie && $firstMovie->poster_url)
-                                <img src="{{ $firstMovie->poster_url }}"
-                                     alt="{{ $selection->name }}"
-                                     class="selection-card__image">
-                            @else
-                                <img
-                                    src="{{ $selection->meta_image ? asset('storage/' . $selection->meta_image) : asset('images/placeholder.jpg') }}"
-                                    alt="{{ $selection->name }}"
-                                    class="selection-card__image">
-                            @endif
-
-                            <div class="selection-card__overlay"></div>
-                            <div class="selection-card__count">{{ $selection->movies->count() }}
-                                фільмів
-                            </div>
-                        </div>
-                        <div class="selection-card__content">
-                            <h3 class="selection-card__title">{{ $selection->name }}</h3>
-                            <p class="selection-card__description">
-                                {{ Str::limit(strip_tags($selection->description ?? ''), 100) }}
-                            </p>
-                            <div class="selection-card__meta">
-                                <span class="selection-card__date">
-                                    <i class="far fa-calendar-alt"></i>
-                                    {{ $selection->created_at->format('d.m.Y') }}
-                                </span>
-                                @if($selection->user)
-                                    <span class="selection-card__author">
-                                        <i class="far fa-user"></i>
-                                        {{ $selection->user->name }}
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-                    </a>
+                    <livewire:components.selection-card :selection="$selection"
+                                                        :key="$selection->id"/>
                 @empty
-                    <div class="selections-page__empty">
-                        <p class="selections-page__empty-text">Підбірки не знайдено.</p>
+                    <div class="selections-page-empty">
+                        <p class="selections-page-empty-text">Підбірки не знайдено.</p>
                     </div>
                 @endforelse
             </div>
@@ -117,7 +106,7 @@
                 {{ $selections->links('livewire.components.pagination') }}
             </div>
         </div>
-    </div>
+    </main>
 
     <livewire:components.main-footer-component/>
 </div>
