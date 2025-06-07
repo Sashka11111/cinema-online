@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120">
     <!-- Фон -->
-    <circle cx="60" cy="60" r="60" fill="#6E8FE8"/>
-    
+    <rect x="0" y="0" width="120" height="120" fill="#6E8FE8"/>
+
     <!-- Силует особи -->
     <circle cx="60" cy="45" r="22" fill="#ffffff"/>
     <path d="M24 100c0-20 16-36 36-36s36 16 36 36" fill="#ffffff"/>
-    
+
     <!-- Декоративні елементи -->
     <circle cx="60" cy="45" r="18" fill="#6E8FE8" opacity="0.1"/>
     <path d="M30 95c0-16.6 13.4-30 30-30s30 13.4 30 30" fill="#6E8FE8" opacity="0.1"/>

@@ -1,66 +1,19 @@
-/* Стилі для секції акторського складу */
-.movie-cast {
-    margin: 3rem 0;
-    padding: 2rem 0;
-}
-
-.movie-cast__header {
-    margin-bottom: var(--spacing-xl);
-    text-align: center;
-}
-/* Block: movie-cast */
-.movie-cast {
-    margin-bottom: var(--spacing-xl);
-}
-
-/* Element: movie-cast__header */
-.movie-cast__header {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-    margin-bottom: var(--spacing-lg);
-}
-
-/* Element: movie-cast__title */
-.movie-cast__title {
-    font-size: var(--font-size-xl);
-    font-weight: 600;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
-}
-
-.movie-cast__title i {
-    font-size: var(--font-size-lg);
-    color: var(--primary-color);
-}
-
-/* Element: movie-cast__grid */
-.movie-cast__grid {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-xl);
-}
-
-/* Стилі для person-card */
+/* Person Card Component */
 .person-card {
     background: var(--card-background);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     box-shadow: var(--shadow-sm);
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Горизонтальний макет */
     align-items: stretch;
-    height: auto;
+    height: auto; /* Висота адаптується до вмісту */
 }
 
 .person-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-color);
 }
@@ -69,11 +22,11 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    text-decoration: none;
+    text-decoration: none; /* Видаляємо підкреслення посилання */
 }
 
 .person-card__image {
-    width: 150px;
+    width: 150px; /* Фіксована ширина для зображення */
     flex-shrink: 0;
     background: var(--background-secondary);
     position: relative;
@@ -88,7 +41,7 @@
 }
 
 .person-card:hover .person-card__photo {
-    transform: scale(1.05);
+    transform: scale(1.05); /* Легке збільшення при наведенні */
 }
 
 .person-card__content {
@@ -106,6 +59,7 @@
     color: var(--text-color);
     margin: 0;
     line-height: 1.3;
+    transition: color 0.3s ease;
 }
 
 .person-card__character {
@@ -138,15 +92,14 @@
     line-height: 1;
 }
 
-/* Темна тема */
-[data-theme="dark"] .movie-cast__title {
-    color: var(--dark-text-color);
+/* Persons Grid */
+.persons-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-md);
 }
 
-[data-theme="dark"] .movie-cast__title i {
-    color: var(--primary-color);
-}
-
+/* Dark Theme */
 [data-theme="dark"] .person-card {
     background: var(--dark-card-background);
     border-color: var(--dark-border-color);
@@ -170,29 +123,15 @@
     color: var(--dark-text-muted);
 }
 
-/* Адаптивність */
-@media (max-width: var(--breakpoint-desktop)) {
-    .movie-cast__grid {
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    }
-}
-
+/* Responsiveness */
 @media (max-width: var(--breakpoint-tablet)) {
-    .movie-cast__grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    .persons-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: var(--spacing-sm);
     }
 
-    .movie-cast__title {
-        font-size: var(--font-size-lg);
-    }
-
-    .movie-cast__title i {
-        font-size: var(--font-size-base);
-    }
-
     .person-card__image {
-        width: 120px;
+        width: 120px; /* Зменшена ширина для планшетів */
     }
 
     .person-card__content {
@@ -209,20 +148,12 @@
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
-    .movie-cast__grid {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-
-    .movie-cast__title {
-        font-size: var(--font-size-base);
-    }
-
-    .movie-cast__title i {
-        font-size: var(--font-size-sm);
+    .persons-grid {
+        grid-template-columns: 1fr; /* Одна колонка для мобільних */
     }
 
     .person-card__image {
-        width: 100px;
+        width: 100px; /* Ще менша ширина для маленьких екранів */
     }
 
     .person-card__content {
@@ -237,6 +168,6 @@
     .person-card__birth-date,
     .person-card__birthplace,
     .person-card__gender {
-        font-size: 11px;
+        font-size: 11px; /* Трохи менший шрифт для економії простору */
     }
 }

@@ -12,7 +12,17 @@ class SelectionShowPage extends Component
     public function mount($slug)
     {
         $this->selection = Selection::where('slug', $slug)
-            ->where('is_published', true)
+            ->with([
+                'user',
+                'movies' => function($query) {
+                    $query->with(['studio', 'tags']);
+                },
+                'persons',
+                'episodes' => function($query) {
+                    $query->with(['movie']);
+                }
+            ])
+            ->withCount(['movies', 'persons', 'episodes'])
             ->firstOrFail();
     }
 
@@ -20,7 +30,6 @@ class SelectionShowPage extends Component
     {
         return view('livewire.pages.selection-show', [
             'selection' => $this->selection,
-            'movies' => $this->selection->movies()->paginate(12),
         ]);
     }
 }

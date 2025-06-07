@@ -56,7 +56,7 @@
                 @empty
                     <div class="
                 trending-section__empty">
-                        <p>Немає доступних фільмів у тренді.</p>
+                        <p>Немає доступних медіа у тренді.</p>
                     </div>
                 @endforelse
             </div>

@@ -1,0 +1,238 @@
+/* Block: person-detail */
+.person-detail {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-lg);
+    width: 100%;
+    align-items: flex-start;
+    background: var(--background-primary);
+    box-shadow: var(--shadow-md);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-lg);
+}
+
+/* Card: left side, compact and modern */
+.person-detail__header {
+    flex: 0 0 300px;
+    max-width: 320px;
+    min-width: 260px;
+    background-color: var(--background-secondary);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    border: 1px solid var(--border-color);
+}
+
+/* Content: right side, flexible */
+.person-detail__movies {
+    flex: 1;
+    margin-left: var(--spacing-lg);
+    background: var(--background-secondary);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    width: auto; /* Ensures it takes all remaining space */
+}
+
+/* Element: image */
+.person-detail__image {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-xs);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.person-detail__image:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-md);
+}
+
+/* Element: photo */
+.person-detail__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+/* Element: info */
+.person-detail__info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+/* Element: original-name */
+.person-detail__original-name {
+    font-size: var(--font-size-base);
+    font-style: italic;
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Element: type */
+.person-detail__type {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--white);
+    background-color: var(--primary-color);
+    border-radius: var(--border-radius-sm);
+    margin-bottom: var(--spacing-xs);
+    align-self: flex-start;
+}
+
+/* Element: gender */
+.person-detail__gender {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+}
+
+.person-detail__gender i {
+    color: var(--primary-color);
+}
+
+/* Element: birth-date */
+.person-detail__birth-date {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+}
+
+.person-detail__birth-date i {
+    color: var(--primary-color);
+}
+
+/* Element: birthplace */
+.person-detail__birthplace {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+}
+
+.person-detail__birthplace i {
+    color: var(--primary-color);
+}
+
+/* Element: description */
+.person-detail__description {
+    padding: var(--spacing-sm);
+    background: var(--background-secondary);
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-xs);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+/* Element: movies */
+.person-detail__movies h2 {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Empty state */
+.movies-page__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    text-align: center;
+    background-color: var(--card-background);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--box-shadow);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.movies-page__empty-text {
+    font-size: var(--font-size-lg);
+    color: var(--text-muted);
+}
+
+/* Dark theme modifiers */
+[data-theme="dark"] .person-detail__header {
+    background-color: var(--dark-card-background);
+    box-shadow: 0 4px 12px var(--dark-shadow-color);
+}
+
+[data-theme="dark"] .person-detail__original-name {
+    color: var(--dark-text-muted);
+}
+
+[data-theme="dark"] .person-detail__gender,
+[data-theme="dark"] .person-detail__birth-date,
+[data-theme="dark"] .person-detail__birthplace {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .person-detail__description,
+[data-theme="dark"] .person-detail__movies {
+    background-color: var(--dark-card-background);
+    box-shadow: 0 4px 12px var(--dark-shadow-color);
+}
+
+[data-theme="dark"] .person-detail__description h2,
+[data-theme="dark"] .person-detail__movies h2 {
+    color: var(--dark-text-color);
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .person-detail__description p {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .movies-page__empty {
+    background-color: var(--dark-card-background);
+    box-shadow: 0 4px 12px var(--dark-shadow-color);
+}
+
+[data-theme="dark"] .movies-page__empty-text {
+    color: var(--dark-text-muted);
+}
+
+/* Responsive styles */
+@media (max-width: var(--breakpoint-tablet)) {
+    .person-detail {
+        flex-direction: column;
+    }
+
+    .person-detail__header {
+        width: 100%;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .person-detail__movies {
+        width: 100%;
+    }
+}
+
+@media (max-width: var(--breakpoint-mobile)) {
+    .person-detail__image {
+        height: 250px;
+    }
+
+    .person-detail__description {
+        font-size: var(--font-size-xs);
+    }
+}

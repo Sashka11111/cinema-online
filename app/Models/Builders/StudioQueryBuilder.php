@@ -27,10 +27,13 @@ class StudioQueryBuilder extends Builder
     public function search(string $search): self
     {
         return $this
-            ->select('*')
-            ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
-            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search])
-            ->orWhereRaw('name % ?', [$search])
+            ->select('studios.*')
+            ->addSelect(DB::raw("ts_rank(studios.searchable, websearch_to_tsquery('ukrainian', ?)) AS rank"))
+            ->addSelect(DB::raw('similarity(studios.name, ?) AS similarity'))
+            ->where(function ($query) use ($search) {
+                $query->whereRaw("studios.searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search])
+                      ->orWhereRaw('studios.name % ?', [$search]);
+            })
             ->orderByDesc('rank')
             ->orderByDesc('similarity');
     }

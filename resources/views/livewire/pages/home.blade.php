@@ -7,7 +7,7 @@
             <livewire:components.trending-movies-component :contentType="'all'"/>
 
             <div class="selections-page__header">
-                <h1 class="content-page__title">Останні підбірки фільмів</h1>
+                <h1 class="content-page__title">Останні підбірки</h1>
                 <div class="selections-page__view-all">
                     <a href="{{ route('selections') }}"
                        class="selections-page__view-all-link">

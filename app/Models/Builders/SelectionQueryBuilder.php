@@ -15,13 +15,7 @@ class SelectionQueryBuilder extends Builder
      */
     public function search(string $search): self
     {
-        return $this
-            ->select('*')
-            ->addSelect(DB::raw('similarity(name, ?) AS similarity'))
-            ->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search, $search, $search, $search, $search])
-            ->orWhereRaw('name % ?', [$search])
-            ->orderByDesc('rank')
-            ->orderByDesc('similarity');
+        return $this->whereRaw("searchable @@ websearch_to_tsquery('ukrainian', ?)", [$search]);
     }
 
     /**

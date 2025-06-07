@@ -13,13 +13,15 @@
             <div class="selections-page__filters">
                 <div class="selections-page__top-panel">
                     <div class="selections-page__search">
-                        <input type="text" wire:model="tempSearch"
+                        <input type="text" wire:model.live.debounce.300ms="search"
                                placeholder="Пошук підбірок..."
                                class="selections-page__search-input">
                     </div>
+
                     <div class="selections-page__actions">
                         <button type="button" wire:click="resetFilters"
-                                class="selections-page__reset-button">
+                                class="selections-page__reset-button"
+                                @if(!$hasActiveFilters) disabled @endif>
                             Скинути фільтри
                         </button>
                         <button type="button" wire:click="applyFilters"
@@ -29,27 +31,12 @@
                     </div>
                 </div>
 
+                <!-- Основні фільтри -->
                 <div class="selections-page__filters-group">
-                    <div class="selections-page__filter-item">
-                        <label for="minItems" class="selections-page__filter-label">Кількість
-                            елементів</label>
-                        <div class="selections-page__select-wrapper">
-                            <select wire:model="tempMinItems" class="selections-page__select"
-                                    id="minItems">
-                                <option value="">Будь-яка кількість елементів</option>
-                                <option value="5">Більше 5</option>
-                                <option value="10">Більше 10</option>
-                                <option value="20">Більше 20</option>
-                            </select>
-                            <div class="selections-page__select-arrow"></div>
-                        </div>
-                    </div>
-
                     <div class="selections-page__filter-item">
                         <label for="author" class="selections-page__filter-label">Автор</label>
                         <div class="selections-page__select-wrapper">
-                            <select wire:model="tempAuthor" class="selections-page__select"
-                                    id="author">
+                            <select wire:model="tempAuthor" class="selections-page__select" id="author">
                                 <option value="">Усі автори</option>
                                 @foreach($authors as $authorId => $authorName)
                                     <option value="{{ $authorId }}">{{ $authorName }}</option>
@@ -66,27 +53,16 @@
                         Сортувати за:
                     </div>
                     <div class="selections-page__sort-buttons">
-                        <button
-                            class="selections-page__sort-button {{ $sortField == 'created_at' ? 'selections-page__sort-button--active' : '' }}"
-                            wire:click="$set('sortField', 'created_at')">
-                            Датою створення
-                            <span
-                                class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : '' }}"></span>
-                        </button>
-                        <button
-                            class="selections-page__sort-button {{ $sortField == 'popularity' ? 'selections-page__sort-button--active' : '' }}"
-                            wire:click="$set('sortField', 'popularity')">
-                            Популярністю
-                            <span
-                                class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : '' }}"></span>
-                        </button>
-                        <button
-                            class="selections-page__sort-button {{ $sortField == 'items_count' ? 'selections-page__sort-button--active' : '' }}"
-                            wire:click="$set('sortField', 'items_count')">
-                            Кількістю елементів
-                            <span
-                                class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : '' }}"></span>
-                        </button>
+                        @foreach($sortOptions as $sortKey => $sortLabel)
+                            <button
+                                class="selections-page__sort-button {{ $sortField == $sortKey ? 'selections-page__sort-button--active' : '' }}"
+                                wire:click="sortBy('{{ $sortKey }}')">
+                                {{ $sortLabel }}
+                                @if($sortField == $sortKey)
+                                    <span class="selections-page__sort-direction {{ $sortDirection == 'desc' ? 'desc' : 'asc' }}"></span>
+                                @endif
+                            </button>
+                        @endforeach
                     </div>
                 </div>
             </div>

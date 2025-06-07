@@ -1,4 +1,5 @@
 <div class="selection-show">
+
     <livewire:components.header-component/>
 
     <main class="content-page__main">
@@ -8,51 +9,82 @@
                 ['label' => 'Підбірки', 'route' => 'selections'],
                 ['label' => $selection->name, 'active' => true]
             ]"/>
-
             <h1 class="content-page__title">{{ $selection->name }}</h1>
-
-            <div class="selection-show__content">
-                <div class="selection-show__image">
-                    <img
-                        src="{{ $selection->image ? asset('storage/' . $selection->image) : asset('images/default-selection.jpg') }}"
-                        alt="{{ $selection->name }}"
-                        class="selection-show__image-img">
-                </div>
+            <div class="selection-show__header">
                 <div class="selection-show__info">
-                    <div class="selection-show__description">
-                        {!! $selection->description !!}
-                    </div>
-                    <div class="selection-show__meta">
-                        <div class="selection-show__date">
-                            <i class="far fa-calendar-alt"></i>
-                            {{ $selection->created_at->format('d.m.Y') }}
+                    <!-- Опис -->
+                    @if($selection->description)
+                        <div class="selection-show__description">
+                            {!! $selection->description !!}
                         </div>
-                        @if($selection->user)
-                            <div class="selection-show__author">
-                                <i class="far fa-user"></i>
-                                {{ $selection->user->name }}
+                    @endif
+                </div>
+            </div>
+
+            <!-- Фільми -->
+            @if($selection->movies->isNotEmpty())
+                <div class="selection-show__section">
+                    <h2 class="selection-show__section-title">
+                        <i class="fas fa-film"></i>
+                        Фільми ({{ $selection->movies_count }})
+                    </h2>
+                    <div class="movie-grid">
+                        @foreach($selection->movies as $movie)
+                            <livewire:components.movie-card :movie="$movie"
+                                                            :key="'movie-'.$movie->id"/>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- Персони -->
+            @if($selection->persons->isNotEmpty())
+                <div class="selection-show__section">
+                    <h2 class="selection-show__section-title">
+                        <i class="fas fa-user"></i>
+                        Персони ({{ $selection->persons_count }})
+                    </h2>
+                    <div class="persons-grid">
+                        @foreach($selection->persons as $person)
+                            <livewire:components.person-card :person="$person"
+                                                             :key="'person-'.$person->id"/>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
+            <!-- Епізоди -->
+            @if($selection->episodes->isNotEmpty())
+                <div class="selection-show__section">
+                    <h2 class="selection-show__section-title">
+                        <i class="fas fa-play"></i>
+                        Епізоди ({{ $selection->episodes_count }})
+                    </h2>
+                    <div class="episodes-grid">
+                        @foreach($selection->episodes as $episode)
+                            <div class="episode-card">
+                                <div class="episode-card__content">
+                                    <h3 class="episode-card__title">{{ $episode->name }}</h3>
+                                    @if($episode->movie)
+                                        <p class="episode-card__movie">{{ $episode->movie->name }}</p>
+                                    @endif
+                                    @if(isset($episode->episode_number))
+                                        <p class="episode-card__number">
+                                            Епізод {{ $episode->episode_number }}</p>
+                                    @endif
+                                </div>
                             </div>
-                        @endif
+                        @endforeach
                     </div>
                 </div>
-            </div>
+            @endif
 
-            <div class="selection-show__movies">
-                <h2 class="selection-show__movies-title">Фільми з цієї підбірки</h2>
-                <div class="movie-grid">
-                    @forelse($movies as $movie)
-                        <livewire:components.movie-card :movie="$movie" :key="'movie-'.$movie->id"/>
-                    @empty
-                        <div class="movies-page__empty">
-                            <p class="movies-page__empty-text">Фільми не знайдено.</p>
-                        </div>
-                    @endforelse
+            <!-- Якщо підбірка порожня -->
+            @if($selection->movies->isEmpty() && $selection->persons->isEmpty() && $selection->episodes->isEmpty())
+                <div class="selection-show__empty">
+                    <p class="selection-show__empty-text">Ця підбірка поки що порожня.</p>
                 </div>
-
-                <div class="content-page__pagination">
-                    {{ $movies->links('livewire.components.pagination') }}
-                </div>
-            </div>
+            @endif
         </div>
     </main>
 

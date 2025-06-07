@@ -18,6 +18,7 @@ use Liamtseva\Cinema\Livewire\Pages\MovieCommentsPage;
 use Liamtseva\Cinema\Livewire\Pages\MovieShow;
 use Liamtseva\Cinema\Livewire\Pages\MoviesPage;
 use Liamtseva\Cinema\Livewire\Pages\MovieWatchPage;
+use Liamtseva\Cinema\Livewire\Pages\PersonDetail;
 use Liamtseva\Cinema\Livewire\Pages\PrivacyPolicy;
 use Liamtseva\Cinema\Livewire\Pages\Profile;
 use Liamtseva\Cinema\Livewire\Pages\RoomWatchPage;
@@ -37,6 +38,7 @@ Route::get('/anime', MoviesPage::class)->defaults('contentType', 'anime')->name(
 
 Route::get('/selections', SelectionsPage::class)->name('selections');
 Route::get('/selection/{slug}', SelectionShowPage::class)->name('selection.show');
+Route::get('/person/{person}', PersonDetail::class)->name('person.show');
 
 Route::get('/privacy-policy', PrivacyPolicy::class)->name('privacy-policy');
 Route::get('/terms-of-use', TermsOfUse::class)->name('terms-of-use');
