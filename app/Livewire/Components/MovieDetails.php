@@ -42,7 +42,7 @@ class MovieDetails extends Component
     public function addToList($listType)
     {
         if (! Auth::check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         // Перетворюємо рядковий тип списку в enum

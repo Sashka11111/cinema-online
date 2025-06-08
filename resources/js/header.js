@@ -8,17 +8,6 @@ function initializeMobileMenu() {
 
     if (!mobileMenuButton || !nav) return;
 
-    // Додаємо іконку бургер-меню, якщо вона ще не додана
-    if (!mobileMenuButton.querySelector('.burger-icon')) {
-        mobileMenuButton.innerHTML = `
-            <div class="burger-icon">
-                <span class="burger-icon__line"></span>
-                <span class="burger-icon__line"></span>
-                <span class="burger-icon__line"></span>
-            </div>
-        `;
-    }
-
     // Очищаємо попередні слухачі (використовуємо клонований елемент для скидання подій)
     const newMobileMenuButton = mobileMenuButton.cloneNode(true);
     mobileMenuButton.parentNode.replaceChild(newMobileMenuButton, mobileMenuButton);
@@ -137,28 +126,68 @@ function initializeMobileMenu() {
 
     // Додаємо слухач для кнопки меню
     newMobileMenuButton.addEventListener('click', activateMobileMenu);
-
-    // Закриття меню при кліку поза ним (делегування)
-    document.addEventListener('click', (event) => {
-        if (nav.classList.contains('header__nav--mobile-active') &&
-            !nav.contains(event.target) &&
-            !newMobileMenuButton.contains(event.target)) {
-            nav.classList.remove('header__nav--mobile-active');
-            nav.style.transform = 'translateY(-10px)';
-            nav.style.opacity = '0';
-            document.body.style.overflow = '';
-            newMobileMenuButton.querySelector('.burger-icon').classList.remove('burger-icon--active');
-            setTimeout(resetMenuStyles, 300);
-        }
-    });
-
-    // Закриття меню при зміні розміру вікна
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 1024 && nav.classList.contains('header__nav--mobile-active')) {
-            resetMenuStyles();
-        }
-    });
 }
 
 // Ініціалізація при першому завантаженні
 document.addEventListener('DOMContentLoaded', initializeMobileMenu);
+
+// Глобальні слухачі подій
+document.addEventListener('click', (event) => {
+    const nav = document.querySelector('.header__nav');
+    const mobileMenuButton = document.querySelector('.header__mobile-menu-button');
+
+    if (nav && nav.classList.contains('header__nav--mobile-active') &&
+        !nav.contains(event.target) &&
+        !mobileMenuButton.contains(event.target)) {
+
+        nav.classList.remove('header__nav--mobile-active');
+        nav.style.transform = 'translateY(-10px)';
+        nav.style.opacity = '0';
+        document.body.style.overflow = '';
+
+        const burgerIcon = mobileMenuButton.querySelector('.burger-icon');
+        if (burgerIcon) {
+            burgerIcon.classList.remove('burger-icon--active');
+        }
+
+        setTimeout(() => {
+            nav.style = '';
+            const navList = nav.querySelector('.header__nav-list');
+            if (navList) {
+                navList.style = '';
+                const navItems = navList.querySelectorAll('.header__nav-item');
+                navItems.forEach(item => item.style = '');
+                const navLinks = navList.querySelectorAll('.header__nav-link');
+                navLinks.forEach(link => link.style = '');
+                const mobileAuth = navList.querySelector('.header__mobile-auth');
+                if (mobileAuth) navList.removeChild(mobileAuth);
+            }
+        }, 300);
+    }
+});
+
+// Закриття меню при зміні розміру вікна
+window.addEventListener('resize', () => {
+    const nav = document.querySelector('.header__nav');
+    const mobileMenuButton = document.querySelector('.header__mobile-menu-button');
+
+    if (window.innerWidth > 1024 && nav && nav.classList.contains('header__nav--mobile-active')) {
+        nav.style = '';
+        document.body.style.overflow = '';
+        const navList = nav.querySelector('.header__nav-list');
+        if (navList) {
+            navList.style = '';
+            const navItems = navList.querySelectorAll('.header__nav-item');
+            navItems.forEach(item => item.style = '');
+            const navLinks = navList.querySelectorAll('.header__nav-link');
+            navLinks.forEach(link => link.style = '');
+            const mobileAuth = navList.querySelector('.header__mobile-auth');
+            if (mobileAuth) navList.removeChild(mobileAuth);
+        }
+        const burgerIcon = mobileMenuButton.querySelector('.burger-icon');
+        if (burgerIcon) {
+            burgerIcon.classList.remove('burger-icon--active');
+        }
+        nav.classList.remove('header__nav--mobile-active');
+    }
+});

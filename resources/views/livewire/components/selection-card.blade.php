@@ -1,4 +1,4 @@
-<a href="{{ route('selection.show', $selection->slug) }}" class="selection-card">
+<a href="{{ route('selection.show', $selection->slug) }}" wire:navigate class="selection-card">
     <div class="selection-card__image-wrapper">
         @foreach($posters as $index => $movie)
             <div class="selection-card__poster {{ 'selection-card__poster--' . ($index + 1) }}">

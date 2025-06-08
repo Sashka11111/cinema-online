@@ -7,7 +7,7 @@
     </div>
     
     @if($showAllLink)
-        <a href="{{ $showAllLink }}" class="section-title__link">
+        <a href="{{ $showAllLink }}" wire:navigate class="section-title__link">
             Дивитися всі <i class="fas fa-chevron-right"></i>
         </a>
     @endif

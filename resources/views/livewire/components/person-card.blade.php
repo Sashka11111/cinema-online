@@ -1,5 +1,5 @@
 <div class="person-card">
-    <a href="{{ route('person.show', $person->slug) }}" class="person-card__link">
+    <a href="{{ route('person.show', $person->slug) }}" wire:navigate class="person-card__link">
         <div class="person-card__image">
             <img src="{{ $person->image_url ?? asset('images/person-placeholder.svg') }}"
                  alt="{{ $person->name }}"

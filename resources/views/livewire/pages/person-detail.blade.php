@@ -11,6 +11,7 @@
 
             <!-- Person Details -->
             <div class="person-detail">
+                <!-- Header Section -->
                 <div class="person-detail__header">
                     <div class="person-detail__image">
                         <img
@@ -21,63 +22,80 @@
                             onerror="this.onerror=null; this.src='{{ asset('images/person-placeholder.svg') }}';">
                     </div>
                     <div class="person-detail__info">
-                        <h1 class="content-page__title">{{ $pageTitle }}</h1>
+                        <h1 class="person-detail__title">{{ $pageTitle }}</h1>
 
                         @if($person->original_name)
-                            <p class="person-detail__original-name">{{ $person->original_name }}</p>
+                            <div class="person-detail__meta-item">
+                                <span class="person-detail__meta-label">Оригінальне ім'я:</span>
+                                <span class="person-detail__meta-value">{{ $person->original_name }}</span>
+                            </div>
                         @endif
 
                         @if($person->type)
-                            <p class="person-detail__type">{{ $person->type->getLabel() }}</p>
+                            <div class="person-detail__meta-item">
+                                <span class="person-detail__meta-label">Тип:</span>
+                                <span class="person-detail__meta-value">{{ $person->type->getLabel() }}</span>
+                            </div>
                         @endif
 
                         @if($person->gender)
-                            <p class="person-detail__gender">
-                                <i class="fas fa-venus-mars"></i>
-                                {{ $person->gender->getLabel() }}
-                            </p>
+                            <div class="person-detail__meta-item">
+                                <i class="fas fa-venus-mars person-detail__meta-icon"></i>
+                                <span class="person-detail__meta-label">Стать:</span>
+                                <span class="person-detail__meta-value">{{ $person->gender->getLabel() }}</span>
+                            </div>
                         @endif
 
                         @if($person->birthday)
-                            <p class="person-detail__birth-date">
-                                <i class="far fa-calendar-alt"></i>
-                                {{ \Carbon\Carbon::parse($person->birthday)->format('F j, Y') }}
-                                ({{ \Carbon\Carbon::parse($person->birthday)->age }} years)
-                            </p>
+                            <div class="person-detail__meta-item">
+                                <i class="far fa-calendar-alt person-detail__meta-icon"></i>
+                                <span class="person-detail__meta-label">Дата народження:</span>
+                                <span class="person-detail__meta-value">
+                                    {{ \Carbon\Carbon::parse($person->birthday)->format('d.m.Y') }}
+                                    ({{ \Carbon\Carbon::parse($person->birthday)->age }} років)
+                                </span>
+                            </div>
                         @endif
 
                         @if($person->birthplace)
-                            <p class="person-detail__birthplace">
-                                <i class="fas fa-map-marker-alt"></i>
-                                {{ $person->birthplace }}
-                            </p>
+                            <div class="person-detail__meta-item">
+                                <i class="fas fa-map-marker-alt person-detail__meta-icon"></i>
+                                <span class="person-detail__meta-label">Місце народження:</span>
+                                <span class="person-detail__meta-value">{{ $person->birthplace }}</span>
+                            </div>
+                        @endif
+
+                        @if($person->description)
+                            <div class="person-detail__biography">
+                                <h3 class="person-detail__biography-title">Біографія</h3>
+                                <div class="person-detail__biography-text">
+                                    {!! nl2br(e($person->description)) !!}
+                                </div>
+                            </div>
                         @endif
                     </div>
-
-                    @if($person->description)
-                        <div class="person-detail__description">
-                            <h2>Biography</h2>
-                            <p>{{ $person->description }}</p>
-                        </div>
-                    @endif
                 </div>
 
-                <!-- Movies Grid -->
-                @if($movies && $movies->isNotEmpty())
-                    <div class="person-detail__movies">
-                        <h2>Filmography</h2>
-                        <div class="movie-grid">
-                            @foreach($movies as $movie)
-                                <livewire:components.movie-card :movie="$movie"
-                                                                :key="'movie-'.$movie->id"/>
-                            @endforeach
-                        </div>
-                    </div>
-                @else
-                    <div class="movies-page__empty">
-                        <p class="movies-page__empty-text">Контент не знайдено.</p>
-                    </div>
-                @endif
+                <!-- Content Section -->
+                <div class="person-detail__content">
+                    <section class="person-detail__movies">
+                        <h2 class="person-detail__section-title">Медіа</h2>
+                        @if($movies && $movies->isNotEmpty())
+                            <div class="person-detail__movies-grid">
+                                @foreach($movies as $movie)
+                                    <livewire:components.movie-card :movie="$movie"
+                                                                    :key="'movie-'.$movie->id"/>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="person-detail__empty">
+                                <div class="person-detail__empty-content">
+                                    <p class="person-detail__empty-text">Наразі персона не належить жодному медіа.</p>
+                                </div>
+                            </div>
+                        @endif
+                    </section>
+                </div>
             </div>
         </div>
     </main>

@@ -86,6 +86,7 @@
                         <div class="room-watch__episodes-list">
                             @foreach($movie->episodes->sortBy('number') as $ep)
                                 <a href="{{ route('movies.watch.episode', ['movie' => $movie, 'episodeNumber' => $ep->number]) }}"
+                                   wire:navigate
                                    class="room-watch__episode-link @if($ep->id === $episode->id) room-watch__episode-link--active @endif">
                                     Епізод {{ $ep->number }}
                                     @if($ep->name)
@@ -109,6 +110,7 @@
                     </button>
                 @endif
                 <a href="{{ route('movies.show', ['movie' => $movie->id]) }}"
+                   wire:navigate
                    class="room-watch__back-button">
                     <i class="fas fa-arrow-left"></i> Повернутися до фільму
                 </a>

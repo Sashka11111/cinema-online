@@ -68,11 +68,11 @@ class MovieWatchPage extends Component
 
         $room->viewers()->attach(Auth::id(), ['joined_at' => now()]);
 
-        return redirect()->route('movies.watch.room', [
+        return $this->redirectRoute('movies.watch.room', [
             'movie' => $this->movie->slug,
             'episodeNumber' => $this->episode->number,
             'room' => $room->slug,
-        ]);
+        ], navigate: true);
     }
 
     public function render()

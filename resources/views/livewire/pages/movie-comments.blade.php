@@ -29,6 +29,7 @@
                             <span class="movie-comments-page__comments-count">{{ $commentsCount }} коментарів</span>
                         </div>
                         <a href="{{ route('movies.show', $movie->slug) }}"
+                           wire:navigate
                            class="movie-comments-page__back-link">
                             ← Повернутися до фільму
                         </a>
@@ -73,9 +74,11 @@
                             <p class="movie-comments-page__login-text">
                                 Щоб залишити коментар, будь ласка,
                                 <a href="{{ route('login') }}"
+                                   wire:navigate
                                    class="movie-comments-page__login-link">увійдіть</a>
                                 або
                                 <a href="{{ route('register') }}"
+                                   wire:navigate
                                    class="movie-comments-page__login-link">зареєструйтесь</a>.
                             </p>
                         </div>

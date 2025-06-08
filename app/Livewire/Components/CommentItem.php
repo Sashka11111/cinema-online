@@ -34,7 +34,7 @@ class CommentItem extends Component
     public function toggleReplyForm()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         $this->showReplyForm = !$this->showReplyForm;
@@ -47,7 +47,7 @@ class CommentItem extends Component
     public function addReply()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         $this->validate([
@@ -82,7 +82,7 @@ class CommentItem extends Component
     public function toggleLike()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         $existingLike = CommentLike::where('comment_id', $this->comment->id)
@@ -113,7 +113,7 @@ class CommentItem extends Component
     public function toggleDislike()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         $existingLike = CommentLike::where('comment_id', $this->comment->id)

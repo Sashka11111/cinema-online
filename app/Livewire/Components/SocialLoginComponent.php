@@ -20,7 +20,7 @@ class SocialLoginComponent extends Component
             return;
         }
 
-        return redirect()->route('auth.social.redirect', ['provider' => $provider]);
+        return $this->redirectRoute('auth.social.redirect', ['provider' => $provider], navigate: true);
     }
 
     public function render()

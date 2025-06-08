@@ -39,7 +39,7 @@ class Register extends Component
 
         session()->flash('status', 'Реєстрація успішна! Будь ласка, підтвердіть вашу пошту.');
 
-        return $this->redirectRoute('verification.notice');
+        return $this->redirectRoute('verification.notice', navigate: true);
     }
 
     public function render()

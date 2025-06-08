@@ -54,8 +54,11 @@
         </div>
 
         <button class="header__mobile-menu-button">
-            <img src="{{ asset('images/menu-icon.svg') }}" alt="Меню"
-                 class="header__mobile-menu-icon">
+            <div class="burger-icon">
+                <span class="burger-icon__line"></span>
+                <span class="burger-icon__line"></span>
+                <span class="burger-icon__line"></span>
+            </div>
         </button>
     </div>
 </header>

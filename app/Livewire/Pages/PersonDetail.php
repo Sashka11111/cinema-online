@@ -21,7 +21,7 @@ class PersonDetail extends Component
 
     public function render()
     {
-        $movies = $this->person->movies()->paginate(12);
+        $movies = $this->person->movies()->with(['studio', 'tags'])->paginate(12);
 
         return view('livewire.pages.person-detail', [
             'movies' => $movies,

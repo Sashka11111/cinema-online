@@ -16,6 +16,7 @@
 @import url('room-watch.css');
 @import url('comments.css');
 @import url('footer.css');
+@import 'movie-rating.css';
 
 :root {
     --primary-color: #93b3f4;

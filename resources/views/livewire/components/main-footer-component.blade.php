@@ -2,7 +2,7 @@
     <div class="main-footer__container">
         <div class="main-footer__content-types">
             <div class="main-footer__brand">
-                <a href="{{ route('home') }}" class="main-footer__logo">
+                <a href="{{ route('home') }}" wire:navigate class="main-footer__logo">
                     <span class="main-footer__logo-text">Cinema</span>
                 </a>
                 <p class="main-footer__slogan">Відкрийте для себе світ кіно</p>

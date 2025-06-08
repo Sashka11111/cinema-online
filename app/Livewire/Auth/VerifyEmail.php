@@ -11,12 +11,12 @@ class VerifyEmail extends Component
     {
         // Перевіряємо, чи користувач авторизований
         if (! Auth::check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         // Якщо пошта вже підтверджена, перенаправляємо на головну
         if (Auth::user()->hasVerifiedEmail()) {
-            return redirect()->route('home');
+            return $this->redirectRoute('home', navigate: true);
         }
     }
 
@@ -24,12 +24,12 @@ class VerifyEmail extends Component
     {
         // Перевіряємо, чи користувач авторизований
         if (! Auth::check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         // Перевіряємо, чи пошта вже підтверджена
         if (Auth::user()->hasVerifiedEmail()) {
-            return redirect()->route('home');
+            return $this->redirectRoute('home', navigate: true);
         }
 
         // Відправляємо лист з підтвердженням
@@ -38,7 +38,8 @@ class VerifyEmail extends Component
         // Встановлюємо повідомлення про успішну відправку
         session()->flash('message', 'Повідомлення для підтвердження електронної пошти надіслано!');
 
-        return back();
+        // Refresh the current page instead of using back()
+        $this->dispatch('$refresh');
     }
 
     public function render()

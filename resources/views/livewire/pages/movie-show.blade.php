@@ -11,6 +11,10 @@
 
             <livewire:components.movie-details :movie="$movie"/>
 
+            <div class="movie-details__section">
+                <livewire:components.movie-rating :movie="$movie" />
+            </div>
+
             @if($movie->persons->isNotEmpty())
                 <section class="movie-cast">
                     <div class="movie-cast__header">
@@ -23,7 +27,7 @@
                     <div class="movie-cast__grid">
                         @foreach($movie->persons as $person)
                             <livewire:components.person-card :person="$person"
-                                                             :key="'person-'.$person->id"/>
+                                                             :key="'person-'.$person->id" />
                         @endforeach
                     </div>
                 </section>

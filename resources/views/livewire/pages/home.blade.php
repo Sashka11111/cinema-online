@@ -9,7 +9,7 @@
             <div class="selections-page__header">
                 <h1 class="content-page__title">Останні підбірки</h1>
                 <div class="selections-page__view-all">
-                    <a href="{{ route('selections') }}"
+                    <a href="{{ route('selections') }}" wire:navigate
                        class="selections-page__view-all-link">
                         Переглянути всі підбірки
                     </a>

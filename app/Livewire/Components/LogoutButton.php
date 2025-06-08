@@ -11,7 +11,7 @@ class LogoutButton extends Component
     {
         app(Logout::class)();
 
-        return $this->redirectRoute('home');
+        return $this->redirectRoute('home', navigate: true);
     }
 
     public function render()

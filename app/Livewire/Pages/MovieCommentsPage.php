@@ -27,7 +27,7 @@ class MovieCommentsPage extends Component
     public function addComment()
     {
         if (!auth()->check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         $this->validate([

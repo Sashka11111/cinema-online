@@ -27,7 +27,7 @@ class UserListsPage extends Component
     public function mount()
     {
         if (! Auth::check()) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
     }
 
@@ -60,7 +60,7 @@ class UserListsPage extends Component
         $user = Auth::user();
 
         if (! $user) {
-            return redirect()->route('login');
+            return $this->redirectRoute('login', navigate: true);
         }
 
         // Отримуємо тип списку з активної вкладки

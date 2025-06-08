@@ -52,7 +52,7 @@
                             мене</label>
                     </div>
                     <div class="auth-form__forgot-password">
-                        <a href="{{ route('password.request') }}" class="auth-form__forgot-link">Забули
+                        <a href="{{ route('password.request') }}" wire:navigate class="auth-form__forgot-link">Забули
                             пароль?</a>
                     </div>
 
@@ -62,7 +62,7 @@
                 <livewire:components.social-login-component/>
 
                 <livewire:components.footer-component
-                    :route="route('register')"
+                    :route="route('register')" wire:navigate
                     :text="'Не маєте облікового запису?'"
                     :linkText="'Зареєструватися'"
                 />

@@ -7,7 +7,7 @@
         <div class="movie-slider__container">
             @foreach($movies as $movie)
                 <div class="movie-card">
-                    <a href="{{ route('movies.show', $movie) }}" class="movie-card__link">
+                    <a href="{{ route('movies.show', $movie) }}" wire:navigate class="movie-card__link">
                         <div class="movie-card__poster-wrapper">
                             <img src="{{ $movie->poster_url }}" alt="{{ $movie->name }}"
                                  class="movie-card__poster">

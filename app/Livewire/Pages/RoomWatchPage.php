@@ -39,19 +39,19 @@ class RoomWatchPage extends Component
         if ($this->room) {
             if (! $this->room->isActive()) {
                 session()->flash('error', 'Кімната не знайдена або вже завершена');
-                return redirect()->route('movies.watch.episode', [
+                return $this->redirectRoute('movies.watch.episode', [
                     'movie' => $this->movie->id,
                     'episodeNumber' => $this->episode->number,
-                ]);
+                ], navigate: true);
             }
 
             if (Auth::check()) {
                 if ($this->room->isFull() && $this->room->user_id !== Auth::id()) {
                     session()->flash('error', 'Кімната заповнена');
-                    return redirect()->route('movies.watch.episode', [
+                    return $this->redirectRoute('movies.watch.episode', [
                         'movie' => $this->movie->id,
                         'episodeNumber' => $this->episode->number,
-                    ]);
+                    ], navigate: true);
                 }
 
                 $this->room->viewers()->syncWithoutDetaching([
@@ -94,11 +94,11 @@ class RoomWatchPage extends Component
             Auth::id() => ['joined_at' => now()],
         ]);
 
-        return redirect()->route('movies.watch.room', [
+        return $this->redirectRoute('movies.watch.room', [
             'movie' => $this->movie->id,
             'episodeNumber' => $this->episode->number,
             'room' => $room->slug,
-        ]);
+        ], navigate: true);
     }
 
     public function leaveRoom()
@@ -113,10 +113,10 @@ class RoomWatchPage extends Component
             $this->room->end();
         }
 
-        return redirect()->route('movies.watch.episode', [
+        return $this->redirectRoute('movies.watch.episode', [
             'movie' => $this->movie->id,
             'episodeNumber' => $this->episode->number,
-        ]);
+        ], navigate: true);
     }
 
     #[\Livewire\Attributes\On('sync-video')]
