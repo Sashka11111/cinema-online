@@ -10,7 +10,12 @@ class UserListPolicy
 {
     public function before(User $user, string $ability): ?bool
     {
-        if ($user->role = Role::ADMIN->value) {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Модератори можуть переглядати списки користувачів
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view'])) {
             return true;
         }
 
@@ -30,7 +35,7 @@ class UserListPolicy
     public function create(User $user): bool
     {
         // Дозволити створення тільки авторизованим користувачам
-        return $user->role === 'admin' || $user->role === 'user';
+        return auth()->check();
     }
 
     public function update(User $user, UserList $userList): bool

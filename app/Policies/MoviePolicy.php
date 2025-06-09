@@ -13,6 +13,11 @@ class MoviePolicy
             return true;
         }
 
+        // Модератори можуть переглядати та редагувати, але не видаляти
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view', 'update'])) {
+            return true;
+        }
+
         return null;
     }
 
@@ -49,7 +54,7 @@ class MoviePolicy
     }
 
     /**
-     * Тільки адміністратор може видаляти фільми.
+     * Тільки адміністратор може видаляти фільми (модератори не можуть).
      */
     public function delete(User $user, Movie $movie): bool
     {

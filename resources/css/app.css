@@ -14,16 +14,30 @@
 @import url('person-detail.css');
 @import url('person-card.css');
 @import url('room-watch.css');
+@import url('room-creation-modal.css');
 @import url('comments.css');
 @import url('footer.css');
-@import 'movie-rating.css';
+@import url('movie-rating.css');
+@import url('rooms-page.css');
+
+/* Загальні стилі для пагінації */
+.content-page__pagination {
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
 
 :root {
     --primary-color: #93b3f4;
+    --primary-hover: #7c9ff7;
     --accent-color: #6e8fe8;
     --background-color: #f5f7fa;
+    --background-primary: #ffffff;
+    --background-secondary: #f8f9fa;
     --text-color: #333333;
+    --text-secondary: #6c757d;
     --text-muted: #666666;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
     --error-color: #e63946;
     --border-color: #d3d3d3;
     --white: #ffffff;
@@ -31,16 +45,24 @@
     --promo-background: #1a1a1a;
     --social-button-bg: #ffffff;
     --card-background: #ffffff;
+    --hover-background: #f8f9fa;
+    --input-background: #ffffff;
+    --primary-color-alpha: rgba(var(--primary-rgb), 0.1);
     --primary-rgb: 147, 179, 244; /* RGB значення для #93b3f4 */
     --accent-rgb: 110, 143, 232; /* RGB значення для #6e8fe8 */
 
     /* Додаткові змінні для темної теми */
     --dark-background: #121212;
+    --dark-background-primary: #0d1117;
+    --dark-background-secondary: #161b22;
     --dark-card-background: #1e1e1e;
     --dark-text-color: #e0e0e0;
+    --dark-text-secondary: #8b949e;
     --dark-text-muted: #a0a0a0;
-    --dark-border-color: #333333;
-    --dark-shadow-color: rgb(0 0 0 / 30%);
+    --dark-border-color: #30363d;
+    --dark-shadow-color: rgb(0 0 0 / 50%);
+    --dark-hover-background: #262c36;
+    --dark-input-background: #0d1117;
     --spacing-unit: 8px;
     --spacing-xs: calc(var(--spacing-unit) * 0.5);
     --spacing-sm: var(--spacing-unit);
@@ -57,6 +79,7 @@
     --font-size-lg: 18px;
     --font-size-xl: 24px;
     --line-height: 1.5;
+    --border-radius: 8px;
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
@@ -65,21 +88,88 @@
     --box-shadow: 0 2px 8px var(--shadow-color);
     --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-    --background-secondary: #f8f9fa;
     --background-tertiary: #e9ecef;
     --breakpoint-mobile: 576px;
     --breakpoint-tablet: 768px;
     --breakpoint-desktop: 1024px;
+
+    /* Додаткові змінні для BEM */
+    --border-width: 1px;
+    --blur-sm: 4px;
+    --blur-md: 8px;
+    --blur-lg: 16px;
+    --gradient-direction: 135deg;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --transition-duration: 0.3s;
+    --transition-easing: ease;
+    --animation-duration: 0.3s;
+    --animation-easing: ease;
+    --z-modal: 1000;
+    --z-toast: 1001;
+    --modal-width: 500px;
+    --modal-max-height: 90vh;
+    --button-size-sm: 32px;
+    --button-size-md: 40px;
+    --button-size-lg: 48px;
+    --scale-hover: 1.1;
+    --overlay-background: rgba(0, 0, 0, 0.7);
+    --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.3);
+    --shadow-success: 0 6px 24px rgba(40, 167, 69, 0.3);
+    --shadow-error: 0 6px 24px rgba(230, 57, 70, 0.3);
+    --shadow-warning: 0 6px 24px rgba(255, 193, 7, 0.3);
+
+    /* Кольори для модифікаторів */
+    --success-dark: #1e7e34;
+    --warning-dark: #d39e00;
+    --error-dark: #c82333;
+    --primary-light: rgba(var(--primary-rgb), 0.05);
+    --accent-light: rgba(var(--accent-rgb), 0.05);
+    --success-light: rgba(40, 167, 69, 0.1);
+    --warning-light: rgba(255, 193, 7, 0.1);
+    --error-light: rgba(230, 57, 70, 0.1);
+
+    /* RGB значення для кольорів */
+    --success-rgb: 40, 167, 69;
+    --warning-rgb: 255, 193, 7;
+    --error-rgb: 230, 57, 70;
+    --text-rgb: 51, 51, 51;
+    --dark-text-rgb: 224, 224, 224;
 }
 
 /* Темна тема */
 [data-theme="dark"] {
     --background-color: var(--dark-background);
+    --background-primary: var(--dark-background-primary);
+    --background-secondary: var(--dark-background-secondary);
     --card-background: var(--dark-card-background);
     --text-color: var(--dark-text-color);
+    --text-secondary: var(--dark-text-secondary);
     --text-muted: var(--dark-text-muted);
     --border-color: var(--dark-border-color);
     --shadow-color: var(--dark-shadow-color);
+    --hover-background: var(--dark-hover-background);
+    --input-background: var(--dark-input-background);
+    --primary-hover: #7c9ff7;
+    --success-color: #238636;
+    --warning-color: #d29922;
+    --error-color: #f85149;
+    --primary-color-alpha: rgba(var(--primary-rgb), 0.2);
+
+    /* Темні варіанти нових змінних */
+    --success-dark: #0d4f1c;
+    --warning-dark: #8a6914;
+    --error-dark: #8b1e2b;
+    --primary-light: rgba(var(--primary-rgb), 0.1);
+    --accent-light: rgba(var(--accent-rgb), 0.1);
+    --success-light: rgba(35, 134, 54, 0.2);
+    --warning-light: rgba(210, 153, 34, 0.2);
+    --error-light: rgba(248, 81, 73, 0.2);
+    --shadow-success: 0 6px 24px rgba(35, 134, 54, 0.4);
+    --shadow-error: 0 6px 24px rgba(248, 81, 73, 0.4);
+    --shadow-warning: 0 6px 24px rgba(210, 153, 34, 0.4);
 }
 
 /* Стилі для перемикача теми */

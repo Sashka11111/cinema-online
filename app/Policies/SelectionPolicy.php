@@ -13,6 +13,11 @@ class SelectionPolicy
             return true;
         }
 
+        // Модератори можуть переглядати та редагувати підбірки
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view', 'update', 'create'])) {
+            return true;
+        }
+
         return null;
     }
 

@@ -13,23 +13,28 @@ class CommentReportPolicy
             return true; // Адміністратор має доступ до всіх дій
         }
 
+        // Модератори можуть переглядати та обробляти звіти
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view', 'update'])) {
+            return true;
+        }
+
         return null; // Продовжуємо перевірку інших методів
     }
 
     /**
-     * Усі адміністратори можуть переглядати список звітів.
+     * Усі адміністратори та модератори можуть переглядати список звітів.
      */
     public function viewAny(User $user): bool
     {
-        return $user->isAdmin(); // Тільки адміністратор може переглядати всі звіти
+        return $user->isAdmin() || $user->isModerator();
     }
 
     /**
-     * Користувач може переглядати звіт, якщо він його створив, або якщо він адміністратор.
+     * Користувач може переглядати звіт, якщо він його створив, або якщо він адміністратор чи модератор.
      */
     public function view(User $user, CommentReport $commentReport): bool
     {
-        return $user->id === $commentReport->user_id || $user->isAdmin();
+        return $user->id === $commentReport->user_id || $user->isAdmin() || $user->isModerator();
     }
 
     /**
@@ -42,11 +47,11 @@ class CommentReportPolicy
     }
 
     /**
-     * Тільки адміністратор може редагувати звіти.
+     * Тільки адміністратор або модератор може редагувати звіти.
      */
     public function update(User $user, CommentReport $commentReport): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() || $user->isModerator();
     }
 
     /**

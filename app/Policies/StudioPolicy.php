@@ -13,13 +13,19 @@ class StudioPolicy
             return true;
         }
 
-        return null;
+        // Модератори можуть переглядати та редагувати студії
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view', 'update', 'create'])) {
+            return true;
+        }
 
+        return null;
     }
 
+    /**
+     * Determine whether the user can view any models.
+     */
     public function viewAny(User $user): bool
     {
-        // Example: Allow all authenticated users to view studios
         return auth()->check();
     }
 
@@ -28,8 +34,7 @@ class StudioPolicy
      */
     public function view(User $user, Studio $studio): bool
     {
-        // Example: Allow the user to view the studio if they are the owner or an admin
-        return $user->id === $studio->user_id || $user->is_admin;
+        return $user->id === $studio->user_id || $user->isAdmin() || $user->isModerator();
     }
 
     /**
@@ -37,8 +42,7 @@ class StudioPolicy
      */
     public function create(User $user): bool
     {
-        // Example: Only allow users with the "admin" role to create studios
-        return $user->is_admin;
+        return $user->isAdmin() || $user->isModerator();
     }
 
     /**
@@ -46,8 +50,7 @@ class StudioPolicy
      */
     public function update(User $user, Studio $studio): bool
     {
-        // Example: Allow the user to update the studio if they are the owner or an admin
-        return $user->id === $studio->user_id || $user->is_admin;
+        return $user->id === $studio->user_id || $user->isAdmin() || $user->isModerator();
     }
 
     /**
@@ -55,8 +58,7 @@ class StudioPolicy
      */
     public function delete(User $user, Studio $studio): bool
     {
-        // Example: Allow the user to delete the studio if they are the owner or an admin
-        return $user->id === $studio->user_id || $user->is_admin;
+        return $user->id === $studio->user_id || $user->isAdmin();
     }
 
     /**
@@ -64,8 +66,7 @@ class StudioPolicy
      */
     public function restore(User $user, Studio $studio): bool
     {
-        // Example: Only allow admins to restore studios
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 
     /**
@@ -73,7 +74,6 @@ class StudioPolicy
      */
     public function forceDelete(User $user, Studio $studio): bool
     {
-        // Example: Only allow admins to permanently delete studios
-        return $user->is_admin;
+        return $user->isAdmin();
     }
 }

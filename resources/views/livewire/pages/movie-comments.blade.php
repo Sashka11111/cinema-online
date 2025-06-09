@@ -21,11 +21,6 @@
                         <h1 class="movie-comments-page__title">Коментарі до фільму</h1>
                         <h2 class="movie-comments-page__movie-title">{{ $movie->name }}</h2>
                         <div class="movie-comments-page__meta">
-                            {{--                            <span class="movie-comments-page__year">{{ $movie->year }}</span>--}}
-                            {{--                            @if($movie->rating)--}}
-                            {{--                                <span--}}
-                            {{--                                    class="movie-comments-page__rating">{{ $movie->rating }}/10</span>--}}
-                            {{--                            @endif--}}
                             <span class="movie-comments-page__comments-count">{{ $commentsCount }} коментарів</span>
                         </div>
                         <a href="{{ route('movies.show', $movie->slug) }}"

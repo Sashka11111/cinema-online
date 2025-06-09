@@ -14,6 +14,11 @@ class TagPolicy
             return true;
         }
 
+        // Модератори можуть переглядати та редагувати теги
+        if ($user && $user->isModerator() && in_array($ability, ['viewAny', 'view', 'update', 'create'])) {
+            return true;
+        }
+
         return null; // Продовжуємо перевірку в інших методах
     }
 

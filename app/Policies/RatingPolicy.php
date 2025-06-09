@@ -14,6 +14,11 @@ class RatingPolicy
             return true;
         }
 
+        // Модератори можуть переглядати та видаляти рейтинги
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view', 'delete'])) {
+            return true;
+        }
+
         return null;
     }
 

@@ -208,7 +208,7 @@ class RoomResource extends Resource
                             ->numeric()
                             ->default(10)
                             ->minValue(1)
-                            ->maxValue(100)
+                            ->maxValue(10)
                             ->required(),
                     ])
                     ->columns(2),

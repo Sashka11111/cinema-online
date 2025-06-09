@@ -17,6 +17,12 @@ class RoomWatchPage extends Component
 
     public ?Room $room = null;
 
+    public bool $showInviteModal = false;
+
+    public string $inviteLink = '';
+
+    public string $roomPassword = '';
+
     public function mount(Movie $movie, ?int $episodeNumber = null, ?Room $room = null)
     {
         $this->movie = $movie;
@@ -26,7 +32,7 @@ class RoomWatchPage extends Component
             abort(404);
         }
 
-        $this->movie->load('episodes');
+        $this->movie->load(['episodes', 'tags']);
 
         $this->episode = $episodeNumber
             ? Episode::where('movie_id', $movie->id)->where('number', $episodeNumber)->first()
@@ -37,10 +43,12 @@ class RoomWatchPage extends Component
         }
 
         if ($this->room) {
+            $this->room->load(['user', 'activeViewers']);
+
             if (! $this->room->isActive()) {
                 session()->flash('error', 'Кімната не знайдена або вже завершена');
                 return $this->redirectRoute('movies.watch.episode', [
-                    'movie' => $this->movie->id,
+                    'movie' => $this->movie->slug,
                     'episodeNumber' => $this->episode->number,
                 ], navigate: true);
             }
@@ -49,7 +57,7 @@ class RoomWatchPage extends Component
                 if ($this->room->isFull() && $this->room->user_id !== Auth::id()) {
                     session()->flash('error', 'Кімната заповнена');
                     return $this->redirectRoute('movies.watch.episode', [
-                        'movie' => $this->movie->id,
+                        'movie' => $this->movie->slug,
                         'episodeNumber' => $this->episode->number,
                     ], navigate: true);
                 }
@@ -94,10 +102,9 @@ class RoomWatchPage extends Component
             Auth::id() => ['joined_at' => now()],
         ]);
 
-        return $this->redirectRoute('movies.watch.room', [
-            'movie' => $this->movie->id,
+        return $this->redirectRoute('movies.watch.episode', [
+            'movie' => $this->movie->slug,
             'episodeNumber' => $this->episode->number,
-            'room' => $room->slug,
         ], navigate: true);
     }
 
@@ -114,9 +121,37 @@ class RoomWatchPage extends Component
         }
 
         return $this->redirectRoute('movies.watch.episode', [
-            'movie' => $this->movie->id,
+            'movie' => $this->movie->slug,
             'episodeNumber' => $this->episode->number,
         ], navigate: true);
+    }
+
+    public function showInviteModal()
+    {
+        if (!$this->room) {
+            return;
+        }
+
+        $this->showInviteModal = true;
+
+        // Генеруємо посилання для запрошення
+        $this->inviteLink = route('movies.watch.room', [
+            'movie' => $this->movie->slug,
+            'episodeNumber' => $this->episode->number,
+            'room' => $this->room->slug,
+        ]);
+
+        // Якщо кімната приватна, отримуємо пароль з сесії
+        if ($this->room->is_private) {
+            $this->roomPassword = session()->get("room_password_{$this->room->slug}", 'Пароль встановлений власником кімнати');
+        }
+    }
+
+    public function closeInviteModal()
+    {
+        $this->showInviteModal = false;
+        $this->inviteLink = '';
+        $this->roomPassword = '';
     }
 
     #[\Livewire\Attributes\On('sync-video')]

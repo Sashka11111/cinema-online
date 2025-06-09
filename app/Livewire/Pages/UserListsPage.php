@@ -8,12 +8,17 @@ use Liamtseva\Cinema\Models\Episode;
 use Liamtseva\Cinema\Models\Movie;
 use Liamtseva\Cinema\Models\Person;
 use Liamtseva\Cinema\Models\UserList;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class UserListsPage extends Component
 {
     use WithPagination;
+
+    // Додаємо властивість page для пагінації з URL-параметром
+    #[Url]
+    public $page = 1;
 
     public string $activeTab = 'favorite';
 
@@ -55,6 +60,18 @@ class UserListsPage extends Component
         }
     }
 
+    // Метод resetPage для Livewire 3
+    public function resetPage($pageName = 'page')
+    {
+        $this->page = 1;
+    }
+
+    // Метод для переходу на конкретну сторінку
+    public function gotoPage($page, $pageName = 'page')
+    {
+        $this->page = $page;
+    }
+
     public function render()
     {
         $user = Auth::user();
@@ -88,7 +105,7 @@ class UserListsPage extends Component
             $query->where('listable_type', Person::class);
         }
 
-        $userLists = $query->latest()->paginate(12);
+        $userLists = $query->latest()->paginate(10, ['*'], 'page', $this->page);
 
         return view('livewire.pages.user-lists-page', [
             'userLists' => $userLists,

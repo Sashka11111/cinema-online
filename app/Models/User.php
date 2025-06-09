@@ -26,6 +26,24 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasUlids, Notifiable;
 
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'avatar',
+        'backdrop',
+        'description',
+        'birthday',
+        'gender',
+        'provider_id',
+        'provider_name',
+        'provider_token',
+        'provider_refresh_token',
+        'role',
+        'email_verified_at',
+        'last_seen_at',
+    ];
+
     protected $hidden = [
         'password',
         'remember_token',
@@ -169,7 +187,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->isAdmin();
+        return $this->isAdmin() || $this->isModerator();
     }
 
     public function isAdmin(): bool
@@ -177,12 +195,17 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         return $this->role == Role::ADMIN;
     }
 
-    protected function avatar(): Attribute
+    public function isModerator(): bool
     {
-        return Attribute::make(
-            get: fn ($value) => $value ? asset("storage/$value") : null
-        );
+        return $this->role == Role::MODERATOR;
     }
+
+    public function isAdminOrModerator(): bool
+    {
+        return $this->isAdmin() || $this->isModerator();
+    }
+
+
 
     public function rooms()
     {

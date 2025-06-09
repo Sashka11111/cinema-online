@@ -13,6 +13,11 @@ class CommentLikePolicy
             return true;
         }
 
+        // Модератори можуть видаляти лайки
+        if ($user->isModerator() && in_array($ability, ['delete'])) {
+            return true;
+        }
+
         return null;
     }
 
@@ -33,12 +38,12 @@ class CommentLikePolicy
 
     public function update(User $user, CommentLike $commentLike): bool
     {
-        return $user->isAdmin() || $user->id === $commentLike->user_id;
+        return $user->isAdmin() || $user->isModerator() || $user->id === $commentLike->user_id;
     }
 
     public function delete(User $user, CommentLike $commentLike): bool
     {
-        return $user->isAdmin() || $user->id === $commentLike->user_id;
+        return $user->isAdmin() || $user->isModerator() || $user->id === $commentLike->user_id;
     }
 
     public function restore(User $user, CommentLike $commentLike): bool

@@ -39,7 +39,7 @@ class RoomFactory extends Factory
             'is_private' => $isPrivate,
             'room_status' => RoomStatus::NOT_STARTED,
             'password' => $isPrivate ? bcrypt('password') : null,
-            'max_viewers' => $this->faker->numberBetween(5, 20),
+            'max_viewers' => $this->faker->numberBetween(5, 10),
             'started_at' => null,
             'ended_at' => null,
         ];

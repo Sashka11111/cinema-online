@@ -13,6 +13,11 @@ class WatchHistoryPolicy
             return true;
         }
 
+        // Модератори можуть переглядати історію переглядів
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view'])) {
+            return true;
+        }
+
         return null;
     }
 
@@ -23,7 +28,7 @@ class WatchHistoryPolicy
 
     public function view(User $user, WatchHistory $watchHistory): bool
     {
-        return $user->id === $watchHistory->user_id || $user->isAdmin();
+        return $user->id === $watchHistory->user_id || $user->isAdmin() || $user->isModerator();
     }
 
     public function delete(User $user, WatchHistory $watchHistory): bool

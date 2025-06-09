@@ -1,13 +1,29 @@
 /* Стилі для сторінки перегляду кімнати */
 .room-watch {
     min-height: 100vh;
-    background-color: var(--background-color);
+    background: linear-gradient(135deg, var(--background-color) 0%, rgba(var(--primary-rgb), 0.02) 100%);
+    position: relative;
+}
+
+.room-watch::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 80%, rgba(var(--primary-rgb), 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(var(--accent-rgb), 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .room-watch__main {
-    max-width: 1200px;
-    padding: var(--spacing-lg);
+    max-width: 1400px;
+    padding: var(--spacing-xl) var(--spacing-lg);
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
 }
 
 .room-watch__title {
@@ -20,49 +36,160 @@
 
 /* Інформація про кімнату */
 .room-watch__info {
-    max-width: 600px;
-    padding: var(--spacing-lg);
-    margin: 0 auto var(--spacing-xl);
-    text-align: center;
-    background: linear-gradient(135deg, var(--card-background), rgba(var(--primary-rgb), 0.02));
-    border-radius: var(--border-radius-lg);
-    box-shadow:
-        0 8px 32px rgb(0 0 0 / 10%),
-        inset 0 1px 0 rgb(255 255 255 / 10%);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    background: var(--card-background);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    border: var(--border-width) solid var(--border-color);
+    backdrop-filter: blur(var(--blur-md));
+    position: relative;
+    overflow: hidden;
 }
 
-.room-watch__info h2 {
+.room-watch__info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--spacing-xs);
+    background: linear-gradient(var(--gradient-direction), var(--primary-color), var(--accent-color));
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+}
+
+.room-watch__info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+}
+
+.room-watch__info-title {
+    margin: 0;
     margin-bottom: var(--spacing-sm);
     font-size: var(--font-size-lg);
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
     color: var(--primary-color);
 }
 
-.room-watch__info p {
-    margin-bottom: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    color: var(--text-muted);
+.room-watch__info-badges {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
 }
 
-.room-watch__private-badge {
-    display: inline-block;
+.room-watch__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
     padding: var(--spacing-xs) var(--spacing-sm);
     font-size: var(--font-size-xs);
-    font-weight: 600;
+    font-weight: var(--font-weight-semibold);
     color: var(--white);
-    background: linear-gradient(135deg, #f59e0b, #d97706);
     border-radius: var(--border-radius-sm);
-    box-shadow: 0 2px 8px rgb(245 158 11 / 30%);
+    box-shadow: var(--shadow-sm);
+}
+
+.room-watch__badge--private {
+    background: linear-gradient(var(--gradient-direction), var(--warning-color), var(--warning-dark));
+}
+
+.room-watch__badge--active {
+    background: linear-gradient(var(--gradient-direction), var(--success-color), var(--success-dark));
+}
+
+/* Компактний селектор джерел відео */
+.room-watch__source-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.room-watch__source-buttons {
+    display: flex;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    background: rgba(var(--card-background-rgb), 0.8);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+}
+
+.room-watch__source-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 60px;
+    text-align: center;
+}
+
+.room-watch__source-button:hover {
+    color: var(--primary-color);
+    background: rgba(var(--primary-rgb), 0.1);
+    border-color: rgba(var(--primary-rgb), 0.2);
+    transform: translateY(-1px);
+}
+
+.room-watch__source-button--active {
+    color: var(--white);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(var(--primary-rgb), 0.3);
+}
+
+.room-watch__source-button--active:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.4);
+}
+
+.room-watch__source-quality {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.room-watch__source-button--active .room-watch__source-quality {
+    opacity: 0.9;
+}
+
+/* Error state for source buttons */
+.room-watch__source-button--error {
+    color: var(--error-color);
+    background: rgba(var(--error-rgb), 0.1);
+    border-color: var(--error-color);
 }
 
 /* Плеєр контейнер */
 .room-watch__player-container {
     width: 100%;
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
     overflow: hidden;
-    background-color: var(--card-background);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--box-shadow);
+    background: var(--card-background);
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15),
+                0 6px 24px rgba(var(--primary-rgb), 0.08);
+    border: 1px solid var(--border-color);
+    position: relative;
+    transform: translateY(0);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.room-watch__player-container:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 64px rgba(0, 0, 0, 0.2),
+                0 8px 32px rgba(var(--primary-rgb), 0.12);
 }
 
 .room-watch__player {
@@ -70,7 +197,8 @@
     height: 0;
     padding-bottom: 56.25%; /* 16:9 */
     overflow: hidden;
-    background-color: #000000;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    border-radius: var(--border-radius-xl);
 }
 
 .room-watch__video {
@@ -80,7 +208,9 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    background-color: #000000;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    border-radius: var(--border-radius-xl);
+    transition: all 0.3s ease;
 }
 
 .room-watch__placeholder {
@@ -109,58 +239,296 @@
 
 /* Вибір плеєра */
 .room-watch__player-selection {
-    max-width: 600px;
-    padding: var(--spacing-md);
-    margin: var(--spacing-lg) auto 0;
-    background: var(--card-background);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--box-shadow);
+    max-width: 800px;
+    padding: var(--spacing-xl);
+    margin: var(--spacing-xl) auto 0;
+    background: linear-gradient(135deg, var(--card-background), rgba(var(--primary-rgb), 0.02));
+    border-radius: var(--border-radius-xl);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1),
+                0 6px 24px rgba(var(--primary-rgb), 0.05);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
 }
 
-.room-watch__player-selection h3 {
-    margin-bottom: var(--spacing-sm);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
+.room-watch__player-selection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--primary-color));
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+}
+
+.room-watch__player-selection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.room-watch__player-selection-header h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
     color: var(--text-color);
-    text-align: center;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.room-watch__player-selection-header h3 i {
+    color: var(--primary-color);
+    -webkit-text-fill-color: var(--primary-color);
+}
+
+.room-watch__player-count {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: var(--white);
+    border-radius: var(--border-radius-lg);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
 }
 
 .room-watch__player-buttons {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--spacing-sm);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
     justify-items: center;
 }
 
 .room-watch__player-button {
     display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
     align-items: center;
+    gap: var(--spacing-sm);
     width: 100%;
-    max-width: 160px;
-    padding: var(--spacing-sm);
+    max-width: 240px;
+    padding: var(--spacing-md);
     font-size: var(--font-size-sm);
     font-weight: 500;
     color: var(--text-color);
-    text-align: center;
+    text-align: left;
     cursor: pointer;
     background: var(--background-color);
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius-md);
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.room-watch__player-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.1), transparent);
+    transition: left 0.6s ease;
+}
+
+.room-watch__player-button:hover::before {
+    left: 100%;
 }
 
 .room-watch__player-button:hover {
     background: rgba(var(--primary-rgb), 0.05);
     border-color: var(--primary-color);
-    transform: translateY(-2px);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.15);
 }
 
 .room-watch__player-button--active {
     color: var(--white);
-    background: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     border-color: var(--primary-color);
+    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.3);
+}
+
+.room-watch__player-button--active:hover {
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 48px rgba(var(--primary-rgb), 0.4);
+}
+
+.room-watch__player-button-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.room-watch__player-button-icon i {
+    font-size: 1rem;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.room-watch__player-button--active .room-watch__player-button-icon {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.room-watch__player-button--active .room-watch__player-button-icon i {
+    color: var(--white);
+}
+
+.room-watch__player-button:hover .room-watch__player-button-icon {
+    transform: scale(1.1);
+    background: rgba(var(--primary-rgb), 0.2);
+}
+
+.room-watch__player-button-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.room-watch__player-button-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.room-watch__player-button-quality,
+.room-watch__player-button-language {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    font-weight: 500;
+}
+
+.room-watch__player-button-quality {
+    color: var(--success-color);
+}
+
+.room-watch__player-button--active .room-watch__player-button-quality,
+.room-watch__player-button--active .room-watch__player-button-language {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.room-watch__player-button-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: var(--success-color);
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.room-watch__player-button-indicator i {
+    font-size: 0.75rem;
+    color: var(--white);
+}
+
+.room-watch__player-button--active .room-watch__player-button-indicator {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Action buttons styling */
+.room-watch__action-button {
+    border: 2px solid var(--border-color) !important;
+    background: var(--card-background) !important;
+    color: var(--text-color) !important;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.room-watch__action-button:hover {
+    transform: translateY(-2px) scale(1.02) !important;
+    box-shadow: 0 6px 24px rgba(var(--primary-rgb), 0.15) !important;
+}
+
+/* Стилі для кнопки запрошення */
+.room-watch__action-button--invite {
+    border-color: var(--success-color) !important;
+    color: var(--success-color) !important;
+}
+
+.room-watch__action-button--invite:hover {
+    background: var(--success-color) !important;
+    color: var(--white) !important;
+    border-color: var(--success-color) !important;
+    box-shadow: var(--shadow-success) !important;
+}
+
+.room-watch__action-button--leave {
+    border-color: var(--error-color) !important;
+    color: var(--error-color) !important;
+}
+
+.room-watch__action-button--leave:hover {
+    background: var(--error-color) !important;
+    color: var(--white) !important;
+    border-color: var(--error-color) !important;
+    box-shadow: 0 6px 24px rgba(var(--error-rgb), 0.3) !important;
+}
+
+.room-watch__action-button--back {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+}
+
+.room-watch__action-button--back:hover {
+    background: var(--primary-color) !important;
+    color: var(--white) !important;
+    border-color: var(--primary-color) !important;
+    text-decoration: none;
+    box-shadow: 0 6px 24px rgba(var(--primary-rgb), 0.3) !important;
+}
+
+.room-watch__action-button .room-watch__player-button-content {
+    text-align: center;
+}
+
+.room-watch__action-button .room-watch__player-button-name {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+}
+
+.room-watch__action-button i {
+    font-size: 0.9rem;
+}
+
+/* Error state for player buttons */
+.room-watch__player-button--error {
+    border-color: var(--error-color);
+    background: rgba(var(--error-rgb), 0.05);
+}
+
+.room-watch__player-button--error .room-watch__player-button-icon {
+    background: rgba(var(--error-rgb), 0.1);
+}
+
+.room-watch__player-button--error .room-watch__player-button-icon i {
+    color: var(--error-color);
 }
 
 /* Епізоди */
@@ -228,8 +596,10 @@
     display: flex;
     gap: var(--spacing-md);
     justify-content: center;
-    max-width: 500px;
-    margin: var(--spacing-xl) auto 0;
+    align-items: center;
+    max-width: 600px;
+    margin: var(--spacing-lg) auto 0;
+    padding: var(--spacing-md);
 }
 
 .room-watch__leave-button,
@@ -237,66 +607,1034 @@
     display: flex;
     gap: var(--spacing-sm);
     align-items: center;
-    padding: var(--spacing-md) var(--spacing-lg);
+    justify-content: center;
+    padding: var(--spacing-md) var(--spacing-xl);
     font-size: var(--font-size-sm);
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius-md);
-    transition: all 0.3s ease;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 180px;
+    text-align: center;
+}
+
+.room-watch__leave-button::before,
+.room-watch__back-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+}
+
+.room-watch__leave-button:hover::before,
+.room-watch__back-button:hover::before {
+    left: 100%;
 }
 
 .room-watch__leave-button {
     color: var(--white);
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    border-color: #ef4444;
+    background: linear-gradient(135deg, #ef4444, #dc2626, #b91c1c);
+    box-shadow: 0 6px 24px rgba(239, 68, 68, 0.25);
 }
 
 .room-watch__leave-button:hover {
-    background: linear-gradient(135deg, #dc2626, #b91c1c);
-    box-shadow: 0 4px 16px rgb(239 68 68 / 30%);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #dc2626, #b91c1c, #991b1b);
+    box-shadow: 0 8px 32px rgba(239, 68, 68, 0.4);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.room-watch__leave-button:active {
+    transform: translateY(-1px) scale(0.98);
 }
 
 .room-watch__back-button {
-    color: var(--text-color);
-    background: var(--card-background);
-    border-color: var(--border-color);
+    color: var(--white);
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    box-shadow: 0 6px 24px rgba(var(--primary-rgb), 0.25);
 }
 
 .room-watch__back-button:hover {
     color: var(--white);
     text-decoration: none;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    border-color: var(--primary-color);
-    box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+    box-shadow: 0 8px 32px rgba(var(--primary-rgb), 0.4);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.room-watch__back-button:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.room-watch__leave-button i,
+.room-watch__back-button i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.room-watch__leave-button:hover i {
+    transform: translateX(-2px);
+}
+
+.room-watch__back-button:hover i {
+    transform: translateX(-2px);
 }
 
 /* Адаптивність */
+@media (width <= 1024px) {
+    .room-watch__main {
+        max-width: 100%;
+        padding: var(--spacing-lg) var(--spacing-md);
+    }
+
+    .room-watch__info {
+        padding: var(--spacing-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .room-watch__details {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+    }
+
+    .room-watch__detail {
+        padding: var(--spacing-xs);
+        font-size: 0.85rem;
+    }
+}
+
 @media (width <= 768px) {
     .room-watch__main {
-        padding: var(--spacing-lg) var(--spacing-md);
+        padding: var(--spacing-md);
+    }
+
+    .room-watch__info {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+    }
+
+    .room-watch__header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--spacing-sm);
+    }
+
+    .room-watch__header h2 {
+        font-size: 1.5rem;
+        text-align: center;
+        width: 100%;
+    }
+
+    .room-watch__badges {
+        align-self: stretch;
+        justify-content: center;
+    }
+
+    .room-watch__details {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-sm);
+    }
+
+    .room-watch__detail {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: 0.8rem;
+        border-radius: var(--border-radius-sm);
+    }
+
+    .room-watch__detail i {
+        width: 14px;
+        font-size: 0.8rem;
+    }
+
+    .room-watch__viewers {
+        padding-top: var(--spacing-md);
+    }
+
+    .room-watch__viewers h4 {
+        font-size: 0.9rem;
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .room-watch__viewer {
+        font-size: 0.75rem;
+        padding: 2px var(--spacing-xs);
     }
 
     .room-watch__actions {
         flex-direction: column;
         align-items: center;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+        margin: var(--spacing-md) auto 0;
     }
 
-    .room-watch__leave-button,
-    .room-watch__back-button {
-        justify-content: center;
+    .room-watch__action-button {
         width: 100%;
-        max-width: 300px;
+        max-width: 280px;
+        min-width: auto;
+        padding: var(--spacing-sm) var(--spacing-md) !important;
     }
 
     .room-watch__episodes-list {
         grid-template-columns: 1fr;
     }
 
-    .room-watch__player-buttons {
-        grid-template-columns: 1fr;
+    .room-watch__source-selector {
+        margin-bottom: var(--spacing-sm);
+    }
+
+    .room-watch__source-buttons {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs);
+    }
+
+    .room-watch__source-button {
+        min-width: 45px;
+        padding: 4px var(--spacing-xs);
+        font-size: 0.65rem;
+    }
+
+    .room-watch__source-quality {
+        font-size: 0.55rem;
+    }
+
+    .room-watch__player-container {
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .room-watch__movie-info {
+        padding: var(--spacing-md);
+        margin-bottom: var(--spacing-md);
+    }
+}
+
+@media (width <= 480px) {
+    .room-watch__main {
+        padding: var(--spacing-sm);
+    }
+
+    .room-watch__info {
+        padding: var(--spacing-sm);
+    }
+
+    .room-watch__header h2 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    .room-watch__badge {
+        font-size: 0.75rem;
+        padding: 2px var(--spacing-xs);
+    }
+
+    .room-watch__details {
+        padding: var(--spacing-xs);
+    }
+
+    .room-watch__detail {
+        font-size: 0.75rem;
+        padding: 2px var(--spacing-xs);
+    }
+
+    .room-watch__source-button {
+        min-width: 40px;
+        padding: 2px 4px;
+        font-size: 0.6rem;
+    }
+
+    .room-watch__source-quality {
+        font-size: 0.5rem;
+    }
+}
+
+/* Нові стилі для розширеної інформації */
+.room-watch__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-lg);
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.room-watch__header h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 1.8rem;
+    font-weight: 700;
+    flex: 1;
+}
+
+.room-watch__badges {
+    display: flex;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+}
+
+.room-watch__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.room-watch__badge--private {
+    background: linear-gradient(135deg, var(--warning-color), #d97706);
+    color: white;
+    box-shadow: 0 4px 16px rgba(var(--warning-rgb), 0.3);
+}
+
+.room-watch__badge--active {
+    background: linear-gradient(135deg, var(--success-color), #059669);
+    color: white;
+    box-shadow: 0 4px 16px rgba(var(--success-rgb), 0.3);
+}
+
+.room-watch__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, var(--background-secondary), rgba(var(--primary-rgb), 0.02));
+    border-radius: var(--border-radius-lg);
+    border: 1px solid rgba(var(--border-rgb), 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.room-watch__detail {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: rgba(var(--card-background-rgb), 0.6);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.room-watch__detail:hover {
+    background: rgba(var(--primary-rgb), 0.05);
+    color: var(--text-color);
+    transform: translateY(-1px);
+}
+
+.room-watch__detail i {
+    width: 16px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.room-watch__viewers {
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+.room-watch__viewers h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.room-watch__viewers h4 i {
+    color: var(--primary-color);
+}
+
+.room-watch__viewers-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.room-watch__viewer {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--background-secondary);
+    color: var(--text-color);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
+}
+
+.room-watch__viewer--you {
+    background: var(--primary-color-alpha);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.room-watch__viewer i {
+    color: var(--warning-color);
+    font-size: 0.8rem;
+}
+
+.room-watch__movie-info {
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--card-background);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-color);
+}
+
+.room-watch__movie-header {
+    margin-bottom: var(--spacing-lg);
+}
+
+.room-watch__movie-header h3 {
+    margin: 0 0 var(--spacing-md) 0;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.room-watch__movie-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.room-watch__meta-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.room-watch__meta-item i {
+    width: 14px;
+    text-align: center;
+}
+
+.room-watch__meta-item:has(.fa-star) i {
+    color: var(--warning-color);
+}
+
+.room-watch__genres,
+.room-watch__studios {
+    margin-bottom: var(--spacing-md);
+    font-size: 0.9rem;
+}
+
+.room-watch__genres strong,
+.room-watch__studios strong {
+    color: var(--text-color);
+    margin-right: var(--spacing-sm);
+}
+
+.room-watch__genre,
+.room-watch__studio {
+    display: inline-block;
+    background: var(--primary-color-alpha);
+    color: var(--primary-color);
+    padding: 2px 6px;
+    border-radius: var(--border-radius);
+    font-size: 0.8rem;
+    font-weight: 500;
+    margin-right: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+}
+
+.room-watch__episode-info {
+    padding: var(--spacing-md);
+    background: var(--background-secondary);
+    border-radius: var(--border-radius);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.room-watch__episode-info strong {
+    color: var(--text-color);
+}
+
+/* Темна тема */
+[data-theme="dark"] .room-watch__info {
+    background: var(--dark-card-background);
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .room-watch__header h2 {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__details {
+    background: var(--dark-background-secondary);
+}
+
+[data-theme="dark"] .room-watch__detail {
+    color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .room-watch__viewers {
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .room-watch__viewers h4 {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__viewer {
+    background: var(--dark-background-secondary);
+    color: var(--dark-text-color);
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .room-watch__viewer--you {
+    background: rgba(var(--primary-rgb), 0.2);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .room-watch__movie-info {
+    background: var(--dark-card-background);
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .room-watch__movie-header h3 {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__meta-item {
+    color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .room-watch__genres strong,
+[data-theme="dark"] .room-watch__studios strong {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__genre,
+[data-theme="dark"] .room-watch__studio {
+    background: rgba(var(--primary-rgb), 0.2);
+    color: var(--primary-color);
+}
+
+[data-theme="dark"] .room-watch__episode-info {
+    background: var(--dark-background-secondary);
+    color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .room-watch__episode-info strong {
+    color: var(--dark-text-color);
+}
+
+/* Модальне вікно запрошення */
+.room-watch__invite-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--overlay-background);
+    backdrop-filter: blur(var(--blur-md));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal);
+    padding: var(--spacing-lg);
+    animation: fadeIn var(--animation-duration) var(--animation-easing);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.room-watch__invite-modal {
+    background: var(--card-background);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-xl);
+    width: 100%;
+    max-width: var(--modal-width);
+    max-height: var(--modal-max-height);
+    overflow: hidden;
+    animation: slideUp var(--animation-duration) var(--animation-easing);
+    border: var(--border-width) solid var(--border-color);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(32px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.room-watch__invite-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-lg);
+    border-bottom: var(--border-width) solid var(--border-color);
+    background: linear-gradient(var(--gradient-direction), var(--primary-light), var(--accent-light));
+}
+
+.room-watch__invite-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-color);
+}
+
+.room-watch__invite-title i {
+    color: var(--primary-color);
+}
+
+.room-watch__invite-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--button-size-sm);
+    height: var(--button-size-sm);
+    background: transparent;
+    border: none;
+    border-radius: var(--border-radius);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-duration) var(--transition-easing);
+}
+
+.room-watch__invite-close:hover {
+    background: var(--error-light);
+    color: var(--error-color);
+    transform: scale(var(--scale-hover));
+}
+
+.room-watch__invite-body {
+    padding: var(--spacing-lg);
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.room-watch__invite-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.room-watch__invite-section:last-child {
+    margin-bottom: 0;
+}
+
+.room-watch__invite-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.room-watch__invite-label i {
+    color: var(--primary-color);
+    width: 16px;
+}
+
+.room-watch__invite-link-container,
+.room-watch__invite-password-container {
+    display: flex;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-sm);
+}
+
+.room-watch__invite-input {
+    flex: 1;
+    padding: var(--spacing-sm) var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+    background: var(--background-color);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+.room-watch__invite-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+}
+
+.room-watch__invite-copy-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.room-watch__invite-copy-btn:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(var(--primary-rgb), 0.3);
+}
+
+.room-watch__invite-qr-btn {
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--accent-color);
+    color: var(--white);
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.room-watch__invite-qr-btn:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(var(--accent-rgb), 0.3);
+}
+
+/* Інформація про кімнату */
+.room-watch__room-info {
+    padding: var(--spacing-md);
+    background: rgba(var(--primary-rgb), 0.05);
+    border-radius: var(--border-radius-md);
+    border-left: 4px solid var(--primary-color);
+}
+
+.room-watch__room-title {
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--primary-color);
+}
+
+.room-watch__room-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.room-watch__room-detail {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-color);
+}
+
+.room-watch__room-detail i {
+    width: 16px;
+    color: var(--primary-color);
+}
+
+.room-watch__room-detail--private {
+    color: var(--warning-color);
+}
+
+.room-watch__room-detail--private i {
+    color: var(--warning-color);
+}
+
+/* QR код */
+.room-watch__qr-container {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--background-color);
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    border: 2px dashed var(--border-color);
+}
+
+.room-watch__qr-code {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-sm);
+}
+
+.room-watch__qr-image {
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.room-watch__qr-hint {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.room-watch__invite-hint {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.4;
+}
+
+.room-watch__invite-social {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+}
+
+.room-watch__invite-social-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.room-watch__invite-social-btn--telegram {
+    background: #0088cc;
+    color: var(--white);
+}
+
+.room-watch__invite-social-btn--telegram:hover {
+    background: #006699;
+    transform: translateY(-2px);
+}
+
+.room-watch__invite-social-btn--viber {
+    background: #665cac;
+    color: var(--white);
+}
+
+.room-watch__invite-social-btn--viber:hover {
+    background: #554a99;
+    transform: translateY(-2px);
+}
+
+.room-watch__invite-social-btn--whatsapp {
+    background: #25d366;
+    color: var(--white);
+}
+
+.room-watch__invite-social-btn--whatsapp:hover {
+    background: #1da851;
+    transform: translateY(-2px);
+}
+
+.room-watch__invite-actions {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--border-color);
+}
+
+.room-watch__invite-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--background-color);
+    color: var(--text-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.room-watch__invite-btn:hover {
+    background: rgba(var(--text-rgb), 0.05);
+    border-color: var(--text-secondary);
+    color: var(--text-color);
+    transform: translateY(-2px);
+}
+
+.room-watch__invite-btn--copy-all {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+    margin-right: var(--spacing-sm);
+}
+
+.room-watch__invite-btn--copy-all:hover {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: var(--white);
+    box-shadow: var(--shadow-success);
+}
+
+/* Toast повідомлення */
+.room-watch__copy-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--success-color);
+    color: var(--white);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    z-index: 1001;
+    animation: slideInRight 0.3s ease;
+    box-shadow: 0 4px 16px rgba(var(--success-rgb), 0.3);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+
+
+/* Темна тема для модального вікна запрошення */
+[data-theme="dark"] .room-watch__invite-modal {
+    background: var(--dark-card-background);
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .room-watch__invite-header {
+    border-color: var(--dark-border-color);
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.1), rgba(var(--accent-rgb), 0.1));
+}
+
+[data-theme="dark"] .room-watch__invite-title {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__invite-close {
+    color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .room-watch__invite-close:hover {
+    background: rgba(var(--error-rgb), 0.2);
+    color: var(--error-color);
+}
+
+[data-theme="dark"] .room-watch__invite-label {
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__invite-input {
+    background: var(--dark-background-color);
+    border-color: var(--dark-border-color);
+    color: var(--dark-text-color);
+}
+
+[data-theme="dark"] .room-watch__invite-input:focus {
+    border-color: var(--primary-color);
+}
+
+[data-theme="dark"] .room-watch__invite-hint {
+    color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .room-watch__invite-actions {
+    border-color: var(--dark-border-color);
+}
+
+[data-theme="dark"] .room-watch__invite-btn {
+    background: var(--dark-background-color);
+    border-color: var(--dark-border-color);
+    color: var(--dark-text-secondary);
+}
+
+[data-theme="dark"] .room-watch__invite-btn:hover {
+    background: rgba(var(--dark-text-rgb), 0.1);
+    border-color: var(--dark-text-secondary);
+    color: var(--dark-text-color);
+}
+
+/* Адаптивні стилі для запрошення */
+@media (max-width: 768px) {
+    .room-watch__invite-link-container,
+    .room-watch__invite-password-container {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .room-watch__invite-copy-btn,
+    .room-watch__invite-qr-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .room-watch__room-details {
+        gap: var(--spacing-sm);
+    }
+
+    .room-watch__room-detail {
+        font-size: var(--font-size-xs);
+    }
+
+    .room-watch__invite-social {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+
+    .room-watch__invite-social-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .room-watch__qr-container {
+        padding: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .room-watch__room-info {
+        padding: var(--spacing-sm);
+    }
+
+    .room-watch__room-title {
+        font-size: var(--font-size-base);
+    }
+
+    .room-watch__room-detail {
+        font-size: var(--font-size-xs);
+    }
+
+    .room-watch__invite-copy-btn,
+    .room-watch__invite-qr-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-size-xs);
     }
 }

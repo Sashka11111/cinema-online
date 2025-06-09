@@ -14,6 +14,11 @@ class CommentPolicy
             return true;
         }
 
+        // Модератори можуть переглядати, редагувати та видаляти коментарі
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view', 'update', 'delete'])) {
+            return true;
+        }
+
         return null;
     }
 
@@ -46,20 +51,20 @@ class CommentPolicy
 
     /**
      * Determine whether the user can update the model.
-     * Дозволяється, якщо користувач є адміністратором або автором коментаря.
+     * Дозволяється, якщо користувач є адміністратором, модератором або автором коментаря.
      */
     public function update(User $user, Comment $comment): bool
     {
-        return $user->isAdmin() || $user->id === $comment->user_id;
+        return $user->isAdmin() || $user->isModerator() || $user->id === $comment->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
-     * Дозволяється, якщо користувач є адміністратором або автором коментаря.
+     * Дозволяється, якщо користувач є адміністратором, модератором або автором коментаря.
      */
     public function delete(User $user, Comment $comment): bool
     {
-        return $user->isAdmin() || $user->id === $comment->user_id;
+        return $user->isAdmin() || $user->isModerator() || $user->id === $comment->user_id;
     }
 
     /**

@@ -169,8 +169,8 @@
                 </div>
 
                 <!-- Пагінація -->
-                <div class="user-lists__pagination">
-                    {{ $userLists->links() }}
+                <div class="content-page__pagination">
+                    {{ $userLists->links('livewire.components.pagination') }}
                 </div>
             @else
                 <div class="user-lists__empty">

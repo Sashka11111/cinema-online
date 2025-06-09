@@ -38,6 +38,8 @@
                            class="header__dropdown-item">Профіль</a>
                         <a href="{{ route('user-lists') }}" wire:navigate
                            class="header__dropdown-item">Мої списки</a>
+                        <a href="{{ route('rooms') }}" wire:navigate
+                           class="header__dropdown-item">Кімнати</a>
                         <hr class="header__dropdown-divider">
                         <livewire:components.logout-button/>
 

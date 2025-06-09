@@ -13,6 +13,11 @@ class SearchHistoryPolicy
             return true;
         }
 
+        // Модератори можуть переглядати історію пошуку
+        if ($user->isModerator() && in_array($ability, ['viewAny', 'view'])) {
+            return true;
+        }
+
         return null;
     }
 
@@ -23,7 +28,7 @@ class SearchHistoryPolicy
 
     public function view(User $user, SearchHistory $searchHistory): bool
     {
-        return $user->id === $searchHistory->user_id || $user->isAdmin();
+        return $user->id === $searchHistory->user_id || $user->isAdmin() || $user->isModerator();
     }
 
     public function delete(User $user, SearchHistory $searchHistory): bool

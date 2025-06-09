@@ -13,6 +13,32 @@
             <h1 class="movie-watch__title">Перегляд: {{ $movie->name }}</h1>
 
             @if($episode)
+                <!-- Video Source Selection - above player -->
+                @if($episode->video_players && $episode->video_players->isNotEmpty() && $episode->video_players->count() > 1)
+                    <div class="movie-watch__source-selector">
+                        <div class="movie-watch__source-buttons">
+                            @foreach($episode->video_players as $index => $player)
+                                <button
+                                    class="movie-watch__source-button {{ $loop->first ? 'movie-watch__source-button--active' : '' }}"
+                                    onclick="changeVideoSource('{{ asset('storage/' . ($player['file_url'] ?? '')) }}', this, {{ $index }})"
+                                    data-player-index="{{ $index }}"
+                                    data-player-name="{{ isset($player['name']) ? __('video_player_name.' . $player['name']) : __('movie_watch.player.default_player_name', ['number' => $index + 1]) }}"
+                                    title="{{ isset($player['name']) ? __('video_player_name.' . $player['name']) : __('movie_watch.player.default_player_name', ['number' => $index + 1]) }}{{ isset($player['quality']) ? ' - ' . __('video_quality.' . $player['quality']) : '' }}"
+                                >
+                                    @if(isset($player['name']))
+                                        {{ __('video_player_name.' . $player['name']) }}
+                                    @else
+                                        {{ $index + 1 }}
+                                    @endif
+                                    @if(isset($player['quality']))
+                                        <span class="movie-watch__source-quality">{{ __('video_quality.' . $player['quality']) }}</span>
+                                    @endif
+                                </button>
+                            @endforeach
+                        </div>
+                    </div>
+                @endif
+
                 <div class="movie-watch__player-container">
                     @if($episode->video_players && $episode->video_players->isNotEmpty())
                         <div class="movie-watch__player">
@@ -31,23 +57,6 @@
                                 data-episode-id="{{ $episode->id }}"
                             ></video>
                         </div>
-
-                        @if(count($episode->video_players) > 1)
-                            <div class="movie-watch__player-options">
-                                <div class="movie-watch__player-options-title">Доступні плеєри:
-                                </div>
-                                <div class="movie-watch__player-buttons">
-                                    @foreach($episode->video_players as $index => $player)
-                                        <button
-                                            class="movie-watch__player-button {{ $index === 0 ? 'movie-watch__player-button--active' : '' }}"
-                                            onclick="changeVideoSource('{{ asset('storage/' . ($player['file_url'] ?? '')) }}', this)"
-                                        >
-                                            {{ $player['name'] ?? 'Плеєр ' . ($index + 1) }}
-                                        </button>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
                     @elseif($movie->attachments && collect($movie->attachments)->firstWhere('type', 'video'))
                         @php
                             $videoAttachment = collect($movie->attachments)->firstWhere('type', 'video');
@@ -147,46 +156,8 @@
                     @endif
                 </div>
 
-                <!-- Форма створення кімнати -->
-                <div class="movie-watch__create-room">
-                    <h3>Створити кімнату для спільного перегляду</h3>
-
-                    @if (session()->has('error'))
-                        <div class="alert alert-error">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    <form wire:submit="createRoom" class="movie-watch__room-form">
-                        <div class="movie-watch__form-group">
-                            <label for="maxViewers">Максимальна кількість глядачів:</label>
-                            <input type="number" id="maxViewers" wire:model="maxViewers" min="1"
-                                   max="50" required>
-                            @error('maxViewers') <span class="error">{{ $message }}</span> @enderror
-                        </div>
-
-                        <div class="movie-watch__form-group">
-                            <label>
-                                <input type="checkbox" wire:model="isPrivate">
-                                Приватна кімната
-                            </label>
-                        </div>
-
-                        @if($isPrivate)
-                            <div class="movie-watch__form-group">
-                                <label for="roomPassword">Пароль кімнати:</label>
-                                <input type="password" id="roomPassword" wire:model="roomPassword"
-                                       required>
-                                @error('roomPassword') <span
-                                    class="error">{{ $message }}</span> @enderror
-                            </div>
-                        @endif
-
-                        <button type="submit" class="movie-watch__create-room-btn">
-                            <i class="fas fa-plus"></i> Створити кімнату
-                        </button>
-                    </form>
-                </div>
+                <!-- Компонент створення кімнати -->
+                <livewire:components.room-creation-modal :movie="$movie" :episode="$episode" />
 
                 @if($movie->episodes && $movie->episodes->count() > 1)
                     <div class="movie-watch__episodes-list">
@@ -221,17 +192,42 @@
 </div>
 
 <script>
-    function changeVideoSource(url, button) {
+    function changeVideoSource(url, button, playerIndex) {
         const videoPlayer = document.querySelector('.movie-watch__video');
         if (videoPlayer) {
+            // Store current time
+            const currentTime = videoPlayer.currentTime;
+
+            // Change source
             videoPlayer.src = url;
             videoPlayer.load();
-            videoPlayer.play();
 
-            document.querySelectorAll('.movie-watch__player-button').forEach(btn => {
-                btn.classList.remove('movie-watch__player-button--active');
+            // Restore time and play
+            videoPlayer.addEventListener('loadedmetadata', function() {
+                if (currentTime > 0) {
+                    videoPlayer.currentTime = currentTime;
+                }
+                videoPlayer.play();
+            }, { once: true });
+
+            // Update active button
+            document.querySelectorAll('.movie-watch__source-button').forEach(btn => {
+                btn.classList.remove('movie-watch__source-button--active');
             });
-            button.classList.add('movie-watch__player-button--active');
+            button.classList.add('movie-watch__source-button--active');
         }
     }
+
+    // Initialize video player when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        const videoPlayer = document.getElementById('videoPlayer');
+        if (videoPlayer) {
+            const firstButton = document.querySelector('.movie-watch__source-button');
+            if (firstButton && !firstButton.classList.contains('movie-watch__source-button--active')) {
+                firstButton.classList.add('movie-watch__source-button--active');
+            }
+        }
+    });
+
+
 </script>
