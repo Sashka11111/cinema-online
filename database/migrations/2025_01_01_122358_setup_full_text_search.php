@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 return new class extends Migration {
     public function up(): void
     {
-        $tsearchPath = env('POSTGRES_TSEARCH_PATH');
+        $tsearchPath = config('fts.tsearch_path');
 
         // Перевіряємо, чи шлях до PostgreSQL вказаний
         if (!$tsearchPath) {
