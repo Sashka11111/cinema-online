@@ -155,10 +155,11 @@
 }
 
 .movie-watch__episode-navigation {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
     grid-template-columns: auto 1fr auto;
     gap: var(--spacing-md);
-    align-items: center;
     max-width: 800px;
     padding: var(--spacing-md);
     margin: 0 auto;
@@ -618,98 +619,6 @@
     margin-top: var(--spacing-xs);
     font-size: var(--font-size-xs);
     color: #dc3545;
-}
-
-/* Адаптивність */
-@media (max-width: 768px) {
-    .movie-watch__navigation {
-        padding: var(--spacing-md) 0;
-    }
-
-    .movie-watch__content {
-        padding: var(--spacing-lg) 0;
-    }
-
-    .movie-watch__player-section {
-        padding: 0 var(--spacing-md);
-    }
-
-    .movie-watch__header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-md);
-        margin-top: var(--spacing-md);
-    }
-
-    .movie-watch__actions {
-        width: 100%;
-        justify-content: flex-start;
-    }
-
-    .movie-watch__title {
-        font-size: 1.5rem;
-    }
-
-    .movie-watch__player-options {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
-
-    .movie-watch__player-button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .movie-watch__episode-navigation {
-        flex-direction: column;
-        gap: var(--spacing-sm);
-    }
-
-    .movie-watch__nav-button {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .movie-watch__episodes-grid {
-        grid-template-columns: 1fr;
-    }
-
-
-
-    .movie-watch__source-selector {
-        margin-bottom: var(--spacing-sm);
-    }
-
-    .movie-watch__source-buttons {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: var(--spacing-xs);
-        padding: var(--spacing-xs);
-    }
-
-    .movie-watch__source-button {
-        min-width: 45px;
-        padding: 4px var(--spacing-xs);
-        font-size: 0.65rem;
-    }
-
-    .movie-watch__source-quality {
-        font-size: 0.55rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .movie-watch__source-button {
-        min-width: 40px;
-        padding: 2px 4px;
-        font-size: 0.6rem;
-    }
-
-    .movie-watch__source-quality {
-        font-size: 0.5rem;
-    }
-
-
 }
 
 
