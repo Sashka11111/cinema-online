@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Video source change function
     window.changeVideoSource = function(url, button) {
         if (!video) return;
-        
+
         video.src = url;
         video.load();
 
@@ -72,15 +72,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Optional: Sync seeking
+        // Sync seeking
         video.addEventListener('seeked', () => {
             if (!ignoreNextEvent) {
-                console.log('📤 Sending SEEK event, time:', video.currentTime);
+                console.log(' Sending SEEK event, time:', video.currentTime);
                 Livewire.dispatch('sync-video', {
                     action: 'seek',
                     data: { currentTime: video.currentTime }
                 });
+            } else {
+                console.log(' Ignoring SEEK event (from sync)');
             }
+
+            // Reset ignore flag after a short delay
+            setTimeout(() => {
+                ignoreNextEvent = false;
+            }, 200);
         });
     }
 });

@@ -373,6 +373,56 @@
     </div>
     @endif
 
+    <!-- Модальне вікно для введення пароля приватної кімнати -->
+    @if($showPasswordModal)
+    <div class="room-watch__password-overlay">
+        <div class="room-watch__password-modal" wire:click.stop>
+            <div class="room-watch__password-header">
+                <h3 class="room-watch__password-title">
+                    <i class="fas fa-lock"></i>
+                    Приватна кімната
+                </h3>
+            </div>
+
+            <div class="room-watch__password-body">
+                <p class="room-watch__password-description">
+                    Ця кімната захищена паролем. Введіть пароль для входу.
+                </p>
+
+                @if (session()->has('error'))
+                    <div class="room-watch__password-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                <div class="room-watch__password-input-container">
+                    <label for="passwordInput" class="room-watch__password-label">
+                        <i class="fas fa-key"></i>
+                        Пароль кімнати
+                    </label>
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        wire:model="passwordInput"
+                        wire:keydown.enter="submitPassword"
+                        placeholder="Введіть пароль"
+                        class="room-watch__password-input"
+                        autofocus
+                    >
+                </div>
+            </div>
+
+            <div class="room-watch__password-actions">
+                <button wire:click="submitPassword" class="room-watch__password-btn room-watch__password-btn--submit">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Увійти
+                </button>
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if($room)
         <script>
             // Передача даних для JavaScript модуля

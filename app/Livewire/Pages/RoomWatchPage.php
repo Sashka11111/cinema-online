@@ -23,12 +23,24 @@ class RoomWatchPage extends Component
 
     public string $roomPassword = '';
 
+    public bool $showPasswordModal = false;
+
+    public string $passwordInput = '';
+
+    public ?string $pendingRoomSlug = null;
+
     public function mount(Movie $movie, ?int $episodeNumber = null, ?Room $room = null)
     {
         $this->movie = $movie;
         $this->room = $room;
 
-        if (! $movie->is_published && (! Auth::check() || ! Auth::user()->isAdmin())) {
+        // Обов'язкова перевірка авторизації для доступу до кімнат
+        if (! Auth::check()) {
+            session()->flash('error', 'Для перегляду в кімнаті необхідно авторизуватися');
+            return $this->redirectRoute('login', navigate: true);
+        }
+
+        if (! $movie->is_published && ! Auth::user()->isAdmin()) {
             abort(404);
         }
 
@@ -53,6 +65,17 @@ class RoomWatchPage extends Component
                 ], navigate: true);
             }
 
+            // Перевірка на приватну кімнату
+            if ($this->room->is_private && $this->room->user_id !== Auth::id()) {
+                // Якщо користувач не є власником кімнати і кімната приватна
+                if (!session()->has("room_access_{$this->room->slug}")) {
+                    // Показуємо модальне вікно для введення пароля
+                    $this->pendingRoomSlug = $this->room->slug;
+                    $this->showPasswordModal = true;
+                    return;
+                }
+            }
+
             if (Auth::check()) {
                 if ($this->room->isFull() && $this->room->user_id !== Auth::id()) {
                     session()->flash('error', 'Кімната заповнена');
@@ -67,14 +90,12 @@ class RoomWatchPage extends Component
                 ]);
             }
         }
-
     }
 
     public function joinRoom($roomId, $password = null)
     {
         if (! Auth::check()) {
             session()->flash('error', 'Для входу в кімнату необхідно авторизуватися');
-
             return;
         }
 
@@ -82,29 +103,32 @@ class RoomWatchPage extends Component
 
         if (! $room || ! $room->isActive()) {
             session()->flash('error', 'Кімната не знайдена або вже завершена');
-
             return;
         }
 
         if ($room->isFull() && $room->user_id !== Auth::id()) {
             session()->flash('error', 'Кімната заповнена');
-
             return;
         }
 
-        if ($room->is_private && ! password_verify($password, $room->password)) {
-            session()->flash('error', 'Невірний пароль');
+        if ($room->is_private && $room->user_id !== Auth::id()) {
+            if (!password_verify($password, $room->password)) {
+                session()->flash('error', 'Невірний пароль');
+                return;
+            }
 
-            return;
+            // Зберігаємо доступ до кімнати в сесії
+            session()->put("room_access_{$room->slug}", true);
         }
 
         $room->viewers()->syncWithoutDetaching([
             Auth::id() => ['joined_at' => now()],
         ]);
 
-        return $this->redirectRoute('movies.watch.episode', [
+        return $this->redirectRoute('movies.watch.room', [
             'movie' => $this->movie->slug,
             'episodeNumber' => $this->episode->number,
+            'room' => $room->slug,
         ], navigate: true);
     }
 
@@ -152,6 +176,73 @@ class RoomWatchPage extends Component
         $this->showInviteModal = false;
         $this->inviteLink = '';
         $this->roomPassword = '';
+    }
+
+    public function submitPassword()
+    {
+        if (!$this->passwordInput) {
+            session()->flash('error', 'Введіть пароль');
+            return;
+        }
+
+        if (!$this->pendingRoomSlug) {
+            session()->flash('error', 'Помилка: кімната не знайдена');
+            $this->showPasswordModal = false;
+            $this->passwordInput = '';
+            $this->pendingRoomSlug = null;
+            return;
+        }
+
+        $room = Room::where('slug', $this->pendingRoomSlug)->first();
+
+        if (!$room || !$room->isActive()) {
+            session()->flash('error', 'Кімната не знайдена або вже завершена');
+            $this->showPasswordModal = false;
+            $this->passwordInput = '';
+            $this->pendingRoomSlug = null;
+            return;
+        }
+
+        if (!password_verify($this->passwordInput, $room->password)) {
+            session()->flash('error', 'Невірний пароль');
+            $this->passwordInput = ''; // Очищуємо поле пароля
+            return;
+        }
+
+        // Зберігаємо доступ до кімнати в сесії
+        session()->put("room_access_{$room->slug}", true);
+
+        // Додаємо користувача до кімнати
+        if ($room->isFull() && $room->user_id !== Auth::id()) {
+            session()->flash('error', 'Кімната заповнена');
+            $this->showPasswordModal = false;
+            $this->passwordInput = '';
+            $this->pendingRoomSlug = null;
+            return;
+        }
+
+        $room->viewers()->syncWithoutDetaching([
+            Auth::id() => ['joined_at' => now()],
+        ]);
+
+        // Закриваємо модальне вікно після успішного входу
+        $this->showPasswordModal = false;
+        $this->passwordInput = '';
+        $this->pendingRoomSlug = null;
+
+        // Перезавантажуємо сторінку для відображення кімнати
+        return $this->redirectRoute('movies.watch.room', [
+            'movie' => $this->movie->slug,
+            'episodeNumber' => $this->episode->number,
+            'room' => $room->slug,
+        ], navigate: true);
+    }
+
+    public function closePasswordModal()
+    {
+        $this->showPasswordModal = false;
+        $this->passwordInput = '';
+        $this->pendingRoomSlug = null;
     }
 
     #[\Livewire\Attributes\On('sync-video')]
