@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-      data-theme="{{ session('theme', 'light') }}">
+      data-theme="{{ session('theme', 'dark') }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,7 +16,7 @@
 
     <script>
         window.appConfig = {
-            theme: '{{ session('theme', 'light') }}'
+            theme: '{{ session('theme', 'dark') }}'
         };
     </script>
 </head>

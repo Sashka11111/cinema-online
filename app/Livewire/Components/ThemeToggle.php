@@ -10,8 +10,8 @@ class ThemeToggle extends Component
 
     public function mount()
     {
-        // Load the theme from session or user preference
-        $this->theme = session('theme', 'light');
+        // Load the theme from session or default to dark
+        $this->theme = session('theme', 'dark');
     }
 
     public function toggleTheme()
