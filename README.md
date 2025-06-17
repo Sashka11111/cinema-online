@@ -1,66 +1,203 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎬 Cinema Online
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Комплексна веб-платформа для перегляду фільмів та серіалів з розширеними соціальними функціями, створена на Laravel 11 з використанням Livewire 3 та Filament 3.
 
-## About Laravel
+## 📋 Зміст
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Огляд проекту](#-огляд-проекту)
+- [Основні функції](#-основні-функції)
+- [Технологічний стек](#-технологічний-стек)
+- [Архітектура](#-архітектура)
+- [Встановлення](#-встановлення)
+- [Конфігурація](#-конфігурація)
+- [Використання](#-використання)
+- [Розробка](#-розробка)
+- [Тестування](#-тестування)
+- [Ліцензія](#-ліцензія)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🎯 Огляд проекту
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Cinema Online - це сучасна веб-платформа для перегляду фільмів та серіалів з акцентом на соціальну взаємодію та спільний перегляд. Платформа підтримує українську мову та включає повнотекстовий пошук з українською локалізацією.
 
-## Learning Laravel
+### Ключові особливості:
+- 🎭 Повний каталог фільмів, серіалів, мультфільмів та аніме
+- 👥 Система ролей (користувач/модератор/адміністратор)
+- 🔍 Повнотекстовий пошук з українською локалізацією
+- 🏠 Кімнати для спільного перегляду з WebSocket синхронізацією
+- 📱 Адаптивний дизайн з підтримкою темної/світлої теми
+- 🔐 Автентифікація через соціальні мережі (Discord, Telegram)
+- 📊 Система рейтингів, коментарів та відгуків
+- 📋 Персональні списки користувачів
+- 🎨 Адміністративна панель
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✨ Основні функції
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 🎬 Контент-менеджмент
+- Управління фільмами, серіалами, епізодами
+- Система тегів та жанрів
+- Інформація про акторів, режисерів та інший персонал
+- Студії та виробники
+- Підбірки контенту
+- Система додавання рейтингів
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 👤 Користувацькі функції
+- Реєстрація та автентифікація
+- Профілі користувачів
+- Персональні списки (улюблені, переглянуті, заплановані)
 
-## Laravel Sponsors
+### 💬 Соціальні функції
+- Коментарі до фільмів, епізодів та підбірок
+- Система лайків/дизлайків
+- Вкладені коментарі (відповіді)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 🏠 Кімнати для спільного перегляду
+- Створення приватних та публічних кімнат
+- Синхронізація відео через WebSocket
+- Обмеження кількості глядачів
+- Система паролів для приватних кімнат
+- Запрошення через QR-коди
 
-### Premium Partners
+### 🔍 Пошук та фільтрація
+- Повнотекстовий пошук з українською локалізацією
+- Фільтрація за жанрами, роками, рейтингами...
+- Пошук 
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 🎨 Адміністрування
+- Панель адміністратора на Filament 3
+- Управління всіма сутностями
+- Модерація 
+- Аналітика та статистика
+- Управління користувачами та ролями
 
-## Contributing
+## 🛠 Технологічний стек
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Backend
+- **PHP 8.3+** - Основна мова програмування
+- **Laravel 11** - Веб-фреймворк
+- **Livewire 3** - Реактивні компоненти
+- **Filament 3** - Адміністративна панель
+- **PostgreSQL** - База даних з повнотекстовим пошуком
+- **Laravel Reverb** - WebSocket сервер для real-time функцій
+- **Laravel Socialite** - Автентифікація через соціальні мережі
 
-## Code of Conduct
+### Frontend
+- **CSS** - мова стилю 
+- **Alpine.js** (через Livewire) - JavaScript реактивність
+- **Vite** - Збірка frontend ресурсів
+- **Laravel Echo** - WebSocket клієнт
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Додаткові пакети
+- **Laravel Breeze** - Автентифікація
+- **Laravel Trend** - Аналітика та тренди
+- **Blade Icons** - Іконки (Clarity, BoxIcons, FontAwesome)
+- **Laravel Lang** - Українська локалізація
 
-## Security Vulnerabilities
+## 🏗 Архітектура
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Основні моделі та зв'язки
 
-## License
+#### Користувачі та автентифікація
+- `User` - Користувачі з ролями та профілями
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Контент
+- `Movie` - Фільми та серіали з метаданими
+- `Episode` - Епізоди серіалів
+- `Person` - Актори, режисери, персонал
+- `Studio` - Студії та виробники
+- `Tag` - Жанри та теги
+- `Selection` - Підбірки контенту
+
+#### Взаємодія
+- `Comment` - Коментарі (поліморфні)
+- `CommentLike` - Лайки/дизлайки коментарів
+- `CommentReport` - Скарги на коментарі
+- `Rating` - Рейтинги фільмів
+- `UserList` - Персональні списки (поліморфні)
+
+#### Кімнати та перегляд
+- `Room` - Кімнати для спільного перегляду
+- `WatchHistory` - Історія перегляду
+- `SearchHistory` - Історія пошуку
+
+### Ключові особливості архітектури
+- **ULID** як первинні ключі для всіх моделей
+- **Поліморфні зв'язки** для гнучкості (коментарі, списки, підбірки)
+- **JSON поля** для оптимізації продуктивності
+- **Scoped моделі** для автоматичної фільтрації
+- **Custom Query Builders** для складних запитів
+- **Policy класи** для авторизації на основі ролей
+
+## 📖 Використання
+
+Додаток доступний за доступний за адресою: http://cinema-online.pp.ua:99/
+
+### Основні маршрути
+
+#### Публічні сторінки
+- `/` - Головна сторінка з трендовими фільмами
+- `/movies` - Каталог фільмів
+- `/series` - Каталог серіалів
+- `/cartoons` - Каталог мультфільмів
+- `/anime` - Каталог аніме
+- `/selections` - Підбірки контенту
+- `/person/{person}` - Сторінка персони
+
+#### Сторінки контенту
+- `/movies/{movie}` - Детальна сторінка фільму
+- `/movies/{movie}/comments` - Коментарі до фільму
+- `/movies/{movie}/watch` - Сторінка перегляду
+- `/movies/{movie}/watch/{episode}` - Перегляд конкретного епізоду
+- `/movies/{movie}/watch/{episode}/{room}` - Спільний перегляд у кімнаті
+
+#### Користувацькі сторінки (потребують автентифікації)
+- `/profile` - Профіль користувача
+- `/my-lists` - Персональні списки
+- `/rooms` - Кімнати для спільного перегляду
+
+## 🔧 Розробка
+
+### Структура проекту
+
+```
+cinema-online/
+├── app/
+│   ├── Enums/              # Перерахування (статуси, ролі, типи)
+│   ├── Events/             # Події для WebSocket
+│   ├── Filament/           # Адміністративна панель
+│   ├── Http/               # Контролери та middleware
+│   ├── Livewire/           # Livewire компоненти
+│   ├── Models/             # Eloquent моделі
+│   ├── Policies/           # Політики авторизації
+│   └── ValueObjects/       # Об'єкти значень
+├── database/
+│   ├── factories/          # Фабрики для тестування
+│   ├── migrations/         # Міграції бази даних
+│   ├── seeders/            # Сідери для заповнення даних
+│   └── fts-dict/          # Словники для повнотекстового пошуку
+├── resources/
+│   ├── css/               # Стилі CSS
+│   ├── js/                # JavaScript файли
+│   └── views/             # Blade шаблони
+└── tests/                 # Тести
+```
+
+### Стандарти кодування
+
+Проект дотримується стандартів:
+- **PSR-12** для PHP коду
+- **BEM методологія** для CSS класів
+- **Conventional Commits** для повідомлень комітів
+- **Ukrainian localization** для всіх текстових рядків
+
+### Внесок у проект
+
+1. Форкніть репозиторій
+2. Створіть гілку для нової функції (`git checkout -b feature/amazing-feature`)
+3. Зробіть коміт змін (`git commit -m 'Add some amazing feature'`)
+4. Відправте зміни в гілку (`git push origin feature/amazing-feature`)
+5. Створіть Pull Request
+
+## 📄 Ліцензія
+
+Цей проект ліцензовано під [MIT License](https://opensource.org/licenses/MIT).
+
