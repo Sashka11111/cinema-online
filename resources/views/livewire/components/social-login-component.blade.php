@@ -12,7 +12,7 @@
         </a>
         <!-- Google button -->
         <a class="auth-page__social-button auth-page__social-button--google"
-           href="{{ route('auth.redirect', 'google') }}" wire:navigate>
+           href="{{ route('auth.redirect', 'google') }}">
             <img src="{{ asset('images/google.png') }}" alt="Google Icon"
                  class="auth-page__social-icon">
             Увійти через Google

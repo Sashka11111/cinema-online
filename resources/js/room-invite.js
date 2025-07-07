@@ -19,13 +19,24 @@ function closeInviteModal() {
 function generateInviteLink() {
     // Отримуємо дані з глобальної змінної
     const roomData = window.roomData;
-    if (!roomData) return;
+    if (!roomData) {
+        console.error('roomData not found');
+        return;
+    }
 
-    const inviteLink = `${window.location.origin}/movies/${roomData.movieSlug}/watch/${roomData.episodeNumber}/room/${roomData.roomSlug}`;
+    console.log('roomData:', roomData);
+
+    // Правильний URL згідно з маршрутами: /movies/{movie}/watch/{episodeNumber}/{room}
+    const inviteLink = `${window.location.origin}/movies/${roomData.movieSlug}/watch/${roomData.episodeNumber}/${roomData.roomSlug}`;
+
+    console.log('Generated invite link:', inviteLink);
 
     const inviteLinkInput = document.getElementById('inviteLink');
     if (inviteLinkInput) {
         inviteLinkInput.value = inviteLink;
+        console.log('Set invite link input value:', inviteLinkInput.value);
+    } else {
+        console.error('inviteLink input not found');
     }
 }
 

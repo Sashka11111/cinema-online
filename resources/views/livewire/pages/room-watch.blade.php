@@ -437,4 +437,4 @@
     @endif
 </div>
 
-@vite(['resources/js/room-echo.js', 'resources/js/room-video-sync.js', 'resources/js/room-video-player.js'])
+@vite(['resources/js/room-echo.js', 'resources/js/room-video-sync.js', 'resources/js/room-video-player.js', 'resources/js/room-invite.js'])
